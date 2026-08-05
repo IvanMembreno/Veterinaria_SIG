@@ -1,0 +1,175 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  GERENTE
+  VETERINARIO
+  RECEPCION
+  INVENTARIO
+}
+
+enum EstadoCita {
+  PROGRAMADA
+  CONFIRMADA
+  ATENDIDA
+  CANCELADA
+  NO_ASISTIO
+}
+
+enum Sexo {
+  MACHO
+  HEMBRA
+}
+
+enum TipoMovimiento {
+  ENTRADA
+  SALIDA_CONSULTA
+  AJUSTE
+}
+
+model Usuario {
+  id        String   @id @default(uuid())
+  nombre    String
+  email     String   @unique
+  password  String
+  rol       Role     @default(RECEPCION)
+  activo    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  citas     Cita[]
+}
+
+model Cliente {
+  id        String    @id @default(uuid())
+  nombre    String
+  telefono  String
+  email     String?
+  direccion String?
+  createdAt DateTime  @default(now())
+
+  mascotas  Mascota[]
+}
+
+model Mascota {
+  id        String    @id @default(uuid())
+  nombre    String
+  especie   String
+  raza      String?
+  sexo      Sexo
+  fechaNac  DateTime?
+  peso      Float?
+  imagenUrl String?
+  createdAt DateTime  @default(now())
+
+  cliente   Cliente @relation(fields: [clienteId], references: [id])
+  clienteId String
+
+  citas Cita[]
+}
+
+model Cita {
+  id        String      @id @default(uuid())
+  fecha     DateTime
+  estado    EstadoCita  @default(PROGRAMADA)
+  motivo    String
+  consulta  Consulta?
+  createdAt DateTime    @default(now())
+
+  mascota   Mascota @relation(fields: [mascotaId], references: [id])
+  mascotaId String
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+  usuarioId String
+}
+
+model Consulta {
+  id            String    @id @default(uuid())
+  diagnostico   String?
+  tratamiento   String?
+  observaciones String?
+  peso          Float?
+  temperatura   Float?
+  factura       Factura?
+  createdAt     DateTime  @default(now())
+
+  cita    Cita    @relation(fields: [citaId], references: [id])
+  citaId  String  @unique
+
+  insumos      ConsultaInsumo[]
+}
+
+model Servicio {
+  id      String  @id @default(uuid())
+  nombre  String
+  precio  Float
+  activo  Boolean @default(true)
+
+  detalles  FacturaDetalle[]
+}
+
+model Inventario {
+  id            String              @id @default(uuid())
+  nombre        String
+  lote          String?
+  fechaVenc     DateTime?
+  stock         Int                 @default(0)
+  stockMinimo   Int                 @default(5)
+  precioUnit    Float
+  createdAt     DateTime            @default(now())
+
+  consultaUso   ConsultaInsumo[]
+  movimientos   MovimientoInventario[]
+}
+
+model ConsultaInsumo {
+  id        String  @id @default(uuid())
+  cantidad  Int
+
+  consulta    Consulta   @relation(fields: [consultaId], references: [id])
+  consultaId  String
+  insumo      Inventario @relation(fields: [insumoId], references: [id])
+  insumoId    String
+}
+
+model MovimientoInventario {
+  id        String          @id @default(uuid())
+  tipo      TipoMovimiento
+  cantidad  Int
+  fecha     DateTime        @default(now())
+  nota      String?
+
+  insumo    Inventario  @relation(fields: [insumoId], references: [id])
+  insumoId  String
+}
+
+model Factura {
+  id    String    @id @default(uuid())
+  total Float
+  fecha DateTime  @default(now())
+
+  consulta    Consulta  @relation(fields: [consultaId], references: [id])
+  consultaId  String    @unique
+
+  detalles  FacturaDetalle[]
+}
+
+model FacturaDetalle {
+  id        String  @id @default(uuid())
+  cantidad  Int     @default(1)
+  precio    Float
+
+  factura     Factura   @relation(fields: [facturaId], references: [id])
+  facturaId   String
+  servicio    Servicio  @relation(fields: [servicioId], references: [id])
+  servicioId  String
+}

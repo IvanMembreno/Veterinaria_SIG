@@ -1,0 +1,14 @@
+find . \
+    -type f \
+    -not -path '*/.*' \
+    -not -path '*/dist/*' \
+    -not -path '*/node_modules/*' \
+    -not -path '*/generated/*' \
+    -not -name "*.log" \
+    -not -name '.env' \
+    -not -name "package-lock.json" \
+    -not -name "pnpm-lock.yaml" \
+    -not -name "README.md" \
+    -not -name "tsconfig.build.tsbuildinfo" \
+    -exec sh -c 'echo "\n\n--- ARCHIVO: {} ---"; cat "{}"' \; \
+> "$HOME/Desktop/Proyectos/gestion_inventario/zContext/estructura_backend.txt"

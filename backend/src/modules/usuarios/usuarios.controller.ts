@@ -8,13 +8,13 @@ import {
     Post,
     UseGuards,
 } from '@nestjs/common';
-import { UsuariosService } from './usuarios.service';
-import { CreateUsuarioDto } from './dto/create-usuario.dto';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../common/guards/roles.guard';
-import { Roles } from '../common/decorators/roles.decorator';
-import { Role } from '../../generated/prisma/enums';
-import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import { UsuariosService } from './usuarios.service.js';
+import { CreateUsuarioDto } from './dto/create-usuario.dto.js';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard.js';
+import { RolesGuard } from '../common/guards/roles.guard.js';
+import { Roles } from '../common/decorators/roles.decorator.js';
+import { Role } from '../../generated/prisma/enums.js';
+import { UpdateUsuarioDto } from './dto/update-usuario.dto.js';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('usuarios')

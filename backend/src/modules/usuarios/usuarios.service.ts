@@ -3,10 +3,10 @@ import {
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '../../config/prisma.service';
-import { CreateUsuarioDto } from './dto/create-usuario.dto';
+import { PrismaService } from '../../config/prisma.service.js';
+import { CreateUsuarioDto } from './dto/create-usuario.dto.js';
 import * as bcrypt from 'bcrypt';
-import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import { UpdateUsuarioDto } from './dto/update-usuario.dto.js';
 
 @Injectable()
 export class UsuariosService {

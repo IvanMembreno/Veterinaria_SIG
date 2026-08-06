@@ -1,5 +1,5 @@
 import {
-    IsDateString,
+    IsDate,
     IsEnum,
     IsNotEmpty,
     IsNumber,
@@ -7,6 +7,7 @@ import {
     IsString,
 } from 'class-validator';
 import { Sexo } from '../../../generated/prisma/enums.js';
+import { Type } from 'class-transformer';
 
 export class CreateMascotaDto {
     @IsString()
@@ -24,11 +25,13 @@ export class CreateMascotaDto {
     @IsEnum(Sexo)
     sexo!: Sexo;
 
-    @IsDateString()
+    @IsDate()
+    @Type(() => Date)
     @IsOptional()
-    fechaNac?: string;
+    fechaNac?: Date;
 
     @IsNumber()
+    @Type(() => Number)
     @IsOptional()
     peso?: number;
 

@@ -1,5 +1,6 @@
 import 'dotenv/config';
-import { PrismaClient, Role } from '../generated/prisma/client.js';
+import { Role } from '../generated/prisma/enums.js';
+import { PrismaClient } from '../generated/prisma/client.js';
 import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcrypt from 'bcrypt';
 

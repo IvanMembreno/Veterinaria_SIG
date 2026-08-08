@@ -1,6 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../features/auth/useAuthStore';
 
+const links = [
+    { to: '/dashboard'  , label: 'Dashboard'    , roles: ['GERENTE'] },
+    { to: '/clientes'   , label: 'Clientes'     , roles: ['GERENTE', 'RECEPCION'] },
+    { to: '/mascotas'   , label: 'Mascotas'     , roles: ['GERENTE', 'RECEPCION', 'VETERINARIO'] },
+    { to: '/citas'      , label: 'Citas'        , roles: ['GERENTE', 'RECEPCION', 'VETERINARIO'] },
+    { to: '/inventario' , label: 'Inventario'   , roles: ['GERENTE', 'INVENTARIO'] },
+]
+
 export function Sidebar() {
     const { usuario, logout } = useAuthStore();
     const navigate = useNavigate();
@@ -32,18 +40,11 @@ export function Sidebar() {
                     gap: 8,
                 }}
             >
-                <li>
-                    <Link to="/dashboard">Dashboard</Link>
-                </li>
-                <li>
-                    <Link to="/clientes">Clientes</Link>
-                </li>
-                <li>
-                    <Link to="/mascotas">Mascotas</Link>
-                </li>
-                <li>
-                    <Link to="/citas">Citas</Link>
-                </li>
+                {links
+                    .filter((l) => usuario && l.roles.includes(usuario.rol))
+                    .map((l) => (
+                        <li key={l.to}><Link to={l.to}>{l.label}</Link></li>
+                    ))}
             </ul>
             <button onClick={handleLogout}>Cerrar sesión</button>
         </nav>

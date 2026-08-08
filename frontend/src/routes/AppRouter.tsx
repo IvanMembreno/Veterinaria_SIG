@@ -6,6 +6,7 @@ import { MascotasPage } from '../features/mascotas/MascotasPage';
 import { CitasPage } from '../features/citas/CitasPage';
 import { ProtectedRoute } from './ProtectedRoute';
 import { ProtectedLayout } from '../components/layout/ProtectedLayout';
+import { InventarioPage } from '../features/inventario/InventarioPage';
 
 export function AppRouter() {
     return (
@@ -15,10 +16,15 @@ export function AppRouter() {
 
                 <Route element={<ProtectedRoute />}>
                     <Route element={<ProtectedLayout />}>
-                        <Route path="/dashboard" element={<DashboardPage />} />
+                        <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['GERENTE']} />} >
+                            <Route index element={<DashboardPage />} />
+                        </Route>
                         <Route path="/clientes" element={<ClientesPage />} />
                         <Route path="/mascotas" element={<MascotasPage />} />
                         <Route path="/citas" element={<CitasPage />} />
+                        <Route path='/inventario' element={<ProtectedRoute allowedRoles={['GERENTE', 'INVENTARIO']} />} >
+                            <Route index element={<InventarioPage />} />
+                        </Route>
                     </Route>
                 </Route>
 

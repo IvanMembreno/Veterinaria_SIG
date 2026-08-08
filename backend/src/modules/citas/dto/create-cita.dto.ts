@@ -1,4 +1,5 @@
-import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateCitaDto {
     @IsString()
@@ -9,8 +10,9 @@ export class CreateCitaDto {
     @IsNotEmpty()
     usuarioId!: string;
 
-    @IsDateString()
-    fecha!: string;
+    @IsDate()
+    @Type(() => Date)
+    fecha!: Date;
 
     @IsString()
     @IsNotEmpty()

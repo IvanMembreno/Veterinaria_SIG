@@ -8,6 +8,7 @@ import { CloudinaryModule } from './modules/cloudinary/cloudinary.module.js';
 import { ClientesModule } from './modules/clientes/clientes.module.js';
 import { MascotasModule } from './modules/mascotas/mascotas.module.js';
 import { CitasModule } from './modules/citas/citas.module.js';
+import { ConsultasModule } from './modules/consultas/consultas.module.js';
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import { CitasModule } from './modules/citas/citas.module.js';
         ClientesModule,
         MascotasModule,
         CitasModule,
+        ConsultasModule,
     ],
     controllers: [],
     providers: [PrismaService],

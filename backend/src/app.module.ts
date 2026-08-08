@@ -10,6 +10,8 @@ import { MascotasModule } from './modules/mascotas/mascotas.module.js';
 import { CitasModule } from './modules/citas/citas.module.js';
 import { ConsultasModule } from './modules/consultas/consultas.module.js';
 import { DashboardModule } from './modules/dashboard/dashboard.module.js';
+import { ServiciosModule } from './modules/servicios/servicios.module.js';
+import { InventarioModule } from './modules/inventario/inventario.module.js';
 
 @Module({
     imports: [
@@ -25,6 +27,8 @@ import { DashboardModule } from './modules/dashboard/dashboard.module.js';
         CitasModule,
         ConsultasModule,
         DashboardModule,
+        ServiciosModule,
+        InventarioModule,
     ],
     controllers: [],
     providers: [PrismaService],

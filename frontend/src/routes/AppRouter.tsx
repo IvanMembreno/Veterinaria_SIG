@@ -5,6 +5,7 @@ import { ClientesPage } from '../features/clientes/ClientesPage';
 import { MascotasPage } from '../features/mascotas/MascotasPage';
 import { CitasPage } from '../features/citas/CitasPage';
 import { ProtectedRoute } from './ProtectedRoute';
+import { ProtectedLayout } from '../components/layout/ProtectedLayout';
 
 export function AppRouter() {
     return (
@@ -13,10 +14,12 @@ export function AppRouter() {
                 <Route path="/login" element={<LoginPage />} />
 
                 <Route element={<ProtectedRoute />}>
-                    <Route path="/dashboard" element={<DashboardPage />} />
-                    <Route path="/clientes" element={<ClientesPage />} />
-                    <Route path="/mascotas" element={<MascotasPage />} />
-                    <Route path="/citas" element={<CitasPage />} />
+                    <Route element={<ProtectedLayout />}>
+                        <Route path="/dashboard" element={<DashboardPage />} />
+                        <Route path="/clientes" element={<ClientesPage />} />
+                        <Route path="/mascotas" element={<MascotasPage />} />
+                        <Route path="/citas" element={<CitasPage />} />
+                    </Route>
                 </Route>
 
                 <Route

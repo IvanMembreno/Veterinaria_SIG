@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module.js';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module.js';
 import { ClientesModule } from './modules/clientes/clientes.module.js';
 import { MascotasModule } from './modules/mascotas/mascotas.module.js';
+import { CitasModule } from './modules/citas/citas.module.js';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { MascotasModule } from './modules/mascotas/mascotas.module.js';
         CloudinaryModule,
         ClientesModule,
         MascotasModule,
+        CitasModule,
     ],
     controllers: [],
     providers: [PrismaService],

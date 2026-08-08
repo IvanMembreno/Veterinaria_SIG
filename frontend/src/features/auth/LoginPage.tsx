@@ -3,6 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { loginRequest } from '../../api/auth.api';
 import { useAuthStore } from './useAuthStore';
 
+const homeByRole: Record<string, string> = {
+    GERENTE: '/dashboard',
+    RECEPCION: '/citas',
+    VETERINARIO: '/citas',
+    INVENTARIO: '/inventario',
+};
+
 export function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -16,7 +23,9 @@ export function LoginPage() {
         try {
             const data = await loginRequest({ email, password });
             login(data.accessToken, data.usuario);
-            navigate('/dashboard');
+
+            const rutaDestino = homeByRole[data.usuario.rol] || '/';
+            navigate(rutaDestino);
         } catch {
             setError('Credenciales inválidas');
         }

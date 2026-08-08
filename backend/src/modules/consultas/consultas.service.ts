@@ -22,7 +22,6 @@ export class ConsultasService {
             );
 
         return this.prisma.$transaction(async (tx) => {
-            // 1. Validar stock suficiente antes de descontar
             for (const item of dto.insumos ?? []) {
                 const insumo = await tx.inventario.findUnique({
                     where: { id: item.insumoId },
@@ -38,7 +37,6 @@ export class ConsultasService {
                 }
             }
 
-            // 2. Crear consulta
             const consulta = await tx.consulta.create({
                 data: {
                     citaId: dto.citaId,
@@ -50,7 +48,6 @@ export class ConsultasService {
                 },
             });
 
-            // 3. Registrar insumos usados + descontar inventario + movimiento
             for (const item of dto.insumos ?? []) {
                 await tx.consultaInsumo.create({
                     data: {
@@ -73,7 +70,6 @@ export class ConsultasService {
                 });
             }
 
-            // 4. Generar factura a partir de los servicios
             let total = 0;
             const detalles: {
                 servicioId: string;
@@ -107,7 +103,6 @@ export class ConsultasService {
                 include: { detalles: true },
             });
 
-            // 5. Marcar cita como atendida
             await tx.cita.update({
                 where: { id: dto.citaId },
                 data: { estado: 'ATENDIDA' },

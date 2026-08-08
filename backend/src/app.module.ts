@@ -9,6 +9,7 @@ import { ClientesModule } from './modules/clientes/clientes.module.js';
 import { MascotasModule } from './modules/mascotas/mascotas.module.js';
 import { CitasModule } from './modules/citas/citas.module.js';
 import { ConsultasModule } from './modules/consultas/consultas.module.js';
+import { DashboardModule } from './modules/dashboard/dashboard.module.js';
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { ConsultasModule } from './modules/consultas/consultas.module.js';
         MascotasModule,
         CitasModule,
         ConsultasModule,
+        DashboardModule,
     ],
     controllers: [],
     providers: [PrismaService],

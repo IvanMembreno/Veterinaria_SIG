@@ -6,6 +6,7 @@ import {
     deleteCliente,
     type Cliente,
 } from '../../api/clientes.api';
+import { useAuthStore } from '../auth/useAuthStore';
 
 export function ClientesPage() {
     const queryClient = useQueryClient();
@@ -13,6 +14,9 @@ export function ClientesPage() {
         queryKey: ['clientes'],
         queryFn: getClientes,
     });
+
+    const usuario = useAuthStore((s) => s.usuario);
+    const puedeCrear = usuario ? ['GERENTE', 'RECEPCION'].includes(usuario.rol) : false;
 
     const [form, setForm] = useState({
         nombre: '',
@@ -46,6 +50,7 @@ export function ClientesPage() {
         <div>
             <h2>Clientes</h2>
 
+            {puedeCrear && (
             <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
                 <input
                     placeholder="Nombre"
@@ -79,7 +84,8 @@ export function ClientesPage() {
                 />
                 <button type="submit">Agregar</button>
             </form>
-
+            )}
+            
             <table border={1} cellPadding={8} style={{ width: '100%' }}>
                 <thead>
                     <tr>

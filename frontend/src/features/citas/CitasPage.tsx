@@ -9,6 +9,7 @@ import {
 import { getMascotas } from '../../api/mascotas.api';
 import { getUsuarios } from '../../api/usuarios.api';
 import { ConsultaForm } from '../consultas/ConsultaForm';
+import { useAuthStore } from '../auth/useAuthStore';
 
 export function CitasPage() {
     const queryClient = useQueryClient();
@@ -24,6 +25,9 @@ export function CitasPage() {
         queryKey: ['usuarios'],
         queryFn: getUsuarios,
     });
+
+    const usuario = useAuthStore((s) => s.usuario);
+    const puedeCrear = usuario ? ['GERENTE', 'RECEPCION'].includes(usuario.rol) : false;
 
     const [form, setForm] = useState({
         mascotaId: '',
@@ -62,6 +66,7 @@ export function CitasPage() {
         <div>
             <h2>Citas</h2>
 
+            {puedeCrear && (
             <form
                 onSubmit={handleSubmit}
                 style={{
@@ -117,6 +122,7 @@ export function CitasPage() {
                 />
                 <button type="submit">Agendar</button>
             </form>
+            )}
 
             <table border={1} cellPadding={8} style={{ width: '100%' }}>
                 <thead>

@@ -6,6 +6,7 @@ import {
     registrarEntrada,
     type Insumo,
 } from '../../api/inventario.api';
+import { useAuthStore } from '../auth/useAuthStore';
 
 export function InventarioPage() {
     const queryClient = useQueryClient();
@@ -13,6 +14,9 @@ export function InventarioPage() {
         queryKey: ['inventario'],
         queryFn: getInventario,
     });
+
+    const usuario = useAuthStore((s) => s.usuario);
+    const puedeCrear = usuario ? ['GERENTE', 'RECEPCION'].includes(usuario.rol) : false;
 
     const [form, setForm] = useState({
         nombre: '',
@@ -64,6 +68,7 @@ export function InventarioPage() {
         <div>
             <h2>Inventario</h2>
 
+            {puedeCrear && (
             <form
                 onSubmit={handleSubmit}
                 style={{
@@ -122,6 +127,7 @@ export function InventarioPage() {
                 />
                 <button type="submit">Agregar insumo</button>
             </form>
+            )}
 
             <table border={1} cellPadding={8} style={{ width: '100%' }}>
                 <thead>

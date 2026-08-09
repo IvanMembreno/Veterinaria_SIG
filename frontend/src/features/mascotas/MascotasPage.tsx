@@ -7,6 +7,7 @@ import {
     type Mascota,
 } from '../../api/mascotas.api';
 import { getClientes } from '../../api/clientes.api';
+import { useAuthStore } from '../auth/useAuthStore';
 
 export function MascotasPage() {
     const queryClient = useQueryClient();
@@ -18,6 +19,9 @@ export function MascotasPage() {
         queryKey: ['clientes'],
         queryFn: getClientes,
     });
+
+    const usuario = useAuthStore((s) => s.usuario);
+    const puedeCrear = usuario ? ['GERENTE', 'RECEPCION'].includes(usuario.rol) : false;
 
     const [form, setForm] = useState({
         nombre: '',
@@ -69,6 +73,7 @@ export function MascotasPage() {
         <div>
             <h2>Mascotas</h2>
 
+            {puedeCrear && (
             <form
                 onSubmit={handleSubmit}
                 style={{
@@ -141,6 +146,7 @@ export function MascotasPage() {
                 />
                 <button type="submit">Agregar</button>
             </form>
+            )}
 
             <table border={1} cellPadding={8} style={{ width: '100%' }}>
                 <thead>

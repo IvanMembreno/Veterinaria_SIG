@@ -33,6 +33,7 @@ export class UsuariosController {
         return this.usuariosService.findAll();
     }
 
+    @Roles(Role.GERENTE)
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.usuariosService.findOne(id);

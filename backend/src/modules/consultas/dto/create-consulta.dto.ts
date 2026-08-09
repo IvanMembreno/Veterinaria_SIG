@@ -1,10 +1,13 @@
 import { Type } from 'class-transformer';
 import {
+    ArrayNotEmpty,
     IsArray,
+    IsInt,
     IsNotEmpty,
     IsNumber,
     IsOptional,
     IsString,
+    Min,
     ValidateNested,
 } from 'class-validator';
 
@@ -13,7 +16,8 @@ class InsumoUsadoDto {
     @IsNotEmpty()
     insumoId!: string;
 
-    @IsNumber()
+    @IsInt()
+    @Min(1)
     cantidad!: number;
 }
 
@@ -22,7 +26,8 @@ class ServicioFacturadoDto {
     @IsNotEmpty()
     servicioId!: string;
 
-    @IsNumber()
+    @IsInt()
+    @Min(1)
     @IsOptional()
     cantidad?: number;
 }
@@ -59,7 +64,7 @@ export class CreateConsultaDto {
     insumos?: InsumoUsadoDto[];
 
     @IsArray()
-    @IsNotEmpty()
+    @ArrayNotEmpty()
     @ValidateNested({ each: true })
     @Type(() => ServicioFacturadoDto)
     servicios!: ServicioFacturadoDto[];

@@ -22,21 +22,6 @@ export class ConsultasService {
             );
 
         return this.prisma.$transaction(async (tx) => {
-            for (const item of dto.insumos ?? []) {
-                const insumo = await tx.inventario.findUnique({
-                    where: { id: item.insumoId },
-                });
-                if (!insumo)
-                    throw new BadRequestException(
-                        `Insumo ${item.insumoId} no existe`,
-                    );
-                if (insumo.stock < item.cantidad) {
-                    throw new BadRequestException(
-                        `Stock insuficiente de ${insumo.nombre}`,
-                    );
-                }
-            }
-
             const consulta = await tx.consulta.create({
                 data: {
                     citaId: dto.citaId,
@@ -49,16 +34,31 @@ export class ConsultasService {
             });
 
             for (const item of dto.insumos ?? []) {
+                const resultado = await tx.inventario.updateMany({
+                    where: { id: item.insumoId, stock: { gte: item.cantidad } },
+                    data: { stock: { decrement: item.cantidad } },
+                });
+
+                if (resultado.count === 0) {
+                    const insumo = await tx.inventario.findUnique({
+                        where: { id: item.insumoId },
+                    });
+                    if (!insumo) {
+                        throw new BadRequestException(
+                            `Insumo ${item.insumoId} no existe`,
+                        );
+                    }
+                    throw new BadRequestException(
+                        `Stock insuficiente de ${insumo.nombre}`,
+                    );
+                }
+
                 await tx.consultaInsumo.create({
                     data: {
                         consultaId: consulta.id,
                         insumoId: item.insumoId,
                         cantidad: item.cantidad,
                     },
-                });
-                await tx.inventario.update({
-                    where: { id: item.insumoId },
-                    data: { stock: { decrement: item.cantidad } },
                 });
                 await tx.movimientoInventario.create({
                     data: {

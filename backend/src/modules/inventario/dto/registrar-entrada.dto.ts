@@ -1,8 +1,8 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsOptional, IsString, Min } from 'class-validator';
 
 export class RegistrarEntradaDto {
-    @IsNumber()
-    @IsNotEmpty()
+    @IsInt()
+    @Min(1)
     cantidad!: number;
 
     @IsString()

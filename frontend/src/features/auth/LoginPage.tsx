@@ -28,7 +28,7 @@ export function LoginPage() {
                             <input
                                 id="email"
                                 type="email"
-                                placeholder="doctor@vetcare.com"
+                                placeholder="doctor@vet.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required

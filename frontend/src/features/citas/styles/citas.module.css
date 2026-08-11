@@ -1,0 +1,11 @@
+.formInline {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.citasTable {
+    width: 100%;
+    border-collapse: collapse;
+}

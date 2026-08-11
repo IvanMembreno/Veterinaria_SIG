@@ -163,6 +163,15 @@
         brightness(25%) contrast(93%);
 }
 
+.navLink.activeLink:hover {
+    color: #ffffff !important;
+    background-color: #52b788;
+}
+
+.navLink.activeLink:hover .navIconImg {
+    filter: brightness(0) invert(1);
+}
+
 .linkLabel {
     line-height: 1;
     white-space: nowrap;

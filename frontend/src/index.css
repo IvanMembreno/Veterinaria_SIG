@@ -64,8 +64,9 @@
 }
 
 body {
-  margin: 0;
-  overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    background-color: #fdfbf7;
 }
 
 h1,

@@ -1,11 +1,218 @@
+/* #region Estructura & Margen del Menú Lateral */
+.pageContainer {
+    margin-left: 68px;
+    min-height: 100vh;
+    background-color: #fdfbf7;
+    padding: 40px;
+    box-sizing: border-box;
+    width: calc(100% - 68px);
+}
+
+.pageTitle {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1b4332;
+    margin: 0 0 28px 0;
+    letter-spacing: -0.5px;
+}
+
+.loadingText {
+    color: #6b6375;
+    font-size: 15px;
+    padding: 40px;
+    margin-left: 68px;
+}
+/* #endregion */
+
+/* #region Bloque Formulario en Línea */
+.formCard {
+    background-color: #f5f1ea; /* 👈 Cambiado a crema medio para contrastar con el fondo claro */
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(27, 67, 50, 0.02);
+    border: 1px solid #e3ded6; /* Bordes más oscuros y marcados */
+    margin-bottom: 32px;
+}
+
 .formInline {
-    margin-bottom: 20px;
     display: flex;
-    gap: 8px;
     flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+}
+
+.selectWrapper {
+    flex: 1;
+    min-width: 160px;
+}
+
+.formInline select,
+.dateTimeInput,
+.textInput {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #c9c2b8; /* Borde de inputs más marcado */
+    border-radius: 10px;
+    font-size: 14px;
+    background-color: #ffffff; /* Mantiene blanco interno para dar luz al escribir */
+    color: #112a1f; /* Texto interno de campos muy oscuro */
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.textInput {
+    flex: 2;
+    min-width: 240px;
+}
+
+.dateTimeInput {
+    flex: 1.2;
+    min-width: 180px;
+}
+
+.formInline select:focus,
+.dateTimeInput:focus,
+.textInput:focus {
+    border-color: #2d6a4f;
+    background-color: #f7fffb;
+    box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.25);
+}
+
+.scheduleBtn {
+    padding: 13px 28px;
+    background-color: #2d6a4f;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s ease;
+}
+
+.scheduleBtn:hover {
+    background-color: #1b4332;
+}
+/* #endregion */
+
+/* #region Tabla de Alto Contraste Oscuro */
+.tableWrapper {
+    background-color: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(27, 67, 50, 0.04);
+    border: 1px solid #e3ded6; /* Borde contenedor más fuerte */
+    overflow: hidden;
 }
 
 .citasTable {
     width: 100%;
     border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
 }
+
+.citasTable th {
+    background-color: #1b4332; /* 👈 Sincronizado exactamente con el color verde de tu Sidebar */
+    color: #b7e4c7; /* Texto menta claro para alta lectura sobre verde oscuro */
+    font-weight: 700;
+    padding: 18px 20px;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.citasTable td {
+    padding: 18px 20px;
+    color: #112a1f; /* Texto de celdas mucho más oscuro para máxima nitidez */
+    border-bottom: 1px solid #f0ede6;
+}
+
+.citasTable tbody tr:hover {
+    background-color: #fcfbfa; /* Efecto hover sutil */
+}
+
+.petCell {
+    font-weight: 700;
+    color: #1b4332;
+}
+
+.darkTextCell {
+    font-weight: 600;
+    color: #112a1f;
+}
+
+.dateCell {
+    font-variant-numeric: tabular-nums;
+    color: #2d2a30;
+}
+/* #endregion */
+
+/* #region Distintivos de Estado & Acciones */
+.statusBadge {
+    display: inline-flex;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.statusActive {
+    background-color: #e8f5e9;
+    color: #1b5e20;
+    border: 1px solid #c8e6c9;
+}
+
+.statusInactive {
+    background-color: #f5f5f5;
+    color: #616161;
+    border: 1px solid #e0e0e0;
+}
+
+.actionGroup {
+    display: flex;
+    gap: 8px;
+}
+
+.attendBtn {
+    padding: 8px 14px;
+    background-color: #2d6a4f;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.attendBtn:hover {
+    background-color: #1b4332;
+}
+
+.cancelBtn {
+    padding: 8px 14px;
+    background-color: #ffffff;
+    color: #c92a2a;
+    border: 1px solid #ffe3e3;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancelBtn:hover {
+    background-color: #dc2626;
+    color: #ffffff;
+    border-color: #dc2626;
+}
+
+.emptyActions {
+    color: #cee3de;
+    padding-left: 16px;
+}
+/* #endregion */

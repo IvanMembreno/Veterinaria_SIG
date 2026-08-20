@@ -1,8 +1,5 @@
-import { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createConsulta } from '../../api/consultas.api';
-import { getServicios } from '../../api/servicios.api';
-import { getInventario } from '../../api/inventario.api';
+import { useConsultaForm } from './hooks/useConsulta';
+import styles from './styles/consulta.module.css';
 
 interface Props {
     citaId: string;
@@ -10,127 +7,136 @@ interface Props {
 }
 
 export function ConsultaForm({ citaId, onClose }: Props) {
-    const queryClient = useQueryClient();
-    const { data: servicios } = useQuery({
-        queryKey: ['servicios'],
-        queryFn: getServicios,
-    });
-    const { data: inventario } = useQuery({
-        queryKey: ['inventario'],
-        queryFn: getInventario,
-    });
-
-    const [diagnostico, setDiagnostico] = useState('');
-    const [tratamiento, setTratamiento] = useState('');
-    const [peso, setPeso] = useState('');
-    const [temperatura, setTemperatura] = useState('');
-    const [servicioId, setServicioId] = useState('');
-    const [insumoId, setInsumoId] = useState('');
-    const [cantidadInsumo, setCantidadInsumo] = useState('1');
-
-    const mutation = useMutation({
-        mutationFn: createConsulta,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['citas'] });
-            queryClient.invalidateQueries({ queryKey: ['inventario'] });
-            onClose();
-        },
-    });
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        mutation.mutate({
-            citaId,
-            diagnostico,
-            tratamiento,
-            peso: peso ? Number(peso) : undefined,
-            temperatura: temperatura ? Number(temperatura) : undefined,
-            servicios: servicioId ? [{ servicioId, cantidad: 1 }] : [],
-            insumos: insumoId
-                ? [{ insumoId, cantidad: Number(cantidadInsumo) }]
-                : [],
-        });
-    };
+    const {
+        servicios,
+        inventario,
+        diagnostico,
+        setDiagnostico,
+        tratamiento,
+        setTratamiento,
+        peso,
+        setPeso,
+        temperatura,
+        setTemperatura,
+        servicioId,
+        setServicioId,
+        insumoId,
+        setInsumoId,
+        cantidadInsumo,
+        setCantidadInsumo,
+        handleSubmit,
+    } = useConsultaForm(citaId, onClose);
 
     return (
-        <div
-            style={{
-                position: 'fixed',
-                inset: 0,
-                background: 'rgba(0,0,0,0.5)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
-        >
-            <div style={{ background: 'white', padding: 24, width: 400 }}>
-                <h3>Registrar consulta</h3>
-                <form
-                    onSubmit={handleSubmit}
-                    style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
-                >
-                    <textarea
-                        placeholder="Diagnóstico"
-                        value={diagnostico}
-                        onChange={(e) => setDiagnostico(e.target.value)}
-                    />
-                    <textarea
-                        placeholder="Tratamiento"
-                        value={tratamiento}
-                        onChange={(e) => setTratamiento(e.target.value)}
-                    />
-                    <input
-                        type="number"
-                        step="0.1"
-                        placeholder="Peso"
-                        value={peso}
-                        onChange={(e) => setPeso(e.target.value)}
-                    />
-                    <input
-                        type="number"
-                        step="0.1"
-                        placeholder="Temperatura"
-                        value={temperatura}
-                        onChange={(e) => setTemperatura(e.target.value)}
-                    />
+        <div className={styles.modalOverlay}>
+            <div className={styles.modalCard}>
+                <header className={styles.modalHeader}>
+                    <h3>Historial Clínico & Consulta</h3>
+                    <p>Completa el expediente médico de la mascota atendida.</p>
+                </header>
 
-                    <select
-                        value={servicioId}
-                        onChange={(e) => setServicioId(e.target.value)}
-                        required
-                    >
-                        <option value="">-- Servicio a facturar --</option>
-                        {servicios?.map((s) => (
-                            <option key={s.id} value={s.id}>
-                                {s.nombre} (${s.precio})
-                            </option>
-                        ))}
-                    </select>
-
-                    <select
-                        value={insumoId}
-                        onChange={(e) => setInsumoId(e.target.value)}
-                    >
-                        <option value="">-- Insumo usado (opcional) --</option>
-                        {inventario?.map((i) => (
-                            <option key={i.id} value={i.id}>
-                                {i.nombre} (stock: {i.stock})
-                            </option>
-                        ))}
-                    </select>
-                    {insumoId && (
-                        <input
-                            type="number"
-                            min="1"
-                            value={cantidadInsumo}
-                            onChange={(e) => setCantidadInsumo(e.target.value)}
+                <form onSubmit={handleSubmit} className={styles.formGrid}>
+                    <div className={styles.fullWidth}>
+                        <label htmlFor="txt-diagnostico">Diagnóstico</label>
+                        <textarea
+                            id="txt-diagnostico"
+                            placeholder="Describe los síntomas observados y valoración médica..."
+                            value={diagnostico}
+                            onChange={(e) => setDiagnostico(e.target.value)}
+                            required
                         />
+                    </div>
+
+                    <div className={styles.fullWidth}>
+                        <label htmlFor="txt-tratamiento">Tratamiento</label>
+                        <textarea
+                            id="txt-tratamiento"
+                            placeholder="Medicamentos, dosis y recomendaciones generales..."
+                            value={tratamiento}
+                            onChange={(e) => setTratamiento(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className={styles.halfWidth}>
+                        <label htmlFor="num-peso">Peso (kg)</label>
+                        <input
+                            id="num-peso"
+                            type="number"
+                            step="0.1"
+                            placeholder="0.0"
+                            value={peso}
+                            onChange={(e) => setPeso(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className={styles.halfWidth}>
+                        <label htmlFor="num-temp">Temperatura (°C)</label>
+                        <input
+                            id="num-temp"
+                            type="number"
+                            step="0.1"
+                            placeholder="38.5"
+                            value={temperatura}
+                            onChange={(e) => setTemperatura(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className={styles.fullWidth}>
+                        <label htmlFor="sel-servicio">Servicio a facturar</label>
+                        <select
+                            id="sel-servicio"
+                            value={servicioId}
+                            onChange={(e) => setServicioId(e.target.value)}
+                            required
+                        >
+                            <option value="">Selecciona el procedimiento realizado</option>
+                            {servicios?.map((s) => (
+                                <option key={s.id} value={s.id}>
+                                    {s.nombre} (${s.precio})
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className={insumoId ? styles.twoThirdsWidth : styles.fullWidth}>
+                        <label htmlFor="sel-insumo">Insumo usado (Opcional)</label>
+                        <select
+                            id="sel-insumo"
+                            value={insumoId}
+                            onChange={(e) => setInsumoId(e.target.value)}
+                        >
+                            <option value="">Ninguno</option>
+                            {inventario?.map((i) => (
+                                <option key={i.id} value={i.id}>
+                                    {i.nombre} (Stock: {i.stock})
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {insumoId && (
+                        <div className={styles.oneThirdsWidth}>
+                            <label htmlFor="num-cant">Cant.</label>
+                            <input
+                                id="num-cant"
+                                type="number"
+                                min="1"
+                                value={cantidadInsumo}
+                                onChange={(e) => setCantidadInsumo(e.target.value)}
+                                required
+                            />
+                        </div>
                     )}
 
-                    <div style={{ display: 'flex', gap: 8 }}>
-                        <button type="submit">Guardar consulta</button>
-                        <button type="button" onClick={onClose}>
+                    <div className={`${styles.fullWidth} ${styles.actionsContainer}`}>
+                        <button type="button" onClick={onClose} className={styles.cancelBtn}>
                             Cancelar
+                        </button>
+                        <button type="submit" className={styles.submitBtn}>
+                            Guardar Consulta
                         </button>
                     </div>
                 </form>

@@ -1,0 +1,161 @@
+/* src/features/consultas/styles/consulta.module.css */
+
+/* #region Contenedores Principales */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(27, 67, 50, 0.4);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modalCard {
+    background: #ffffff;
+    padding: 32px;
+    width: 100%;
+    max-width: 520px;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(27, 67, 50, 0.15);
+    box-sizing: border-box;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+/* #endregion */
+
+/* #region Encabezado */
+.modalHeader {
+    margin-bottom: 24px;
+}
+
+.modalHeader h3 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1b4332;
+    margin: 0 0 6px 0;
+}
+
+.modalHeader p {
+    font-size: 13px;
+    color: #6c757d;
+    margin: 0;
+}
+/* #endregion */
+
+/* #region Estructura del Formulario & Tamaños */
+.formGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    width: 100%;
+}
+
+.fullWidth {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.halfWidth {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: calc(50% - 8px);
+}
+
+.twoThirdsWidth {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: calc(75% - 12px);
+}
+
+.oneThirdsWidth {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: calc(25% - 4px);
+}
+/* #endregion */
+
+/* #region Elementos de Entrada (Inputs) */
+.formGrid label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #40916c;
+}
+
+.formGrid textarea,
+.formGrid input,
+.formGrid select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    background: #ffffff;
+    outline: none;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.formGrid textarea {
+    height: 90px;
+    resize: none;
+}
+
+.formGrid textarea:focus,
+.formGrid input:focus,
+.formGrid select:focus {
+    border-color: #52b788;
+    background-color: #f7fffb;
+}
+/* #endregion */
+
+/* #region Botones de Acción */
+.actionsContainer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 12px;
+    flex-direction: row;
+}
+
+.submitBtn {
+    padding: 14px 24px;
+    background-color: #2d6a4f;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.submitBtn:hover {
+    background-color: #1b4332;
+}
+
+.cancelBtn {
+    padding: 14px 20px;
+    background-color: #f1f5f9;
+    color: #475569;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.cancelBtn:hover {
+    background-color: #e2e8f0;
+}
+/* #endregion */

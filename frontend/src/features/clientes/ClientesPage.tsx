@@ -1,117 +1,191 @@
-import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-    getClientes,
-    createCliente,
-    deleteCliente,
-    type Cliente,
-} from '../../api/clientes.api';
-import { useAuthStore } from '../auth/useAuthStore';
+import { useClientes } from './hooks/useClientes';
+import { type Cliente } from '../../api/clientes.api';
+import styles from './styles/clientes.module.css';
+import basurero from '../../assets/actions/trash.svg'
 
 export function ClientesPage() {
-    const queryClient = useQueryClient();
-    const { data: clientes, isLoading } = useQuery({
-        queryKey: ['clientes'],
-        queryFn: getClientes,
-    });
+    const {
+        clientes,
+        isLoading,
+        puedeCrear,
+        form,
+        setForm,
+        deleteMutation,
+        handleSubmit,
+    } = useClientes();
 
-    const usuario = useAuthStore((s) => s.usuario);
-    const puedeCrear = usuario ? ['GERENTE', 'RECEPCION'].includes(usuario.rol) : false;
-
-    const [form, setForm] = useState({
-        nombre: '',
-        telefono: '',
-        email: '',
-        direccion: '',
-    });
-
-    const createMutation = useMutation({
-        mutationFn: createCliente,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['clientes'] });
-            setForm({ nombre: '', telefono: '', email: '', direccion: '' });
-        },
-    });
-
-    const deleteMutation = useMutation({
-        mutationFn: deleteCliente,
-        onSuccess: () =>
-            queryClient.invalidateQueries({ queryKey: ['clientes'] }),
-    });
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        createMutation.mutate(form);
-    };
-
-    if (isLoading) return <p>Cargando...</p>;
+    if (isLoading) {
+        return (
+            <div className={styles.loaderContainer}>
+                <p>Abriendo el directorio de familias La Garrita Feliz...</p>
+            </div>
+        );
+    }
 
     return (
-        <div>
-            <h2>Clientes</h2>
+        <div className={styles.pageWrapper}>
+            <header className={styles.pageHeader}>
+                <div>
+                    <span className={styles.subBrand}>
+                        VETERINARIA LA GARRITA FELIZ
+                    </span>
+                    <h1 className={styles.mainTitle}>Directorio de Clientes</h1>
+                    <p className={styles.subtitle}>
+                        Gestiona los datos de contacto de los dueños de
+                        mascotas.
+                    </p>
+                </div>
+                <div className={styles.statsBadge}>
+                    <span>
+                        Total dueños: <b>{clientes?.length || 0}</b>
+                    </span>
+                </div>
+            </header>
 
             {puedeCrear && (
-            <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
-                <input
-                    placeholder="Nombre"
-                    value={form.nombre}
-                    onChange={(e) =>
-                        setForm({ ...form, nombre: e.target.value })
-                    }
-                    required
-                />
-                <input
-                    placeholder="Teléfono"
-                    value={form.telefono}
-                    onChange={(e) =>
-                        setForm({ ...form, telefono: e.target.value })
-                    }
-                    required
-                />
-                <input
-                    placeholder="Email"
-                    value={form.email}
-                    onChange={(e) =>
-                        setForm({ ...form, email: e.target.value })
-                    }
-                />
-                <input
-                    placeholder="Dirección"
-                    value={form.direccion}
-                    onChange={(e) =>
-                        setForm({ ...form, direccion: e.target.value })
-                    }
-                />
-                <button type="submit">Agregar</button>
-            </form>
+                <section className={styles.bookingBanner}>
+                    <h3 className={styles.bannerTitle}>
+                        Registrar Nuevo Cliente
+                    </h3>
+                    <form onSubmit={handleSubmit} className={styles.formGrid}>
+                        <div className={styles.field}>
+                            <label htmlFor="input-nombre">
+                                Nombre Completo
+                            </label>
+                            <input
+                                id="input-nombre"
+                                placeholder="Ej: Carlos Mendoza"
+                                value={form.nombre}
+                                onChange={(e) =>
+                                    setForm({ ...form, nombre: e.target.value })
+                                }
+                                required
+                            />
+                        </div>
+
+                        <div className={styles.field}>
+                            <label htmlFor="input-telefono">Teléfono</label>
+                            <input
+                                id="input-telefono"
+                                placeholder="Ej: 555-0199"
+                                value={form.telefono}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        telefono: e.target.value,
+                                    })
+                                }
+                                required
+                            />
+                        </div>
+
+                        <div className={styles.field}>
+                            <label htmlFor="input-email">
+                                Correo Electrónico
+                            </label>
+                            <input
+                                id="input-email"
+                                type="email"
+                                placeholder="nombre@correo.com"
+                                value={form.email}
+                                onChange={(e) =>
+                                    setForm({ ...form, email: e.target.value })
+                                }
+                            />
+                        </div>
+
+                        <div className={styles.field}>
+                            <label htmlFor="input-direccion">
+                                Dirección Residencial
+                            </label>
+                            <input
+                                id="input-direccion"
+                                placeholder="Ej: Av. Las Palmeras #123"
+                                value={form.direccion}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        direccion: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+
+                        <button type="submit" className={styles.submitBtn}>
+                            Agregar Cliente
+                        </button>
+                    </form>
+                </section>
             )}
-            
-            <table border={1} cellPadding={8} style={{ width: '100%' }}>
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Teléfono</th>
-                        <th>Email</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {clientes?.map((c: Cliente) => (
-                        <tr key={c.id}>
-                            <td>{c.nombre}</td>
-                            <td>{c.telefono}</td>
-                            <td>{c.email ?? '-'}</td>
-                            <td>
-                                <button
-                                    onClick={() => deleteMutation.mutate(c.id)}
-                                >
-                                    Eliminar
-                                </button>
-                            </td>
+
+            <div className={styles.tableResponsive}>
+                <table className={styles.clientesTable}>
+                    <thead>
+                        <tr>
+                            <th>Propietario</th>
+                            <th>Teléfono de Contacto</th>
+                            <th>Email</th>
+                            <th className={styles.textCenter}>Acciones</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {clientes && clientes.length > 0 ? (
+                            clientes.map((c: Cliente) => (
+                                <tr key={c.id} className={styles.tableRow}>
+                                    <td className={styles.clientCell}>
+                                        <div className={styles.avatarWrapper}>
+                                            <img src="" alt="" className={styles.clientIcon}/>
+                                        </div>
+                                        <div>
+                                            <span className={styles.clientName}>
+                                                {c.nombre}
+                                            </span>
+                                            {c.direccion && (
+                                                <small
+                                                    className={
+                                                        styles.clientDirection
+                                                    }
+                                                >
+                                                    {c.direccion}
+                                                </small>
+                                            )}
+                                        </div>
+                                    </td>
+                                    <td className={styles.phoneCell}>
+                                        {c.telefono}
+                                    </td>
+                                    <td className={styles.emailCell}>
+                                        {c.email ?? (
+                                            <span className={styles.noData}>
+                                                - No registrado -
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td className={styles.actionsCell}>
+                                        <button
+                                            className={styles.btnDelete}
+                                            onClick={() =>
+                                                deleteMutation.mutate(c.id)
+                                            }
+                                            title="Eliminar cliente permanente"
+                                        >
+                                            <img src={basurero} alt="asd" className={styles.trash}/>
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan={4} className={styles.emptyState}>
+                                    No hay clientes registrados en el
+                                    sistema.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }

@@ -11,7 +11,7 @@ export function LoginPage() {
                 <div className={styles.formContentWrapper}>
                     <div className={styles.brand}>
                         <span className={styles.subBrand}>VETERINARIA</span>
-                        <h1 className={styles.mainBrand}>Whistledown</h1>
+                        <h1 className={styles.mainBrand}>La Garrita Feliz</h1>
                     </div>
 
                     <div className={styles.intro}>

@@ -1,13 +1,16 @@
 import { useClientes } from './hooks/useClientes';
 import { type Cliente } from '../../api/clientes.api';
+import { Modal } from '../../components/ui/Modal';
 import styles from './styles/clientes.module.css';
-import basurero from '../../assets/actions/trash.svg'
+import basurero from '../../assets/actions/trash.svg';
 
 export function ClientesPage() {
     const {
         clientes,
         isLoading,
         puedeCrear,
+        isModalOpen,
+        setIsModalOpen,
         form,
         setForm,
         deleteMutation,
@@ -35,90 +38,22 @@ export function ClientesPage() {
                         mascotas.
                     </p>
                 </div>
-                <div className={styles.statsBadge}>
-                    <span>
+                <div className={styles.headerActions}>
+                    <div className={styles.statsBadge}>
                         Total dueños: <b>{clientes?.length || 0}</b>
-                    </span>
+                    </div>
+                    {puedeCrear && (
+                        <button
+                            className={styles.newBtn}
+                            onClick={() => setIsModalOpen(true)}
+                        >
+                            + Nuevo Cliente
+                        </button>
+                    )}
                 </div>
             </header>
 
-            {puedeCrear && (
-                <section className={styles.bookingBanner}>
-                    <h3 className={styles.bannerTitle}>
-                        Registrar Nuevo Cliente
-                    </h3>
-                    <form onSubmit={handleSubmit} className={styles.formGrid}>
-                        <div className={styles.field}>
-                            <label htmlFor="input-nombre">
-                                Nombre Completo
-                            </label>
-                            <input
-                                id="input-nombre"
-                                placeholder="Ej: Carlos Mendoza"
-                                value={form.nombre}
-                                onChange={(e) =>
-                                    setForm({ ...form, nombre: e.target.value })
-                                }
-                                required
-                            />
-                        </div>
-
-                        <div className={styles.field}>
-                            <label htmlFor="input-telefono">Teléfono</label>
-                            <input
-                                id="input-telefono"
-                                placeholder="Ej: 555-0199"
-                                value={form.telefono}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        telefono: e.target.value,
-                                    })
-                                }
-                                required
-                            />
-                        </div>
-
-                        <div className={styles.field}>
-                            <label htmlFor="input-email">
-                                Correo Electrónico
-                            </label>
-                            <input
-                                id="input-email"
-                                type="email"
-                                placeholder="nombre@correo.com"
-                                value={form.email}
-                                onChange={(e) =>
-                                    setForm({ ...form, email: e.target.value })
-                                }
-                            />
-                        </div>
-
-                        <div className={styles.field}>
-                            <label htmlFor="input-direccion">
-                                Dirección Residencial
-                            </label>
-                            <input
-                                id="input-direccion"
-                                placeholder="Ej: Av. Las Palmeras #123"
-                                value={form.direccion}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        direccion: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-
-                        <button type="submit" className={styles.submitBtn}>
-                            Agregar Cliente
-                        </button>
-                    </form>
-                </section>
-            )}
-
-            <div className={styles.tableResponsive}>
+            <div className={styles.card}>
                 <table className={styles.clientesTable}>
                     <thead>
                         <tr>
@@ -133,8 +68,8 @@ export function ClientesPage() {
                             clientes.map((c: Cliente) => (
                                 <tr key={c.id} className={styles.tableRow}>
                                     <td className={styles.clientCell}>
-                                        <div className={styles.avatarWrapper}>
-                                            <img src="" alt="" className={styles.clientIcon}/>
+                                        <div className={styles.avatar}>
+                                            {c.nombre.charAt(0).toUpperCase()}
                                         </div>
                                         <div>
                                             <span className={styles.clientName}>
@@ -169,7 +104,11 @@ export function ClientesPage() {
                                             }
                                             title="Eliminar cliente permanente"
                                         >
-                                            <img src={basurero} alt="asd" className={styles.trash}/>
+                                            <img
+                                                src={basurero}
+                                                alt=""
+                                                className={styles.trash}
+                                            />
                                             Eliminar
                                         </button>
                                     </td>
@@ -178,14 +117,81 @@ export function ClientesPage() {
                         ) : (
                             <tr>
                                 <td colSpan={4} className={styles.emptyState}>
-                                    No hay clientes registrados en el
-                                    sistema.
+                                    No hay clientes registrados en el sistema.
                                 </td>
                             </tr>
                         )}
                     </tbody>
                 </table>
             </div>
+
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                title="Registrar Nuevo Cliente"
+            >
+                <form onSubmit={handleSubmit} className={styles.formGrid}>
+                    <div className={styles.field}>
+                        <label htmlFor="input-nombre">Nombre Completo</label>
+                        <input
+                            id="input-nombre"
+                            placeholder="Ej: Carlos Mendoza"
+                            value={form.nombre}
+                            onChange={(e) =>
+                                setForm({ ...form, nombre: e.target.value })
+                            }
+                            required
+                        />
+                    </div>
+
+                    <div className={styles.field}>
+                        <label htmlFor="input-telefono">Teléfono</label>
+                        <input
+                            id="input-telefono"
+                            placeholder="Ej: 555-0199"
+                            value={form.telefono}
+                            onChange={(e) =>
+                                setForm({ ...form, telefono: e.target.value })
+                            }
+                            required
+                        />
+                    </div>
+
+                    <div className={styles.field}>
+                        <label htmlFor="input-email">Correo Electrónico</label>
+                        <input
+                            id="input-email"
+                            type="email"
+                            placeholder="nombre@correo.com"
+                            value={form.email}
+                            onChange={(e) =>
+                                setForm({ ...form, email: e.target.value })
+                            }
+                        />
+                    </div>
+
+                    <div className={styles.field}>
+                        <label htmlFor="input-direccion">
+                            Dirección Residencial
+                        </label>
+                        <input
+                            id="input-direccion"
+                            placeholder="Ej: Av. Las Palmeras #123"
+                            value={form.direccion}
+                            onChange={(e) =>
+                                setForm({
+                                    ...form,
+                                    direccion: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <button type="submit" className={styles.submitBtn}>
+                        Agregar Cliente
+                    </button>
+                </form>
+            </Modal>
         </div>
     );
 }

@@ -7,6 +7,8 @@ import {
 } from '../../../api/clientes.api';
 import { useAuthStore } from '../../auth/useAuthStore';
 
+const initialForm = { nombre: '', telefono: '', email: '', direccion: '' };
+
 export function useClientes() {
     const queryClient = useQueryClient();
     const { data: clientes, isLoading } = useQuery({
@@ -19,18 +21,15 @@ export function useClientes() {
         ? ['GERENTE', 'RECEPCION'].includes(usuario.rol)
         : false;
 
-    const [form, setForm] = useState({
-        nombre: '',
-        telefono: '',
-        email: '',
-        direccion: '',
-    });
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [form, setForm] = useState(initialForm);
 
     const createMutation = useMutation({
         mutationFn: createCliente,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['clientes'] });
-            setForm({ nombre: '', telefono: '', email: '', direccion: '' });
+            setForm(initialForm);
+            setIsModalOpen(false);
         },
     });
 
@@ -49,6 +48,8 @@ export function useClientes() {
         clientes,
         isLoading,
         puedeCrear,
+        isModalOpen,
+        setIsModalOpen,
         form,
         setForm,
         deleteMutation,

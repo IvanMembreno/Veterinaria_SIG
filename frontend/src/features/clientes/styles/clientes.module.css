@@ -7,20 +7,17 @@
         system-ui,
         -apple-system,
         sans-serif;
-    background-color: #fcfbfa;
-    min-height: 100vh;
     box-sizing: border-box;
     width: calc(100% - 68px);
 }
 
 .loaderContainer {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 60vh;
-    gap: 16px;
-    color: #2d6a4f;
+    margin-left: 68px;
+    color: var(--color-primary-mid);
 }
 /* #endregion */
 
@@ -31,60 +28,197 @@
     align-items: flex-end;
     flex-wrap: wrap;
     gap: 20px;
-    margin-bottom: 36px;
+    margin-bottom: 32px;
 }
 
 .subBrand {
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 1.5px;
-    color: #40916c;
+    color: var(--color-primary-soft);
 }
 
 .mainTitle {
-    font-size: 32px;
+    font-size: 30px;
     font-weight: 800;
-    color: #1b4332;
-    margin: 4px 0 0 0;
+    margin-top: 4px;
 }
 
 .subtitle {
-    color: #6c757d;
-    margin: 6px 0 0 0;
+    color: var(--color-text-muted);
+    margin-top: 6px;
     font-size: 14px;
+}
+
+.headerActions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .statsBadge {
-    background: #d8f3dc;
-    color: #1b4332;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-primary);
     padding: 10px 18px;
     border-radius: 30px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
+    white-space: nowrap;
+}
+
+.newBtn {
+    padding: 12px 20px;
+    background-color: var(--color-primary-mid);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s ease;
+}
+
+.newBtn:hover {
+    background-color: var(--color-primary);
 }
 /* #endregion */
 
-/* #region Banner de registro*/
-.bookingBanner {
-    background: #ffffff;
-    border: 2px dashed #b7e4c7;
-    border-radius: 20px;
-    padding: 24px;
-    margin-bottom: 40px;
+/* #region Card contenedora */
+.card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+/* #endregion */
+
+/* #region Tabla */
+.clientesTable {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
 }
 
-.bannerTitle {
-    margin: 0 0 20px 0;
-    font-size: 16px;
-    color: #1b4332;
+.clientesTable th {
+    background-color: var(--color-surface-alt);
+    padding: 16px 20px;
+    color: var(--color-text-muted);
     font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    border-bottom: 1px solid var(--color-border);
 }
 
+.textCenter {
+    text-align: center;
+}
+
+.tableRow {
+    border-bottom: 1px solid var(--color-surface-alt);
+    transition: background-color 0.15s ease;
+}
+
+.tableRow:last-child {
+    border-bottom: none;
+}
+
+.tableRow:hover {
+    background-color: var(--color-surface-alt);
+}
+
+.clientCell {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: var(--color-accent-soft);
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.clientName {
+    display: block;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.clientDirection {
+    display: block;
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+}
+
+.phoneCell,
+.emailCell {
+    padding: 14px 20px;
+    color: var(--color-text);
+}
+
+.noData {
+    color: #a3aba5;
+    font-style: italic;
+}
+
+.actionsCell {
+    padding: 14px 20px;
+}
+/* #endregion */
+
+/* #region Acciones */
+.btnDelete {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.btnDelete:hover {
+    background-color: var(--color-danger);
+    color: white;
+}
+
+.trash {
+    width: 14px;
+}
+
+.emptyState {
+    padding: 48px;
+    text-align: center;
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+/* #endregion */
+
+/* #region Formulario del modal */
 .formGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 16px;
-    align-items: flex-end;
 }
 
 .field {
@@ -96,178 +230,39 @@
 .field label {
     font-size: 13px;
     font-weight: 600;
-    color: #40916c;
+    color: var(--color-primary-soft);
 }
 
 .field input {
-    width: 100%;
     padding: 12px 14px;
-    border: 2px solid #e9ecef;
+    border: 2px solid var(--color-border);
     border-radius: 10px;
-    background-color: #ffffff;
+    background-color: var(--color-surface);
     font-size: 14px;
+    font-family: inherit;
     outline: none;
     transition: all 0.2s ease;
-    box-sizing: border-box;
-    height: 48px;
 }
 
 .field input:focus {
-    border-color: #52b788;
-    background-color: #f7fffb;
+    border-color: var(--color-accent);
+    background-color: var(--color-surface-alt);
 }
 
 .submitBtn {
     padding: 12px 20px;
-    background-color: #2d6a4f;
+    background-color: var(--color-primary-mid);
     color: white;
     border: none;
     border-radius: 10px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s;
-    height: 48px;
+    margin-top: 4px;
+    transition: background-color 0.2s ease;
 }
 
 .submitBtn:hover {
-    background-color: #1b4332;
-}
-/* #endregion */
-
-/* #region Tabla de datos */
-.tableResponsive {
-    background: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(27, 67, 50, 0.04);
-    overflow: hidden;
-    border: 1px solid #e9ecef;
-}
-
-.clientesTable {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    font-size: 15px;
-}
-
-.clientesTable th {
-    background-color: #f8fafc;
-    padding: 18px 20px;
-    color: #475569;
-    font-weight: 700;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.tableRow {
-    border-bottom: 1px solid #f1f5f9;
-    transition: background 0.2s ease;
-}
-
-.tableRow:hover {
-    background-color: #f7fffb;
-}
-
-/* Celdas Específicas */
-.clientCell {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 18px 20px;
-}
-
-.avatarWrapper {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #e0f2fe;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid #bae6fd;
-    flex-shrink: 0;
-}
-
-.clientIcon {
-    font-size: 16px;
-}
-
-.clientName {
-    font-weight: 700;
-    color: #1b4332;
-    display: block;
-}
-
-.clientDirection {
-    display: block;
-    font-size: 12px;
-    color: #94a3b8;
-    margin-top: 2px;
-}
-
-.phoneCell {
-    padding: 18px 20px;
-    color: #4a5568;
-    font-weight: 600;
-}
-
-.emailCell {
-    padding: 18px 20px;
-    color: #6c757d;
-}
-
-.noData {
-    color: #cbd5e1;
-    font-style: italic;
-    font-size: 14px;
-}
-/* #endregion */
-
-/* #region Acciones */
-.actionsCell {
-    padding: 18px 20px;
-}
-
-.btnDelete {
-    padding: 8px 14px;
-    background-color: #ffe3e3;
-    color: #c92a2a;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 13px;
-    transition: all 0.2s;
-}
-
-.trash {
-    width: 15px;
-    margin-right: 5px;
-}
-
-.btnDelete:hover {
-    background-color: #c92a2a;
-    color: white;
-}
-
-.emptyState {
-    padding: 48px;
-    text-align: center;
-    color: #6c757d;
-    font-style: italic;
-}
-/* #endregion */
-
-/* #region Animaciones */
-@keyframes bounce {
-    from {
-        transform: translateY(0);
-    }
-    to {
-        transform: translateY(-12px);
-    }
+    background-color: var(--color-primary);
 }
 /* #endregion */

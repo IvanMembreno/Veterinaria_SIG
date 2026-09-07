@@ -18,11 +18,13 @@ export class ConsultasController {
         return this.consultasService.create(dto);
     }
 
+    @Roles(Role.GERENTE, Role.VETERINARIO)
     @Get()
     findAll() {
         return this.consultasService.findAll();
     }
 
+    @Roles(Role.GERENTE, Role.VETERINARIO)
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.consultasService.findOne(id);

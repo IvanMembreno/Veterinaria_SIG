@@ -8,13 +8,7 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { ProtectedLayout } from '../components/layout/ProtectedLayout';
 import { InventarioPage } from '../features/inventario/InventarioPage';
 import { useAuthStore } from '../features/auth/useAuthStore';
-
-const homeByRole: Record<string, string> = {
-    GERENTE: '/dashboard',
-    RECEPCION: '/citas',
-    VETERINARIO: '/citas',
-    INVENTARIO: '/inventario',
-};
+import { homeByRole } from './homeByRole';
 
 function HomeRedirect() {
     const usuario = useAuthStore((state) => state.usuario);

@@ -11,6 +11,8 @@ import { ConsultasModule } from './modules/consultas/consultas.module.js';
 import { DashboardModule } from './modules/dashboard/dashboard.module.js';
 import { ServiciosModule } from './modules/servicios/servicios.module.js';
 import { InventarioModule } from './modules/inventario/inventario.module.js';
+import { VentasModule } from './modules/ventas/ventas.module.js';
+import { FacturasModule } from './modules/facturas/facturas.module.js';
 
 @Module({
     imports: [
@@ -28,6 +30,8 @@ import { InventarioModule } from './modules/inventario/inventario.module.js';
         DashboardModule,
         ServiciosModule,
         InventarioModule,
+        VentasModule,
+        FacturasModule,
     ],
     controllers: [],
     providers: [],

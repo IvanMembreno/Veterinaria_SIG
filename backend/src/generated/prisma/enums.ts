@@ -41,7 +41,16 @@ export type Sexo = (typeof Sexo)[keyof typeof Sexo]
 export const TipoMovimiento = {
   ENTRADA: 'ENTRADA',
   SALIDA_CONSULTA: 'SALIDA_CONSULTA',
-  AJUSTE: 'AJUSTE'
+  AJUSTE: 'AJUSTE',
+  VENTA: 'VENTA'
 } as const
 
 export type TipoMovimiento = (typeof TipoMovimiento)[keyof typeof TipoMovimiento]
+
+
+export const EstadoFactura = {
+  PENDIENTE: 'PENDIENTE',
+  PAGADA: 'PAGADA'
+} as const
+
+export type EstadoFactura = (typeof EstadoFactura)[keyof typeof EstadoFactura]

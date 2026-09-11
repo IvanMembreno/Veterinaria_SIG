@@ -198,6 +198,8 @@ export const FacturaScalarFieldEnum = {
   id: 'id',
   total: 'total',
   fecha: 'fecha',
+  estado: 'estado',
+  metodoPago: 'metodoPago',
   consultaId: 'consultaId'
 } as const
 
@@ -209,7 +211,8 @@ export const FacturaDetalleScalarFieldEnum = {
   cantidad: 'cantidad',
   precio: 'precio',
   facturaId: 'facturaId',
-  servicioId: 'servicioId'
+  servicioId: 'servicioId',
+  insumoId: 'insumoId'
 } as const
 
 export type FacturaDetalleScalarFieldEnum = (typeof FacturaDetalleScalarFieldEnum)[keyof typeof FacturaDetalleScalarFieldEnum]

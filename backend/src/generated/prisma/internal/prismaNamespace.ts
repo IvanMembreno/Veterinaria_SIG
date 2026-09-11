@@ -1398,6 +1398,8 @@ export const FacturaScalarFieldEnum = {
   id: 'id',
   total: 'total',
   fecha: 'fecha',
+  estado: 'estado',
+  metodoPago: 'metodoPago',
   consultaId: 'consultaId'
 } as const
 
@@ -1409,7 +1411,8 @@ export const FacturaDetalleScalarFieldEnum = {
   cantidad: 'cantidad',
   precio: 'precio',
   facturaId: 'facturaId',
-  servicioId: 'servicioId'
+  servicioId: 'servicioId',
+  insumoId: 'insumoId'
 } as const
 
 export type FacturaDetalleScalarFieldEnum = (typeof FacturaDetalleScalarFieldEnum)[keyof typeof FacturaDetalleScalarFieldEnum]
@@ -1561,6 +1564,20 @@ export type EnumTipoMovimientoFieldRefInput<$PrismaModel> = FieldRefInputType<$P
  * Reference to a field of type 'TipoMovimiento[]'
  */
 export type ListEnumTipoMovimientoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoMovimiento[]'>
+    
+
+
+/**
+ * Reference to a field of type 'EstadoFactura'
+ */
+export type EnumEstadoFacturaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoFactura'>
+    
+
+
+/**
+ * Reference to a field of type 'EstadoFactura[]'
+ */
+export type ListEnumEstadoFacturaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoFactura[]'>
     
 
 /**

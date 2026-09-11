@@ -37,6 +37,12 @@ enum TipoMovimiento {
   ENTRADA
   SALIDA_CONSULTA
   AJUSTE
+  VENTA
+}
+
+enum EstadoFactura {
+  PENDIENTE
+  PAGADA
 }
 
 model Usuario {
@@ -100,7 +106,7 @@ model Consulta {
   observaciones String?
   peso          Float?
   temperatura   Float?
-  factura       Factura?
+  facturas      Factura[]
   createdAt     DateTime  @default(now())
 
   cita    Cita    @relation(fields: [citaId], references: [id])
@@ -130,6 +136,7 @@ model Inventario {
 
   consultaUso   ConsultaInsumo[]
   movimientos   MovimientoInventario[]
+  detalles      FacturaDetalle[]
 }
 
 model ConsultaInsumo {
@@ -154,12 +161,14 @@ model MovimientoInventario {
 }
 
 model Factura {
-  id    String    @id @default(uuid())
-  total Float
-  fecha DateTime  @default(now())
+  id          String        @id @default(uuid())
+  total       Float
+  fecha       DateTime      @default(now())
+  estado      EstadoFactura @default(PENDIENTE)
+  metodoPago  String?
 
-  consulta    Consulta  @relation(fields: [consultaId], references: [id])
-  consultaId  String    @unique
+  consulta    Consulta? @relation(fields: [consultaId], references: [id])
+  consultaId  String?
 
   detalles  FacturaDetalle[]
 }
@@ -169,8 +178,10 @@ model FacturaDetalle {
   cantidad  Int     @default(1)
   precio    Float
 
-  factura     Factura   @relation(fields: [facturaId], references: [id])
+  factura     Factura    @relation(fields: [facturaId], references: [id])
   facturaId   String
-  servicio    Servicio  @relation(fields: [servicioId], references: [id])
-  servicioId  String
+  servicio    Servicio?  @relation(fields: [servicioId], references: [id])
+  servicioId  String?
+  insumo      Inventario? @relation(fields: [insumoId], references: [id])
+  insumoId    String?
 }

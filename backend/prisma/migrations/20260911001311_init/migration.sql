@@ -11,7 +11,10 @@ CREATE TYPE "EstadoCita" AS ENUM ('PROGRAMADA', 'CONFIRMADA', 'ATENDIDA', 'CANCE
 CREATE TYPE "Sexo" AS ENUM ('MACHO', 'HEMBRA');
 
 -- CreateEnum
-CREATE TYPE "TipoMovimiento" AS ENUM ('ENTRADA', 'SALIDA_CONSULTA', 'AJUSTE');
+CREATE TYPE "TipoMovimiento" AS ENUM ('ENTRADA', 'SALIDA_CONSULTA', 'AJUSTE', 'VENTA');
+
+-- CreateEnum
+CREATE TYPE "EstadoFactura" AS ENUM ('PENDIENTE', 'PAGADA');
 
 -- CreateTable
 CREATE TABLE "Usuario" (
@@ -132,7 +135,9 @@ CREATE TABLE "Factura" (
     "id" TEXT NOT NULL,
     "total" DOUBLE PRECISION NOT NULL,
     "fecha" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "consultaId" TEXT NOT NULL,
+    "estado" "EstadoFactura" NOT NULL DEFAULT 'PENDIENTE',
+    "metodoPago" TEXT,
+    "consultaId" TEXT,
 
     CONSTRAINT "Factura_pkey" PRIMARY KEY ("id")
 );
@@ -143,7 +148,8 @@ CREATE TABLE "FacturaDetalle" (
     "cantidad" INTEGER NOT NULL DEFAULT 1,
     "precio" DOUBLE PRECISION NOT NULL,
     "facturaId" TEXT NOT NULL,
-    "servicioId" TEXT NOT NULL,
+    "servicioId" TEXT,
+    "insumoId" TEXT,
 
     CONSTRAINT "FacturaDetalle_pkey" PRIMARY KEY ("id")
 );
@@ -153,9 +159,6 @@ CREATE UNIQUE INDEX "Usuario_email_key" ON "Usuario"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Consulta_citaId_key" ON "Consulta"("citaId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Factura_consultaId_key" ON "Factura"("consultaId");
 
 -- AddForeignKey
 ALTER TABLE "Mascota" ADD CONSTRAINT "Mascota_clienteId_fkey" FOREIGN KEY ("clienteId") REFERENCES "Cliente"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -179,10 +182,13 @@ ALTER TABLE "ConsultaInsumo" ADD CONSTRAINT "ConsultaInsumo_insumoId_fkey" FOREI
 ALTER TABLE "MovimientoInventario" ADD CONSTRAINT "MovimientoInventario_insumoId_fkey" FOREIGN KEY ("insumoId") REFERENCES "Inventario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Factura" ADD CONSTRAINT "Factura_consultaId_fkey" FOREIGN KEY ("consultaId") REFERENCES "Consulta"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Factura" ADD CONSTRAINT "Factura_consultaId_fkey" FOREIGN KEY ("consultaId") REFERENCES "Consulta"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "FacturaDetalle" ADD CONSTRAINT "FacturaDetalle_facturaId_fkey" FOREIGN KEY ("facturaId") REFERENCES "Factura"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FacturaDetalle" ADD CONSTRAINT "FacturaDetalle_servicioId_fkey" FOREIGN KEY ("servicioId") REFERENCES "Servicio"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FacturaDetalle" ADD CONSTRAINT "FacturaDetalle_servicioId_fkey" FOREIGN KEY ("servicioId") REFERENCES "Servicio"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "FacturaDetalle" ADD CONSTRAINT "FacturaDetalle_insumoId_fkey" FOREIGN KEY ("insumoId") REFERENCES "Inventario"("id") ON DELETE SET NULL ON UPDATE CASCADE;

@@ -334,9 +334,9 @@ export type ServicioSumOrderByAggregateInput = {
   precio?: Prisma.SortOrder
 }
 
-export type ServicioScalarRelationFilter = {
-  is?: Prisma.ServicioWhereInput
-  isNot?: Prisma.ServicioWhereInput
+export type ServicioNullableScalarRelationFilter = {
+  is?: Prisma.ServicioWhereInput | null
+  isNot?: Prisma.ServicioWhereInput | null
 }
 
 export type FloatFieldUpdateOperationsInput = {
@@ -353,10 +353,12 @@ export type ServicioCreateNestedOneWithoutDetallesInput = {
   connect?: Prisma.ServicioWhereUniqueInput
 }
 
-export type ServicioUpdateOneRequiredWithoutDetallesNestedInput = {
+export type ServicioUpdateOneWithoutDetallesNestedInput = {
   create?: Prisma.XOR<Prisma.ServicioCreateWithoutDetallesInput, Prisma.ServicioUncheckedCreateWithoutDetallesInput>
   connectOrCreate?: Prisma.ServicioCreateOrConnectWithoutDetallesInput
   upsert?: Prisma.ServicioUpsertWithoutDetallesInput
+  disconnect?: Prisma.ServicioWhereInput | boolean
+  delete?: Prisma.ServicioWhereInput | boolean
   connect?: Prisma.ServicioWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ServicioUpdateToOneWithWhereWithoutDetallesInput, Prisma.ServicioUpdateWithoutDetallesInput>, Prisma.ServicioUncheckedUpdateWithoutDetallesInput>
 }

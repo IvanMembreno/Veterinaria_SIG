@@ -72,3 +72,8 @@ export type Factura = Prisma.FacturaModel
  * 
  */
 export type FacturaDetalle = Prisma.FacturaDetalleModel
+/**
+ * Model Recordatorio
+ * 
+ */
+export type Recordatorio = Prisma.RecordatorioModel

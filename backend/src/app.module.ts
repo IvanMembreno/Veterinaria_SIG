@@ -13,6 +13,7 @@ import { ServiciosModule } from './modules/servicios/servicios.module.js';
 import { InventarioModule } from './modules/inventario/inventario.module.js';
 import { VentasModule } from './modules/ventas/ventas.module.js';
 import { FacturasModule } from './modules/facturas/facturas.module.js';
+import { RecordatoriosModule } from './modules/recordatorios/recordatorios.module.js';
 
 @Module({
     imports: [
@@ -32,6 +33,7 @@ import { FacturasModule } from './modules/facturas/facturas.module.js';
         InventarioModule,
         VentasModule,
         FacturasModule,
+        RecordatoriosModule,
     ],
     controllers: [],
     providers: [],

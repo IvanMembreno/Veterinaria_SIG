@@ -54,3 +54,20 @@ export const EstadoFactura = {
 } as const
 
 export type EstadoFactura = (typeof EstadoFactura)[keyof typeof EstadoFactura]
+
+
+export const TipoRecordatorio = {
+  VACUNA: 'VACUNA',
+  CONTROL: 'CONTROL'
+} as const
+
+export type TipoRecordatorio = (typeof TipoRecordatorio)[keyof typeof TipoRecordatorio]
+
+
+export const EstadoRecordatorio = {
+  PENDIENTE: 'PENDIENTE',
+  ENVIADO: 'ENVIADO',
+  COMPLETADO: 'COMPLETADO'
+} as const
+
+export type EstadoRecordatorio = (typeof EstadoRecordatorio)[keyof typeof EstadoRecordatorio]

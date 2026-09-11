@@ -88,22 +88,47 @@ export class DashboardService {
             }));
     }
 
+    async alertasVencimiento() {
+        const limite = new Date();
+        limite.setDate(limite.getDate() + 30);
+
+        const insumos = await this.prisma.inventario.findMany({
+            where: { fechaVenc: { not: null, lte: limite } },
+            orderBy: { fechaVenc: 'asc' },
+        });
+
+        return insumos.map((i) => ({
+            nombre: i.nombre,
+            lote: i.lote,
+            fechaVenc: i.fechaVenc,
+            stock: i.stock,
+        }));
+    }
+
     async resumen() {
-        const [ingresos, porVeterinario, ticket, ocupacion, alertas] =
-            await Promise.all([
-                this.ingresosPorServicio(),
-                this.consultasPorVeterinario(),
-                this.ticketPromedio(),
-                this.tasaOcupacion(),
-                this.stockBajo(),
-            ]);
+        const [
+            ingresos,
+            porVeterinario,
+            ticket,
+            ocupacion,
+            alertasStock,
+            alertasVencimiento,
+        ] = await Promise.all([
+            this.ingresosPorServicio(),
+            this.consultasPorVeterinario(),
+            this.ticketPromedio(),
+            this.tasaOcupacion(),
+            this.stockBajo(),
+            this.alertasVencimiento(),
+        ]);
 
         return {
             ingresosPorServicio: ingresos,
             consultasPorVeterinario: porVeterinario,
             ticketPromedio: ticket,
             ocupacionAgenda: ocupacion,
-            alertasStockBajo: alertas,
+            alertasStockBajo: alertasStock,
+            alertasVencimiento,
         };
     }
 }

@@ -1,5 +1,6 @@
 import { useInventario } from './hooks/useInventario';
 import { type Insumo } from '../../api/inventario.api';
+import { Modal } from '../../components/ui/Modal';
 import styles from './styles/inventario.module.css';
 
 function estadoVencimiento(fechaVenc?: string) {
@@ -15,15 +16,9 @@ function estadoVencimiento(fechaVenc?: string) {
         return { label: 'Vencido', className: styles.vencVencido };
     }
     if (dias <= 30) {
-        return {
-            label: `Vence en ${dias}d`,
-            className: styles.vencProximo,
-        };
+        return { label: `Vence en ${dias}d`, className: styles.vencProximo };
     }
-    return {
-        label: vence.toLocaleDateString(),
-        className: styles.vencLejano,
-    };
+    return { label: vence.toLocaleDateString(), className: styles.vencLejano };
 }
 
 function nivelStock(stock: number, stockMinimo: number) {
@@ -37,6 +32,8 @@ export function InventarioPage() {
         insumos,
         isLoading,
         puedeCrear,
+        isModalOpen,
+        setIsModalOpen,
         form,
         setForm,
         entradas,
@@ -67,119 +64,24 @@ export function InventarioPage() {
                         Controla existencias, vencimientos y reabastecimiento.
                     </p>
                 </div>
-                <div
-                    className={`${styles.statsBadge} ${bajoMinimo.length > 0 ? styles.statsBadgeAlert : ''}`}
-                >
-                    <span>
+                <div className={styles.headerActions}>
+                    <div
+                        className={`${styles.statsBadge} ${bajoMinimo.length > 0 ? styles.statsBadgeAlert : ''}`}
+                    >
                         Bajo mínimo: <b>{bajoMinimo.length}</b>
-                    </span>
+                    </div>
+                    {puedeCrear && (
+                        <button
+                            className={styles.newBtn}
+                            onClick={() => setIsModalOpen(true)}
+                        >
+                            + Nuevo Insumo
+                        </button>
+                    )}
                 </div>
             </header>
 
-            {puedeCrear && (
-                <section className={styles.bookingBanner}>
-                    <h3 className={styles.bannerTitle}>
-                        Registrar Nuevo Insumo
-                    </h3>
-                    <form onSubmit={handleSubmit} className={styles.formGrid}>
-                        <div className={styles.field}>
-                            <label htmlFor="input-nombre">Nombre</label>
-                            <input
-                                id="input-nombre"
-                                placeholder="Ej: Vacuna triple felina"
-                                value={form.nombre}
-                                onChange={(e) =>
-                                    setForm({ ...form, nombre: e.target.value })
-                                }
-                                required
-                            />
-                        </div>
-
-                        <div className={styles.field}>
-                            <label htmlFor="input-lote">Lote</label>
-                            <input
-                                id="input-lote"
-                                placeholder="Ej: L-2026-04"
-                                value={form.lote}
-                                onChange={(e) =>
-                                    setForm({ ...form, lote: e.target.value })
-                                }
-                            />
-                        </div>
-
-                        <div className={styles.field}>
-                            <label htmlFor="input-vence">Vence</label>
-                            <input
-                                id="input-vence"
-                                type="date"
-                                value={form.fechaVenc}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        fechaVenc: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-
-                        <div className={styles.field}>
-                            <label htmlFor="input-stock">Stock inicial</label>
-                            <input
-                                id="input-stock"
-                                type="number"
-                                placeholder="0"
-                                value={form.stock}
-                                onChange={(e) =>
-                                    setForm({ ...form, stock: e.target.value })
-                                }
-                                required
-                            />
-                        </div>
-
-                        <div className={styles.field}>
-                            <label htmlFor="input-minimo">Stock mínimo</label>
-                            <input
-                                id="input-minimo"
-                                type="number"
-                                placeholder="5"
-                                value={form.stockMinimo}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        stockMinimo: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-
-                        <div className={styles.field}>
-                            <label htmlFor="input-precio">
-                                Precio unitario
-                            </label>
-                            <input
-                                id="input-precio"
-                                type="number"
-                                step="0.01"
-                                placeholder="0.00"
-                                value={form.precioUnit}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        precioUnit: e.target.value,
-                                    })
-                                }
-                                required
-                            />
-                        </div>
-
-                        <button type="submit" className={styles.submitBtn}>
-                            Agregar Insumo
-                        </button>
-                    </form>
-                </section>
-            )}
-
-            <div className={styles.tableResponsive}>
+            <div className={styles.card}>
                 <table className={styles.inventarioTable}>
                     <thead>
                         <tr>
@@ -313,6 +215,108 @@ export function InventarioPage() {
                     </tbody>
                 </table>
             </div>
+
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                title="Registrar Nuevo Insumo"
+            >
+                <form onSubmit={handleSubmit} className={styles.formGrid}>
+                    <div className={styles.field}>
+                        <label htmlFor="input-nombre">Nombre</label>
+                        <input
+                            id="input-nombre"
+                            placeholder="Ej: Vacuna triple felina"
+                            value={form.nombre}
+                            onChange={(e) =>
+                                setForm({ ...form, nombre: e.target.value })
+                            }
+                            required
+                        />
+                    </div>
+
+                    <div className={styles.formRow}>
+                        <div className={styles.field}>
+                            <label htmlFor="input-lote">Lote</label>
+                            <input
+                                id="input-lote"
+                                placeholder="Ej: L-2026-04"
+                                value={form.lote}
+                                onChange={(e) =>
+                                    setForm({ ...form, lote: e.target.value })
+                                }
+                            />
+                        </div>
+                        <div className={styles.field}>
+                            <label htmlFor="input-vence">Vence</label>
+                            <input
+                                id="input-vence"
+                                type="date"
+                                value={form.fechaVenc}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        fechaVenc: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+                    </div>
+
+                    <div className={styles.formRow}>
+                        <div className={styles.field}>
+                            <label htmlFor="input-stock">Stock inicial</label>
+                            <input
+                                id="input-stock"
+                                type="number"
+                                placeholder="0"
+                                value={form.stock}
+                                onChange={(e) =>
+                                    setForm({ ...form, stock: e.target.value })
+                                }
+                                required
+                            />
+                        </div>
+                        <div className={styles.field}>
+                            <label htmlFor="input-minimo">Stock mínimo</label>
+                            <input
+                                id="input-minimo"
+                                type="number"
+                                placeholder="5"
+                                value={form.stockMinimo}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        stockMinimo: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+                    </div>
+
+                    <div className={styles.field}>
+                        <label htmlFor="input-precio">Precio unitario</label>
+                        <input
+                            id="input-precio"
+                            type="number"
+                            step="0.01"
+                            placeholder="0.00"
+                            value={form.precioUnit}
+                            onChange={(e) =>
+                                setForm({
+                                    ...form,
+                                    precioUnit: e.target.value,
+                                })
+                            }
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" className={styles.submitBtn}>
+                        Agregar Insumo
+                    </button>
+                </form>
+            </Modal>
         </div>
     );
 }

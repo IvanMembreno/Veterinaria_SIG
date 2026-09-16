@@ -5,6 +5,8 @@ import { getMascotas } from '../../../api/mascotas.api';
 import { getUsuarios } from '../../../api/usuarios.api';
 import { useAuthStore } from '../../auth/useAuthStore';
 
+const initialForm = { mascotaId: '', usuarioId: '', fecha: '', motivo: '' };
+
 export function useCitas() {
     const queryClient = useQueryClient();
     const { data: citas, isLoading } = useQuery({
@@ -25,12 +27,8 @@ export function useCitas() {
         ? ['GERENTE', 'RECEPCION'].includes(usuario.rol)
         : false;
 
-    const [form, setForm] = useState({
-        mascotaId: '',
-        usuarioId: '',
-        fecha: '',
-        motivo: '',
-    });
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [form, setForm] = useState(initialForm);
     const [citaParaAtender, setCitaParaAtender] = useState<string | null>(null);
 
     const veterinarios = usuarios?.filter((u) => u.rol === 'VETERINARIO');
@@ -39,7 +37,8 @@ export function useCitas() {
         mutationFn: createCita,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['citas'] });
-            setForm({ mascotaId: '', usuarioId: '', fecha: '', motivo: '' });
+            setForm(initialForm);
+            setIsModalOpen(false);
         },
     });
 
@@ -62,6 +61,8 @@ export function useCitas() {
         veterinarios,
         isLoading,
         puedeCrear,
+        isModalOpen,
+        setIsModalOpen,
         form,
         setForm,
         citaParaAtender,

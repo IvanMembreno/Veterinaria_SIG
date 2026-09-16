@@ -7,6 +7,15 @@ import {
 } from '../../../api/inventario.api';
 import { useAuthStore } from '../../auth/useAuthStore';
 
+const initialForm = {
+    nombre: '',
+    lote: '',
+    fechaVenc: '',
+    stock: '',
+    stockMinimo: '5',
+    precioUnit: '',
+};
+
 export function useInventario() {
     const queryClient = useQueryClient();
     const { data: insumos, isLoading } = useQuery({
@@ -19,28 +28,16 @@ export function useInventario() {
         ? ['GERENTE', 'RECEPCION'].includes(usuario.rol)
         : false;
 
-    const [form, setForm] = useState({
-        nombre: '',
-        lote: '',
-        fechaVenc: '',
-        stock: '',
-        stockMinimo: '5',
-        precioUnit: '',
-    });
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [form, setForm] = useState(initialForm);
     const [entradas, setEntradas] = useState<Record<string, string>>({});
 
     const createMutation = useMutation({
         mutationFn: createInsumo,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['inventario'] });
-            setForm({
-                nombre: '',
-                lote: '',
-                fechaVenc: '',
-                stock: '',
-                stockMinimo: '5',
-                precioUnit: '',
-            });
+            setForm(initialForm);
+            setIsModalOpen(false);
         },
     });
 
@@ -67,6 +64,8 @@ export function useInventario() {
         insumos,
         isLoading,
         puedeCrear,
+        isModalOpen,
+        setIsModalOpen,
         form,
         setForm,
         entradas,

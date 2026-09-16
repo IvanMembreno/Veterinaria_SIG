@@ -34,6 +34,7 @@ export function useMascotas() {
         ? ['GERENTE', 'RECEPCION'].includes(usuario.rol)
         : false;
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [form, setForm] = useState(initialForm);
     const [imagen, setImagen] = useState<File | null>(null);
 
@@ -43,6 +44,7 @@ export function useMascotas() {
             queryClient.invalidateQueries({ queryKey: ['mascotas'] });
             setForm(initialForm);
             setImagen(null);
+            setIsModalOpen(false);
         },
     });
 
@@ -67,6 +69,8 @@ export function useMascotas() {
         clientes,
         isLoading,
         puedeCrear,
+        isModalOpen,
+        setIsModalOpen,
         form,
         setForm,
         imagen,

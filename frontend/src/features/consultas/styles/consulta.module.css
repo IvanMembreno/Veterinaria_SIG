@@ -1,52 +1,12 @@
-/* src/features/consultas/styles/consulta.module.css */
-
-/* #region Contenedores Principales */
-.modalOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(27, 67, 50, 0.4);
-    backdrop-filter: blur(6px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1100;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.modalCard {
-    background: #ffffff;
-    padding: 32px;
-    width: 100%;
-    max-width: 520px;
-    border-radius: 24px;
-    box-shadow: 0 20px 50px rgba(27, 67, 50, 0.15);
-    box-sizing: border-box;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-/* #endregion */
-
 /* #region Encabezado */
-.modalHeader {
-    margin-bottom: 24px;
-}
-
-.modalHeader h3 {
-    font-size: 22px;
-    font-weight: 800;
-    color: #1b4332;
-    margin: 0 0 6px 0;
-}
-
-.modalHeader p {
+.formHint {
     font-size: 13px;
-    color: #6c757d;
-    margin: 0;
+    color: var(--color-text-muted);
+    margin: -8px 0 20px 0;
 }
 /* #endregion */
 
-/* #region Estructura del Formulario & Tamaños */
+/* #region Estructura del formulario */
 .formGrid {
     display: flex;
     flex-wrap: wrap;
@@ -83,11 +43,11 @@
 }
 /* #endregion */
 
-/* #region Elementos de Entrada (Inputs) */
+/* #region Campos */
 .formGrid label {
     font-size: 13px;
     font-weight: 600;
-    color: #40916c;
+    color: var(--color-primary-soft);
 }
 
 .formGrid textarea,
@@ -95,13 +55,13 @@
 .formGrid select {
     width: 100%;
     padding: 12px 14px;
-    border: 2px solid #e9ecef;
+    border: 2px solid var(--color-border);
     border-radius: 10px;
     font-family: inherit;
     font-size: 14px;
-    background: #ffffff;
+    background-color: var(--color-surface);
     outline: none;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     box-sizing: border-box;
 }
 
@@ -113,49 +73,48 @@
 .formGrid textarea:focus,
 .formGrid input:focus,
 .formGrid select:focus {
-    border-color: #52b788;
-    background-color: #f7fffb;
+    border-color: var(--color-accent);
+    background-color: var(--color-surface-alt);
 }
 /* #endregion */
 
-/* #region Botones de Acción */
+/* #region Acciones */
 .actionsContainer {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    margin-top: 12px;
-    flex-direction: row;
+    margin-top: 4px;
 }
 
 .submitBtn {
-    padding: 14px 24px;
-    background-color: #2d6a4f;
-    color: #ffffff;
+    padding: 12px 22px;
+    background-color: var(--color-primary-mid);
+    color: white;
     border: none;
     border-radius: 10px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background-color 0.2s ease;
 }
 
 .submitBtn:hover {
-    background-color: #1b4332;
+    background-color: var(--color-primary);
 }
 
 .cancelBtn {
-    padding: 14px 20px;
-    background-color: #f1f5f9;
-    color: #475569;
-    border: none;
+    padding: 12px 20px;
+    background-color: var(--color-surface-alt);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
     border-radius: 10px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background-color 0.2s ease;
 }
 
 .cancelBtn:hover {
-    background-color: #e2e8f0;
+    background-color: var(--color-border);
 }
 /* #endregion */

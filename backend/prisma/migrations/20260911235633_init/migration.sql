@@ -16,6 +16,12 @@ CREATE TYPE "TipoMovimiento" AS ENUM ('ENTRADA', 'SALIDA_CONSULTA', 'AJUSTE', 'V
 -- CreateEnum
 CREATE TYPE "EstadoFactura" AS ENUM ('PENDIENTE', 'PAGADA');
 
+-- CreateEnum
+CREATE TYPE "TipoRecordatorio" AS ENUM ('VACUNA', 'CONTROL');
+
+-- CreateEnum
+CREATE TYPE "EstadoRecordatorio" AS ENUM ('PENDIENTE', 'ENVIADO', 'COMPLETADO');
+
 -- CreateTable
 CREATE TABLE "Usuario" (
     "id" TEXT NOT NULL,
@@ -154,6 +160,20 @@ CREATE TABLE "FacturaDetalle" (
     CONSTRAINT "FacturaDetalle_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Recordatorio" (
+    "id" TEXT NOT NULL,
+    "tipo" "TipoRecordatorio" NOT NULL,
+    "fechaProgramada" TIMESTAMP(3) NOT NULL,
+    "estado" "EstadoRecordatorio" NOT NULL DEFAULT 'PENDIENTE',
+    "nota" TEXT,
+    "contactoEnviado" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "mascotaId" TEXT NOT NULL,
+
+    CONSTRAINT "Recordatorio_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Usuario_email_key" ON "Usuario"("email");
 
@@ -192,3 +212,6 @@ ALTER TABLE "FacturaDetalle" ADD CONSTRAINT "FacturaDetalle_servicioId_fkey" FOR
 
 -- AddForeignKey
 ALTER TABLE "FacturaDetalle" ADD CONSTRAINT "FacturaDetalle_insumoId_fkey" FOREIGN KEY ("insumoId") REFERENCES "Inventario"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Recordatorio" ADD CONSTRAINT "Recordatorio_mascotaId_fkey" FOREIGN KEY ("mascotaId") REFERENCES "Mascota"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

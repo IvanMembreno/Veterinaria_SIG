@@ -4,8 +4,8 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
   moduleFormat = "esm"
 }
 
@@ -45,6 +45,17 @@ enum EstadoFactura {
   PAGADA
 }
 
+enum TipoRecordatorio {
+  VACUNA
+  CONTROL
+}
+
+enum EstadoRecordatorio {
+  PENDIENTE
+  ENVIADO
+  COMPLETADO
+}
+
 model Usuario {
   id        String   @id @default(uuid())
   nombre    String
@@ -54,18 +65,18 @@ model Usuario {
   activo    Boolean  @default(true)
   createdAt DateTime @default(now())
 
-  citas     Cita[]
+  citas Cita[]
 }
 
 model Cliente {
-  id        String    @id @default(uuid())
+  id        String   @id @default(uuid())
   nombre    String
   telefono  String
   email     String?
   direccion String?
-  createdAt DateTime  @default(now())
+  createdAt DateTime @default(now())
 
-  mascotas  Mascota[]
+  mascotas Mascota[]
 }
 
 model Mascota {
@@ -82,16 +93,17 @@ model Mascota {
   cliente   Cliente @relation(fields: [clienteId], references: [id])
   clienteId String
 
-  citas Cita[]
+  citas         Cita[]
+  recordatorios Recordatorio[]
 }
 
 model Cita {
-  id        String      @id @default(uuid())
+  id        String     @id @default(uuid())
   fecha     DateTime
-  estado    EstadoCita  @default(PROGRAMADA)
+  estado    EstadoCita @default(PROGRAMADA)
   motivo    String
   consulta  Consulta?
-  createdAt DateTime    @default(now())
+  createdAt DateTime   @default(now())
 
   mascota   Mascota @relation(fields: [mascotaId], references: [id])
   mascotaId String
@@ -109,79 +121,92 @@ model Consulta {
   facturas      Factura[]
   createdAt     DateTime  @default(now())
 
-  cita    Cita    @relation(fields: [citaId], references: [id])
-  citaId  String  @unique
+  cita   Cita   @relation(fields: [citaId], references: [id])
+  citaId String @unique
 
-  insumos      ConsultaInsumo[]
+  insumos ConsultaInsumo[]
 }
 
 model Servicio {
-  id      String  @id @default(uuid())
-  nombre  String
-  precio  Float
-  activo  Boolean @default(true)
+  id     String  @id @default(uuid())
+  nombre String
+  precio Float
+  activo Boolean @default(true)
 
-  detalles  FacturaDetalle[]
+  detalles FacturaDetalle[]
 }
 
 model Inventario {
-  id            String              @id @default(uuid())
-  nombre        String
-  lote          String?
-  fechaVenc     DateTime?
-  stock         Int                 @default(0)
-  stockMinimo   Int                 @default(5)
-  precioUnit    Float
-  createdAt     DateTime            @default(now())
+  id          String    @id @default(uuid())
+  nombre      String
+  lote        String?
+  fechaVenc   DateTime?
+  stock       Int       @default(0)
+  stockMinimo Int       @default(5)
+  precioUnit  Float
+  createdAt   DateTime  @default(now())
 
-  consultaUso   ConsultaInsumo[]
-  movimientos   MovimientoInventario[]
-  detalles      FacturaDetalle[]
+  consultaUso ConsultaInsumo[]
+  movimientos MovimientoInventario[]
+  detalles    FacturaDetalle[]
 }
 
 model ConsultaInsumo {
-  id        String  @id @default(uuid())
-  cantidad  Int
+  id       String @id @default(uuid())
+  cantidad Int
 
-  consulta    Consulta   @relation(fields: [consultaId], references: [id])
-  consultaId  String
-  insumo      Inventario @relation(fields: [insumoId], references: [id])
-  insumoId    String
+  consulta   Consulta   @relation(fields: [consultaId], references: [id])
+  consultaId String
+  insumo     Inventario @relation(fields: [insumoId], references: [id])
+  insumoId   String
 }
 
 model MovimientoInventario {
-  id        String          @id @default(uuid())
-  tipo      TipoMovimiento
-  cantidad  Int
-  fecha     DateTime        @default(now())
-  nota      String?
+  id       String         @id @default(uuid())
+  tipo     TipoMovimiento
+  cantidad Int
+  fecha    DateTime       @default(now())
+  nota     String?
 
-  insumo    Inventario  @relation(fields: [insumoId], references: [id])
-  insumoId  String
+  insumo   Inventario @relation(fields: [insumoId], references: [id])
+  insumoId String
 }
 
 model Factura {
-  id          String        @id @default(uuid())
-  total       Float
-  fecha       DateTime      @default(now())
-  estado      EstadoFactura @default(PENDIENTE)
-  metodoPago  String?
+  id         String        @id @default(uuid())
+  total      Float
+  fecha      DateTime      @default(now())
+  estado     EstadoFactura @default(PENDIENTE)
+  metodoPago String?
 
-  consulta    Consulta? @relation(fields: [consultaId], references: [id])
-  consultaId  String?
+  consulta   Consulta? @relation(fields: [consultaId], references: [id])
+  consultaId String?
 
-  detalles  FacturaDetalle[]
+  detalles FacturaDetalle[]
 }
 
 model FacturaDetalle {
-  id        String  @id @default(uuid())
-  cantidad  Int     @default(1)
-  precio    Float
+  id       String @id @default(uuid())
+  cantidad Int    @default(1)
+  precio   Float
 
-  factura     Factura    @relation(fields: [facturaId], references: [id])
-  facturaId   String
-  servicio    Servicio?  @relation(fields: [servicioId], references: [id])
-  servicioId  String?
-  insumo      Inventario? @relation(fields: [insumoId], references: [id])
-  insumoId    String?
+  factura    Factura     @relation(fields: [facturaId], references: [id])
+  facturaId  String
+  servicio   Servicio?   @relation(fields: [servicioId], references: [id])
+  servicioId String?
+  insumo     Inventario? @relation(fields: [insumoId], references: [id])
+  insumoId   String?
+}
+
+model Recordatorio {
+  id              String             @id @default(uuid())
+  tipo            TipoRecordatorio
+  fechaProgramada DateTime
+  estado          EstadoRecordatorio @default(PENDIENTE)
+  nota            String?
+  contactoEnviado DateTime?
+  createdAt       DateTime           @default(now())
+
+  mascota   Mascota @relation(fields: [mascotaId], references: [id])
+  mascotaId String
 }

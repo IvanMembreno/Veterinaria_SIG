@@ -8,6 +8,9 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { ProtectedLayout } from '../components/layout/ProtectedLayout';
 import { InventarioPage } from '../features/inventario/InventarioPage';
 import { VentasPage } from '../features/ventas/VentasPage';
+import { UsuariosPage } from '../features/usuarios/UsuariosPage';
+import { ServiciosPage } from '../features/servicios/ServiciosPage';
+import { FacturasPage } from '../features/facturas/FacturasPage';
 import { useAuthStore } from '../features/auth/useAuthStore';
 import { homeByRole } from './homeByRole';
 
@@ -58,6 +61,32 @@ export function AppRouter() {
                             }
                         >
                             <Route index element={<VentasPage />} />
+                        </Route>
+                        <Route
+                            path="/usuarios"
+                            element={
+                                <ProtectedRoute allowedRoles={['GERENTE']} />
+                            }
+                        >
+                            <Route index element={<UsuariosPage />} />
+                        </Route>
+                        <Route
+                            path="/servicios"
+                            element={
+                                <ProtectedRoute allowedRoles={['GERENTE']} />
+                            }
+                        >
+                            <Route index element={<ServiciosPage />} />
+                        </Route>
+                        <Route
+                            path="/facturas"
+                            element={
+                                <ProtectedRoute
+                                    allowedRoles={['RECEPCION', 'GERENTE']}
+                                />
+                            }
+                        >
+                            <Route index element={<FacturasPage />} />
                         </Route>
                     </Route>
                 </Route>

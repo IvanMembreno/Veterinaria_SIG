@@ -1,0 +1,341 @@
+/* #region Estructura general */
+.pageWrapper {
+    margin-left: 68px;
+    min-height: 100vh;
+    padding: 40px max(4vw, 40px);
+    font-family:
+        system-ui,
+        -apple-system,
+        sans-serif;
+    box-sizing: border-box;
+    width: calc(100% - 68px);
+}
+
+.loaderContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    margin-left: 68px;
+    color: var(--color-primary-mid);
+}
+/* #endregion */
+
+/* #region Header */
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.subBrand {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--color-primary-soft);
+}
+
+.mainTitle {
+    font-size: 30px;
+    font-weight: 800;
+    margin-top: 4px;
+}
+
+.subtitle {
+    color: var(--color-text-muted);
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+.headerActions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.statsBadge {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-primary);
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.newBtn {
+    padding: 12px 20px;
+    background-color: var(--color-primary-mid);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s ease;
+}
+
+.newBtn:hover {
+    background-color: var(--color-primary);
+}
+/* #endregion */
+
+/* #region Card contenedora */
+.card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+/* #endregion */
+
+/* #region Tabla */
+.usuariosTable {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+}
+
+.usuariosTable th {
+    background-color: var(--color-surface-alt);
+    padding: 16px 20px;
+    color: var(--color-text-muted);
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.textCenter {
+    text-align: center;
+}
+
+.tableRow {
+    border-bottom: 1px solid var(--color-surface-alt);
+    transition: background-color 0.15s ease;
+}
+
+.tableRow:last-child {
+    border-bottom: none;
+}
+
+.tableRow:hover {
+    background-color: var(--color-surface-alt);
+}
+
+.userCell {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: var(--color-accent-soft);
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.userName {
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.emailCell {
+    padding: 14px 20px;
+    color: var(--color-text);
+}
+
+.actionsCell {
+    padding: 14px 20px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+/* #endregion */
+
+/* #region Badges de rol y estado */
+.rolBadge {
+    display: inline-flex;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+}
+
+.rolGerente {
+    background-color: var(--color-accent-soft);
+    color: var(--color-primary);
+}
+
+.rolVeterinario {
+    background-color: var(--color-warning-soft);
+    color: var(--color-warning);
+}
+
+.rolRecepcion {
+    background-color: var(--color-surface-alt);
+    color: var(--color-primary-soft);
+}
+
+.rolInventario {
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+}
+
+.estadoActivo {
+    display: inline-flex;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    background-color: var(--color-accent-soft);
+    color: var(--color-primary);
+}
+/* #endregion */
+
+/* #region Acciones */
+.btnEdit {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background-color: var(--color-surface-alt);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.btnEdit:hover {
+    background-color: var(--color-primary-mid);
+    color: white;
+}
+
+.btnDeactivate {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.btnDeactivate:hover {
+    background-color: var(--color-danger);
+    color: white;
+}
+
+.actionIcon {
+    width: 14px;
+}
+
+.emptyState {
+    padding: 48px;
+    text-align: center;
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+/* #endregion */
+
+/* #region Formulario del modal */
+.formGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-primary-soft);
+}
+
+.field input,
+.field select {
+    padding: 12px 14px;
+    border: 2px solid var(--color-border);
+    border-radius: 10px;
+    background-color: var(--color-surface);
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.field input:focus,
+.field select:focus {
+    border-color: var(--color-accent);
+    background-color: var(--color-surface-alt);
+}
+
+.submitBtn {
+    padding: 12px 20px;
+    background-color: var(--color-primary-mid);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.submitBtn:hover:not(:disabled) {
+    background-color: var(--color-primary);
+}
+
+.submitBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.errorMsg {
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
+/* #endregion */

@@ -4,6 +4,16 @@ import { PrismaService } from '../../config/prisma.service.js';
 import { ListFacturasQueryDto } from './dto/list-facturas-query.dto.js';
 import { PagarFacturaDto } from './dto/pagar-factura.dto.js';
 
+const CONSULTA_CON_CLIENTE_INCLUDE = {
+    cita: {
+        include: {
+            mascota: {
+                include: { cliente: true },
+            },
+        },
+    },
+} satisfies Prisma.ConsultaInclude;
+
 @Injectable()
 export class FacturasService {
     constructor(private readonly prisma: PrismaService) {}
@@ -28,6 +38,7 @@ export class FacturasService {
             where,
             include: {
                 detalles: { include: { servicio: true, insumo: true } },
+                consulta: { include: CONSULTA_CON_CLIENTE_INCLUDE },
             },
             orderBy: { fecha: 'desc' },
         });
@@ -38,7 +49,7 @@ export class FacturasService {
             where: { id },
             include: {
                 detalles: { include: { servicio: true, insumo: true } },
-                consulta: true,
+                consulta: { include: CONSULTA_CON_CLIENTE_INCLUDE },
             },
         });
         if (!factura) throw new NotFoundException('Factura no encontrada');

@@ -1,6 +1,6 @@
-import { isAxiosError } from 'axios';
 import { Modal } from '../../../components/ui/Modal';
 import type { Factura } from '../../../api/ventas.api';
+import { getErrorMessage } from '../../../utils/getErrorMessage';
 import styles from '../styles/ventas.module.css';
 
 const METODOS_PAGO = [
@@ -8,16 +8,6 @@ const METODOS_PAGO = [
     { value: 'tarjeta', label: 'Tarjeta' },
     { value: 'transferencia', label: 'Transferencia' },
 ];
-
-function extraerMensajeError(error: unknown): string {
-    if (isAxiosError(error)) {
-        const data = error.response?.data as
-            { message?: string | string[] } | undefined;
-        if (Array.isArray(data?.message)) return data.message.join(', ');
-        if (typeof data?.message === 'string') return data.message;
-    }
-    return 'Ocurrió un error al procesar la venta.';
-}
 
 interface ModalCobroProps {
     isOpen: boolean;
@@ -107,7 +97,10 @@ export function ModalCobro({
 
                     {isError && (
                         <p className={styles.errorMsg}>
-                            {extraerMensajeError(error)}
+                            {getErrorMessage(
+                                error,
+                                'Ocurrió un error al procesar la venta.',
+                            )}
                         </p>
                     )}
 

@@ -42,6 +42,7 @@ export type FacturaDetalleMinAggregateOutputType = {
   precio: number | null
   facturaId: string | null
   servicioId: string | null
+  insumoId: string | null
 }
 
 export type FacturaDetalleMaxAggregateOutputType = {
@@ -50,6 +51,7 @@ export type FacturaDetalleMaxAggregateOutputType = {
   precio: number | null
   facturaId: string | null
   servicioId: string | null
+  insumoId: string | null
 }
 
 export type FacturaDetalleCountAggregateOutputType = {
@@ -58,6 +60,7 @@ export type FacturaDetalleCountAggregateOutputType = {
   precio: number
   facturaId: number
   servicioId: number
+  insumoId: number
   _all: number
 }
 
@@ -78,6 +81,7 @@ export type FacturaDetalleMinAggregateInputType = {
   precio?: true
   facturaId?: true
   servicioId?: true
+  insumoId?: true
 }
 
 export type FacturaDetalleMaxAggregateInputType = {
@@ -86,6 +90,7 @@ export type FacturaDetalleMaxAggregateInputType = {
   precio?: true
   facturaId?: true
   servicioId?: true
+  insumoId?: true
 }
 
 export type FacturaDetalleCountAggregateInputType = {
@@ -94,6 +99,7 @@ export type FacturaDetalleCountAggregateInputType = {
   precio?: true
   facturaId?: true
   servicioId?: true
+  insumoId?: true
   _all?: true
 }
 
@@ -188,7 +194,8 @@ export type FacturaDetalleGroupByOutputType = {
   cantidad: number
   precio: number
   facturaId: string
-  servicioId: string
+  servicioId: string | null
+  insumoId: string | null
   _count: FacturaDetalleCountAggregateOutputType | null
   _avg: FacturaDetalleAvgAggregateOutputType | null
   _sum: FacturaDetalleSumAggregateOutputType | null
@@ -219,9 +226,11 @@ export type FacturaDetalleWhereInput = {
   cantidad?: Prisma.IntFilter<"FacturaDetalle"> | number
   precio?: Prisma.FloatFilter<"FacturaDetalle"> | number
   facturaId?: Prisma.StringFilter<"FacturaDetalle"> | string
-  servicioId?: Prisma.StringFilter<"FacturaDetalle"> | string
+  servicioId?: Prisma.StringNullableFilter<"FacturaDetalle"> | string | null
+  insumoId?: Prisma.StringNullableFilter<"FacturaDetalle"> | string | null
   factura?: Prisma.XOR<Prisma.FacturaScalarRelationFilter, Prisma.FacturaWhereInput>
-  servicio?: Prisma.XOR<Prisma.ServicioScalarRelationFilter, Prisma.ServicioWhereInput>
+  servicio?: Prisma.XOR<Prisma.ServicioNullableScalarRelationFilter, Prisma.ServicioWhereInput> | null
+  insumo?: Prisma.XOR<Prisma.InventarioNullableScalarRelationFilter, Prisma.InventarioWhereInput> | null
 }
 
 export type FacturaDetalleOrderByWithRelationInput = {
@@ -229,9 +238,11 @@ export type FacturaDetalleOrderByWithRelationInput = {
   cantidad?: Prisma.SortOrder
   precio?: Prisma.SortOrder
   facturaId?: Prisma.SortOrder
-  servicioId?: Prisma.SortOrder
+  servicioId?: Prisma.SortOrderInput | Prisma.SortOrder
+  insumoId?: Prisma.SortOrderInput | Prisma.SortOrder
   factura?: Prisma.FacturaOrderByWithRelationInput
   servicio?: Prisma.ServicioOrderByWithRelationInput
+  insumo?: Prisma.InventarioOrderByWithRelationInput
 }
 
 export type FacturaDetalleWhereUniqueInput = Prisma.AtLeast<{
@@ -242,9 +253,11 @@ export type FacturaDetalleWhereUniqueInput = Prisma.AtLeast<{
   cantidad?: Prisma.IntFilter<"FacturaDetalle"> | number
   precio?: Prisma.FloatFilter<"FacturaDetalle"> | number
   facturaId?: Prisma.StringFilter<"FacturaDetalle"> | string
-  servicioId?: Prisma.StringFilter<"FacturaDetalle"> | string
+  servicioId?: Prisma.StringNullableFilter<"FacturaDetalle"> | string | null
+  insumoId?: Prisma.StringNullableFilter<"FacturaDetalle"> | string | null
   factura?: Prisma.XOR<Prisma.FacturaScalarRelationFilter, Prisma.FacturaWhereInput>
-  servicio?: Prisma.XOR<Prisma.ServicioScalarRelationFilter, Prisma.ServicioWhereInput>
+  servicio?: Prisma.XOR<Prisma.ServicioNullableScalarRelationFilter, Prisma.ServicioWhereInput> | null
+  insumo?: Prisma.XOR<Prisma.InventarioNullableScalarRelationFilter, Prisma.InventarioWhereInput> | null
 }, "id">
 
 export type FacturaDetalleOrderByWithAggregationInput = {
@@ -252,7 +265,8 @@ export type FacturaDetalleOrderByWithAggregationInput = {
   cantidad?: Prisma.SortOrder
   precio?: Prisma.SortOrder
   facturaId?: Prisma.SortOrder
-  servicioId?: Prisma.SortOrder
+  servicioId?: Prisma.SortOrderInput | Prisma.SortOrder
+  insumoId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.FacturaDetalleCountOrderByAggregateInput
   _avg?: Prisma.FacturaDetalleAvgOrderByAggregateInput
   _max?: Prisma.FacturaDetalleMaxOrderByAggregateInput
@@ -268,7 +282,8 @@ export type FacturaDetalleScalarWhereWithAggregatesInput = {
   cantidad?: Prisma.IntWithAggregatesFilter<"FacturaDetalle"> | number
   precio?: Prisma.FloatWithAggregatesFilter<"FacturaDetalle"> | number
   facturaId?: Prisma.StringWithAggregatesFilter<"FacturaDetalle"> | string
-  servicioId?: Prisma.StringWithAggregatesFilter<"FacturaDetalle"> | string
+  servicioId?: Prisma.StringNullableWithAggregatesFilter<"FacturaDetalle"> | string | null
+  insumoId?: Prisma.StringNullableWithAggregatesFilter<"FacturaDetalle"> | string | null
 }
 
 export type FacturaDetalleCreateInput = {
@@ -276,7 +291,8 @@ export type FacturaDetalleCreateInput = {
   cantidad?: number
   precio: number
   factura: Prisma.FacturaCreateNestedOneWithoutDetallesInput
-  servicio: Prisma.ServicioCreateNestedOneWithoutDetallesInput
+  servicio?: Prisma.ServicioCreateNestedOneWithoutDetallesInput
+  insumo?: Prisma.InventarioCreateNestedOneWithoutDetallesInput
 }
 
 export type FacturaDetalleUncheckedCreateInput = {
@@ -284,7 +300,8 @@ export type FacturaDetalleUncheckedCreateInput = {
   cantidad?: number
   precio: number
   facturaId: string
-  servicioId: string
+  servicioId?: string | null
+  insumoId?: string | null
 }
 
 export type FacturaDetalleUpdateInput = {
@@ -292,7 +309,8 @@ export type FacturaDetalleUpdateInput = {
   cantidad?: Prisma.IntFieldUpdateOperationsInput | number
   precio?: Prisma.FloatFieldUpdateOperationsInput | number
   factura?: Prisma.FacturaUpdateOneRequiredWithoutDetallesNestedInput
-  servicio?: Prisma.ServicioUpdateOneRequiredWithoutDetallesNestedInput
+  servicio?: Prisma.ServicioUpdateOneWithoutDetallesNestedInput
+  insumo?: Prisma.InventarioUpdateOneWithoutDetallesNestedInput
 }
 
 export type FacturaDetalleUncheckedUpdateInput = {
@@ -300,7 +318,8 @@ export type FacturaDetalleUncheckedUpdateInput = {
   cantidad?: Prisma.IntFieldUpdateOperationsInput | number
   precio?: Prisma.FloatFieldUpdateOperationsInput | number
   facturaId?: Prisma.StringFieldUpdateOperationsInput | string
-  servicioId?: Prisma.StringFieldUpdateOperationsInput | string
+  servicioId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  insumoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type FacturaDetalleCreateManyInput = {
@@ -308,7 +327,8 @@ export type FacturaDetalleCreateManyInput = {
   cantidad?: number
   precio: number
   facturaId: string
-  servicioId: string
+  servicioId?: string | null
+  insumoId?: string | null
 }
 
 export type FacturaDetalleUpdateManyMutationInput = {
@@ -322,7 +342,8 @@ export type FacturaDetalleUncheckedUpdateManyInput = {
   cantidad?: Prisma.IntFieldUpdateOperationsInput | number
   precio?: Prisma.FloatFieldUpdateOperationsInput | number
   facturaId?: Prisma.StringFieldUpdateOperationsInput | string
-  servicioId?: Prisma.StringFieldUpdateOperationsInput | string
+  servicioId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  insumoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type FacturaDetalleListRelationFilter = {
@@ -341,6 +362,7 @@ export type FacturaDetalleCountOrderByAggregateInput = {
   precio?: Prisma.SortOrder
   facturaId?: Prisma.SortOrder
   servicioId?: Prisma.SortOrder
+  insumoId?: Prisma.SortOrder
 }
 
 export type FacturaDetalleAvgOrderByAggregateInput = {
@@ -354,6 +376,7 @@ export type FacturaDetalleMaxOrderByAggregateInput = {
   precio?: Prisma.SortOrder
   facturaId?: Prisma.SortOrder
   servicioId?: Prisma.SortOrder
+  insumoId?: Prisma.SortOrder
 }
 
 export type FacturaDetalleMinOrderByAggregateInput = {
@@ -362,6 +385,7 @@ export type FacturaDetalleMinOrderByAggregateInput = {
   precio?: Prisma.SortOrder
   facturaId?: Prisma.SortOrder
   servicioId?: Prisma.SortOrder
+  insumoId?: Prisma.SortOrder
 }
 
 export type FacturaDetalleSumOrderByAggregateInput = {
@@ -408,6 +432,48 @@ export type FacturaDetalleUncheckedUpdateManyWithoutServicioNestedInput = {
   connect?: Prisma.FacturaDetalleWhereUniqueInput | Prisma.FacturaDetalleWhereUniqueInput[]
   update?: Prisma.FacturaDetalleUpdateWithWhereUniqueWithoutServicioInput | Prisma.FacturaDetalleUpdateWithWhereUniqueWithoutServicioInput[]
   updateMany?: Prisma.FacturaDetalleUpdateManyWithWhereWithoutServicioInput | Prisma.FacturaDetalleUpdateManyWithWhereWithoutServicioInput[]
+  deleteMany?: Prisma.FacturaDetalleScalarWhereInput | Prisma.FacturaDetalleScalarWhereInput[]
+}
+
+export type FacturaDetalleCreateNestedManyWithoutInsumoInput = {
+  create?: Prisma.XOR<Prisma.FacturaDetalleCreateWithoutInsumoInput, Prisma.FacturaDetalleUncheckedCreateWithoutInsumoInput> | Prisma.FacturaDetalleCreateWithoutInsumoInput[] | Prisma.FacturaDetalleUncheckedCreateWithoutInsumoInput[]
+  connectOrCreate?: Prisma.FacturaDetalleCreateOrConnectWithoutInsumoInput | Prisma.FacturaDetalleCreateOrConnectWithoutInsumoInput[]
+  createMany?: Prisma.FacturaDetalleCreateManyInsumoInputEnvelope
+  connect?: Prisma.FacturaDetalleWhereUniqueInput | Prisma.FacturaDetalleWhereUniqueInput[]
+}
+
+export type FacturaDetalleUncheckedCreateNestedManyWithoutInsumoInput = {
+  create?: Prisma.XOR<Prisma.FacturaDetalleCreateWithoutInsumoInput, Prisma.FacturaDetalleUncheckedCreateWithoutInsumoInput> | Prisma.FacturaDetalleCreateWithoutInsumoInput[] | Prisma.FacturaDetalleUncheckedCreateWithoutInsumoInput[]
+  connectOrCreate?: Prisma.FacturaDetalleCreateOrConnectWithoutInsumoInput | Prisma.FacturaDetalleCreateOrConnectWithoutInsumoInput[]
+  createMany?: Prisma.FacturaDetalleCreateManyInsumoInputEnvelope
+  connect?: Prisma.FacturaDetalleWhereUniqueInput | Prisma.FacturaDetalleWhereUniqueInput[]
+}
+
+export type FacturaDetalleUpdateManyWithoutInsumoNestedInput = {
+  create?: Prisma.XOR<Prisma.FacturaDetalleCreateWithoutInsumoInput, Prisma.FacturaDetalleUncheckedCreateWithoutInsumoInput> | Prisma.FacturaDetalleCreateWithoutInsumoInput[] | Prisma.FacturaDetalleUncheckedCreateWithoutInsumoInput[]
+  connectOrCreate?: Prisma.FacturaDetalleCreateOrConnectWithoutInsumoInput | Prisma.FacturaDetalleCreateOrConnectWithoutInsumoInput[]
+  upsert?: Prisma.FacturaDetalleUpsertWithWhereUniqueWithoutInsumoInput | Prisma.FacturaDetalleUpsertWithWhereUniqueWithoutInsumoInput[]
+  createMany?: Prisma.FacturaDetalleCreateManyInsumoInputEnvelope
+  set?: Prisma.FacturaDetalleWhereUniqueInput | Prisma.FacturaDetalleWhereUniqueInput[]
+  disconnect?: Prisma.FacturaDetalleWhereUniqueInput | Prisma.FacturaDetalleWhereUniqueInput[]
+  delete?: Prisma.FacturaDetalleWhereUniqueInput | Prisma.FacturaDetalleWhereUniqueInput[]
+  connect?: Prisma.FacturaDetalleWhereUniqueInput | Prisma.FacturaDetalleWhereUniqueInput[]
+  update?: Prisma.FacturaDetalleUpdateWithWhereUniqueWithoutInsumoInput | Prisma.FacturaDetalleUpdateWithWhereUniqueWithoutInsumoInput[]
+  updateMany?: Prisma.FacturaDetalleUpdateManyWithWhereWithoutInsumoInput | Prisma.FacturaDetalleUpdateManyWithWhereWithoutInsumoInput[]
+  deleteMany?: Prisma.FacturaDetalleScalarWhereInput | Prisma.FacturaDetalleScalarWhereInput[]
+}
+
+export type FacturaDetalleUncheckedUpdateManyWithoutInsumoNestedInput = {
+  create?: Prisma.XOR<Prisma.FacturaDetalleCreateWithoutInsumoInput, Prisma.FacturaDetalleUncheckedCreateWithoutInsumoInput> | Prisma.FacturaDetalleCreateWithoutInsumoInput[] | Prisma.FacturaDetalleUncheckedCreateWithoutInsumoInput[]
+  connectOrCreate?: Prisma.FacturaDetalleCreateOrConnectWithoutInsumoInput | Prisma.FacturaDetalleCreateOrConnectWithoutInsumoInput[]
+  upsert?: Prisma.FacturaDetalleUpsertWithWhereUniqueWithoutInsumoInput | Prisma.FacturaDetalleUpsertWithWhereUniqueWithoutInsumoInput[]
+  createMany?: Prisma.FacturaDetalleCreateManyInsumoInputEnvelope
+  set?: Prisma.FacturaDetalleWhereUniqueInput | Prisma.FacturaDetalleWhereUniqueInput[]
+  disconnect?: Prisma.FacturaDetalleWhereUniqueInput | Prisma.FacturaDetalleWhereUniqueInput[]
+  delete?: Prisma.FacturaDetalleWhereUniqueInput | Prisma.FacturaDetalleWhereUniqueInput[]
+  connect?: Prisma.FacturaDetalleWhereUniqueInput | Prisma.FacturaDetalleWhereUniqueInput[]
+  update?: Prisma.FacturaDetalleUpdateWithWhereUniqueWithoutInsumoInput | Prisma.FacturaDetalleUpdateWithWhereUniqueWithoutInsumoInput[]
+  updateMany?: Prisma.FacturaDetalleUpdateManyWithWhereWithoutInsumoInput | Prisma.FacturaDetalleUpdateManyWithWhereWithoutInsumoInput[]
   deleteMany?: Prisma.FacturaDetalleScalarWhereInput | Prisma.FacturaDetalleScalarWhereInput[]
 }
 
@@ -458,6 +524,7 @@ export type FacturaDetalleCreateWithoutServicioInput = {
   cantidad?: number
   precio: number
   factura: Prisma.FacturaCreateNestedOneWithoutDetallesInput
+  insumo?: Prisma.InventarioCreateNestedOneWithoutDetallesInput
 }
 
 export type FacturaDetalleUncheckedCreateWithoutServicioInput = {
@@ -465,6 +532,7 @@ export type FacturaDetalleUncheckedCreateWithoutServicioInput = {
   cantidad?: number
   precio: number
   facturaId: string
+  insumoId?: string | null
 }
 
 export type FacturaDetalleCreateOrConnectWithoutServicioInput = {
@@ -501,21 +569,66 @@ export type FacturaDetalleScalarWhereInput = {
   cantidad?: Prisma.IntFilter<"FacturaDetalle"> | number
   precio?: Prisma.FloatFilter<"FacturaDetalle"> | number
   facturaId?: Prisma.StringFilter<"FacturaDetalle"> | string
-  servicioId?: Prisma.StringFilter<"FacturaDetalle"> | string
+  servicioId?: Prisma.StringNullableFilter<"FacturaDetalle"> | string | null
+  insumoId?: Prisma.StringNullableFilter<"FacturaDetalle"> | string | null
+}
+
+export type FacturaDetalleCreateWithoutInsumoInput = {
+  id?: string
+  cantidad?: number
+  precio: number
+  factura: Prisma.FacturaCreateNestedOneWithoutDetallesInput
+  servicio?: Prisma.ServicioCreateNestedOneWithoutDetallesInput
+}
+
+export type FacturaDetalleUncheckedCreateWithoutInsumoInput = {
+  id?: string
+  cantidad?: number
+  precio: number
+  facturaId: string
+  servicioId?: string | null
+}
+
+export type FacturaDetalleCreateOrConnectWithoutInsumoInput = {
+  where: Prisma.FacturaDetalleWhereUniqueInput
+  create: Prisma.XOR<Prisma.FacturaDetalleCreateWithoutInsumoInput, Prisma.FacturaDetalleUncheckedCreateWithoutInsumoInput>
+}
+
+export type FacturaDetalleCreateManyInsumoInputEnvelope = {
+  data: Prisma.FacturaDetalleCreateManyInsumoInput | Prisma.FacturaDetalleCreateManyInsumoInput[]
+  skipDuplicates?: boolean
+}
+
+export type FacturaDetalleUpsertWithWhereUniqueWithoutInsumoInput = {
+  where: Prisma.FacturaDetalleWhereUniqueInput
+  update: Prisma.XOR<Prisma.FacturaDetalleUpdateWithoutInsumoInput, Prisma.FacturaDetalleUncheckedUpdateWithoutInsumoInput>
+  create: Prisma.XOR<Prisma.FacturaDetalleCreateWithoutInsumoInput, Prisma.FacturaDetalleUncheckedCreateWithoutInsumoInput>
+}
+
+export type FacturaDetalleUpdateWithWhereUniqueWithoutInsumoInput = {
+  where: Prisma.FacturaDetalleWhereUniqueInput
+  data: Prisma.XOR<Prisma.FacturaDetalleUpdateWithoutInsumoInput, Prisma.FacturaDetalleUncheckedUpdateWithoutInsumoInput>
+}
+
+export type FacturaDetalleUpdateManyWithWhereWithoutInsumoInput = {
+  where: Prisma.FacturaDetalleScalarWhereInput
+  data: Prisma.XOR<Prisma.FacturaDetalleUpdateManyMutationInput, Prisma.FacturaDetalleUncheckedUpdateManyWithoutInsumoInput>
 }
 
 export type FacturaDetalleCreateWithoutFacturaInput = {
   id?: string
   cantidad?: number
   precio: number
-  servicio: Prisma.ServicioCreateNestedOneWithoutDetallesInput
+  servicio?: Prisma.ServicioCreateNestedOneWithoutDetallesInput
+  insumo?: Prisma.InventarioCreateNestedOneWithoutDetallesInput
 }
 
 export type FacturaDetalleUncheckedCreateWithoutFacturaInput = {
   id?: string
   cantidad?: number
   precio: number
-  servicioId: string
+  servicioId?: string | null
+  insumoId?: string | null
 }
 
 export type FacturaDetalleCreateOrConnectWithoutFacturaInput = {
@@ -549,6 +662,7 @@ export type FacturaDetalleCreateManyServicioInput = {
   cantidad?: number
   precio: number
   facturaId: string
+  insumoId?: string | null
 }
 
 export type FacturaDetalleUpdateWithoutServicioInput = {
@@ -556,6 +670,7 @@ export type FacturaDetalleUpdateWithoutServicioInput = {
   cantidad?: Prisma.IntFieldUpdateOperationsInput | number
   precio?: Prisma.FloatFieldUpdateOperationsInput | number
   factura?: Prisma.FacturaUpdateOneRequiredWithoutDetallesNestedInput
+  insumo?: Prisma.InventarioUpdateOneWithoutDetallesNestedInput
 }
 
 export type FacturaDetalleUncheckedUpdateWithoutServicioInput = {
@@ -563,6 +678,7 @@ export type FacturaDetalleUncheckedUpdateWithoutServicioInput = {
   cantidad?: Prisma.IntFieldUpdateOperationsInput | number
   precio?: Prisma.FloatFieldUpdateOperationsInput | number
   facturaId?: Prisma.StringFieldUpdateOperationsInput | string
+  insumoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type FacturaDetalleUncheckedUpdateManyWithoutServicioInput = {
@@ -570,34 +686,71 @@ export type FacturaDetalleUncheckedUpdateManyWithoutServicioInput = {
   cantidad?: Prisma.IntFieldUpdateOperationsInput | number
   precio?: Prisma.FloatFieldUpdateOperationsInput | number
   facturaId?: Prisma.StringFieldUpdateOperationsInput | string
+  insumoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type FacturaDetalleCreateManyInsumoInput = {
+  id?: string
+  cantidad?: number
+  precio: number
+  facturaId: string
+  servicioId?: string | null
+}
+
+export type FacturaDetalleUpdateWithoutInsumoInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  cantidad?: Prisma.IntFieldUpdateOperationsInput | number
+  precio?: Prisma.FloatFieldUpdateOperationsInput | number
+  factura?: Prisma.FacturaUpdateOneRequiredWithoutDetallesNestedInput
+  servicio?: Prisma.ServicioUpdateOneWithoutDetallesNestedInput
+}
+
+export type FacturaDetalleUncheckedUpdateWithoutInsumoInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  cantidad?: Prisma.IntFieldUpdateOperationsInput | number
+  precio?: Prisma.FloatFieldUpdateOperationsInput | number
+  facturaId?: Prisma.StringFieldUpdateOperationsInput | string
+  servicioId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type FacturaDetalleUncheckedUpdateManyWithoutInsumoInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  cantidad?: Prisma.IntFieldUpdateOperationsInput | number
+  precio?: Prisma.FloatFieldUpdateOperationsInput | number
+  facturaId?: Prisma.StringFieldUpdateOperationsInput | string
+  servicioId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type FacturaDetalleCreateManyFacturaInput = {
   id?: string
   cantidad?: number
   precio: number
-  servicioId: string
+  servicioId?: string | null
+  insumoId?: string | null
 }
 
 export type FacturaDetalleUpdateWithoutFacturaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   cantidad?: Prisma.IntFieldUpdateOperationsInput | number
   precio?: Prisma.FloatFieldUpdateOperationsInput | number
-  servicio?: Prisma.ServicioUpdateOneRequiredWithoutDetallesNestedInput
+  servicio?: Prisma.ServicioUpdateOneWithoutDetallesNestedInput
+  insumo?: Prisma.InventarioUpdateOneWithoutDetallesNestedInput
 }
 
 export type FacturaDetalleUncheckedUpdateWithoutFacturaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   cantidad?: Prisma.IntFieldUpdateOperationsInput | number
   precio?: Prisma.FloatFieldUpdateOperationsInput | number
-  servicioId?: Prisma.StringFieldUpdateOperationsInput | string
+  servicioId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  insumoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type FacturaDetalleUncheckedUpdateManyWithoutFacturaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   cantidad?: Prisma.IntFieldUpdateOperationsInput | number
   precio?: Prisma.FloatFieldUpdateOperationsInput | number
-  servicioId?: Prisma.StringFieldUpdateOperationsInput | string
+  servicioId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  insumoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -608,8 +761,10 @@ export type FacturaDetalleSelect<ExtArgs extends runtime.Types.Extensions.Intern
   precio?: boolean
   facturaId?: boolean
   servicioId?: boolean
+  insumoId?: boolean
   factura?: boolean | Prisma.FacturaDefaultArgs<ExtArgs>
-  servicio?: boolean | Prisma.ServicioDefaultArgs<ExtArgs>
+  servicio?: boolean | Prisma.FacturaDetalle$servicioArgs<ExtArgs>
+  insumo?: boolean | Prisma.FacturaDetalle$insumoArgs<ExtArgs>
 }, ExtArgs["result"]["facturaDetalle"]>
 
 export type FacturaDetalleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -618,8 +773,10 @@ export type FacturaDetalleSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   precio?: boolean
   facturaId?: boolean
   servicioId?: boolean
+  insumoId?: boolean
   factura?: boolean | Prisma.FacturaDefaultArgs<ExtArgs>
-  servicio?: boolean | Prisma.ServicioDefaultArgs<ExtArgs>
+  servicio?: boolean | Prisma.FacturaDetalle$servicioArgs<ExtArgs>
+  insumo?: boolean | Prisma.FacturaDetalle$insumoArgs<ExtArgs>
 }, ExtArgs["result"]["facturaDetalle"]>
 
 export type FacturaDetalleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -628,8 +785,10 @@ export type FacturaDetalleSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   precio?: boolean
   facturaId?: boolean
   servicioId?: boolean
+  insumoId?: boolean
   factura?: boolean | Prisma.FacturaDefaultArgs<ExtArgs>
-  servicio?: boolean | Prisma.ServicioDefaultArgs<ExtArgs>
+  servicio?: boolean | Prisma.FacturaDetalle$servicioArgs<ExtArgs>
+  insumo?: boolean | Prisma.FacturaDetalle$insumoArgs<ExtArgs>
 }, ExtArgs["result"]["facturaDetalle"]>
 
 export type FacturaDetalleSelectScalar = {
@@ -638,34 +797,40 @@ export type FacturaDetalleSelectScalar = {
   precio?: boolean
   facturaId?: boolean
   servicioId?: boolean
+  insumoId?: boolean
 }
 
-export type FacturaDetalleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "cantidad" | "precio" | "facturaId" | "servicioId", ExtArgs["result"]["facturaDetalle"]>
+export type FacturaDetalleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "cantidad" | "precio" | "facturaId" | "servicioId" | "insumoId", ExtArgs["result"]["facturaDetalle"]>
 export type FacturaDetalleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   factura?: boolean | Prisma.FacturaDefaultArgs<ExtArgs>
-  servicio?: boolean | Prisma.ServicioDefaultArgs<ExtArgs>
+  servicio?: boolean | Prisma.FacturaDetalle$servicioArgs<ExtArgs>
+  insumo?: boolean | Prisma.FacturaDetalle$insumoArgs<ExtArgs>
 }
 export type FacturaDetalleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   factura?: boolean | Prisma.FacturaDefaultArgs<ExtArgs>
-  servicio?: boolean | Prisma.ServicioDefaultArgs<ExtArgs>
+  servicio?: boolean | Prisma.FacturaDetalle$servicioArgs<ExtArgs>
+  insumo?: boolean | Prisma.FacturaDetalle$insumoArgs<ExtArgs>
 }
 export type FacturaDetalleIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   factura?: boolean | Prisma.FacturaDefaultArgs<ExtArgs>
-  servicio?: boolean | Prisma.ServicioDefaultArgs<ExtArgs>
+  servicio?: boolean | Prisma.FacturaDetalle$servicioArgs<ExtArgs>
+  insumo?: boolean | Prisma.FacturaDetalle$insumoArgs<ExtArgs>
 }
 
 export type $FacturaDetallePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FacturaDetalle"
   objects: {
     factura: Prisma.$FacturaPayload<ExtArgs>
-    servicio: Prisma.$ServicioPayload<ExtArgs>
+    servicio: Prisma.$ServicioPayload<ExtArgs> | null
+    insumo: Prisma.$InventarioPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     cantidad: number
     precio: number
     facturaId: string
-    servicioId: string
+    servicioId: string | null
+    insumoId: string | null
   }, ExtArgs["result"]["facturaDetalle"]>
   composites: {}
 }
@@ -1061,7 +1226,8 @@ readonly fields: FacturaDetalleFieldRefs;
 export interface Prisma__FacturaDetalleClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   factura<T extends Prisma.FacturaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FacturaDefaultArgs<ExtArgs>>): Prisma.Prisma__FacturaClient<runtime.Types.Result.GetResult<Prisma.$FacturaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  servicio<T extends Prisma.ServicioDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServicioDefaultArgs<ExtArgs>>): Prisma.Prisma__ServicioClient<runtime.Types.Result.GetResult<Prisma.$ServicioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  servicio<T extends Prisma.FacturaDetalle$servicioArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FacturaDetalle$servicioArgs<ExtArgs>>): Prisma.Prisma__ServicioClient<runtime.Types.Result.GetResult<Prisma.$ServicioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  insumo<T extends Prisma.FacturaDetalle$insumoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FacturaDetalle$insumoArgs<ExtArgs>>): Prisma.Prisma__InventarioClient<runtime.Types.Result.GetResult<Prisma.$InventarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1096,6 +1262,7 @@ export interface FacturaDetalleFieldRefs {
   readonly precio: Prisma.FieldRef<"FacturaDetalle", 'Float'>
   readonly facturaId: Prisma.FieldRef<"FacturaDetalle", 'String'>
   readonly servicioId: Prisma.FieldRef<"FacturaDetalle", 'String'>
+  readonly insumoId: Prisma.FieldRef<"FacturaDetalle", 'String'>
 }
     
 
@@ -1494,6 +1661,44 @@ export type FacturaDetalleDeleteManyArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many FacturaDetalles to delete.
    */
   limit?: number
+}
+
+/**
+ * FacturaDetalle.servicio
+ */
+export type FacturaDetalle$servicioArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Servicio
+   */
+  select?: Prisma.ServicioSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Servicio
+   */
+  omit?: Prisma.ServicioOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServicioInclude<ExtArgs> | null
+  where?: Prisma.ServicioWhereInput
+}
+
+/**
+ * FacturaDetalle.insumo
+ */
+export type FacturaDetalle$insumoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Inventario
+   */
+  select?: Prisma.InventarioSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Inventario
+   */
+  omit?: Prisma.InventarioOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InventarioInclude<ExtArgs> | null
+  where?: Prisma.InventarioWhereInput
 }
 
 /**

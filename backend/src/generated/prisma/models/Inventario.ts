@@ -250,6 +250,7 @@ export type InventarioWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Inventario"> | Date | string
   consultaUso?: Prisma.ConsultaInsumoListRelationFilter
   movimientos?: Prisma.MovimientoInventarioListRelationFilter
+  detalles?: Prisma.FacturaDetalleListRelationFilter
 }
 
 export type InventarioOrderByWithRelationInput = {
@@ -263,6 +264,7 @@ export type InventarioOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   consultaUso?: Prisma.ConsultaInsumoOrderByRelationAggregateInput
   movimientos?: Prisma.MovimientoInventarioOrderByRelationAggregateInput
+  detalles?: Prisma.FacturaDetalleOrderByRelationAggregateInput
 }
 
 export type InventarioWhereUniqueInput = Prisma.AtLeast<{
@@ -279,6 +281,7 @@ export type InventarioWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Inventario"> | Date | string
   consultaUso?: Prisma.ConsultaInsumoListRelationFilter
   movimientos?: Prisma.MovimientoInventarioListRelationFilter
+  detalles?: Prisma.FacturaDetalleListRelationFilter
 }, "id">
 
 export type InventarioOrderByWithAggregationInput = {
@@ -322,6 +325,7 @@ export type InventarioCreateInput = {
   createdAt?: Date | string
   consultaUso?: Prisma.ConsultaInsumoCreateNestedManyWithoutInsumoInput
   movimientos?: Prisma.MovimientoInventarioCreateNestedManyWithoutInsumoInput
+  detalles?: Prisma.FacturaDetalleCreateNestedManyWithoutInsumoInput
 }
 
 export type InventarioUncheckedCreateInput = {
@@ -335,6 +339,7 @@ export type InventarioUncheckedCreateInput = {
   createdAt?: Date | string
   consultaUso?: Prisma.ConsultaInsumoUncheckedCreateNestedManyWithoutInsumoInput
   movimientos?: Prisma.MovimientoInventarioUncheckedCreateNestedManyWithoutInsumoInput
+  detalles?: Prisma.FacturaDetalleUncheckedCreateNestedManyWithoutInsumoInput
 }
 
 export type InventarioUpdateInput = {
@@ -348,6 +353,7 @@ export type InventarioUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consultaUso?: Prisma.ConsultaInsumoUpdateManyWithoutInsumoNestedInput
   movimientos?: Prisma.MovimientoInventarioUpdateManyWithoutInsumoNestedInput
+  detalles?: Prisma.FacturaDetalleUpdateManyWithoutInsumoNestedInput
 }
 
 export type InventarioUncheckedUpdateInput = {
@@ -361,6 +367,7 @@ export type InventarioUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consultaUso?: Prisma.ConsultaInsumoUncheckedUpdateManyWithoutInsumoNestedInput
   movimientos?: Prisma.MovimientoInventarioUncheckedUpdateManyWithoutInsumoNestedInput
+  detalles?: Prisma.FacturaDetalleUncheckedUpdateManyWithoutInsumoNestedInput
 }
 
 export type InventarioCreateManyInput = {
@@ -446,6 +453,11 @@ export type InventarioScalarRelationFilter = {
   isNot?: Prisma.InventarioWhereInput
 }
 
+export type InventarioNullableScalarRelationFilter = {
+  is?: Prisma.InventarioWhereInput | null
+  isNot?: Prisma.InventarioWhereInput | null
+}
+
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -482,6 +494,22 @@ export type InventarioUpdateOneRequiredWithoutMovimientosNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InventarioUpdateToOneWithWhereWithoutMovimientosInput, Prisma.InventarioUpdateWithoutMovimientosInput>, Prisma.InventarioUncheckedUpdateWithoutMovimientosInput>
 }
 
+export type InventarioCreateNestedOneWithoutDetallesInput = {
+  create?: Prisma.XOR<Prisma.InventarioCreateWithoutDetallesInput, Prisma.InventarioUncheckedCreateWithoutDetallesInput>
+  connectOrCreate?: Prisma.InventarioCreateOrConnectWithoutDetallesInput
+  connect?: Prisma.InventarioWhereUniqueInput
+}
+
+export type InventarioUpdateOneWithoutDetallesNestedInput = {
+  create?: Prisma.XOR<Prisma.InventarioCreateWithoutDetallesInput, Prisma.InventarioUncheckedCreateWithoutDetallesInput>
+  connectOrCreate?: Prisma.InventarioCreateOrConnectWithoutDetallesInput
+  upsert?: Prisma.InventarioUpsertWithoutDetallesInput
+  disconnect?: Prisma.InventarioWhereInput | boolean
+  delete?: Prisma.InventarioWhereInput | boolean
+  connect?: Prisma.InventarioWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InventarioUpdateToOneWithWhereWithoutDetallesInput, Prisma.InventarioUpdateWithoutDetallesInput>, Prisma.InventarioUncheckedUpdateWithoutDetallesInput>
+}
+
 export type InventarioCreateWithoutConsultaUsoInput = {
   id?: string
   nombre: string
@@ -492,6 +520,7 @@ export type InventarioCreateWithoutConsultaUsoInput = {
   precioUnit: number
   createdAt?: Date | string
   movimientos?: Prisma.MovimientoInventarioCreateNestedManyWithoutInsumoInput
+  detalles?: Prisma.FacturaDetalleCreateNestedManyWithoutInsumoInput
 }
 
 export type InventarioUncheckedCreateWithoutConsultaUsoInput = {
@@ -504,6 +533,7 @@ export type InventarioUncheckedCreateWithoutConsultaUsoInput = {
   precioUnit: number
   createdAt?: Date | string
   movimientos?: Prisma.MovimientoInventarioUncheckedCreateNestedManyWithoutInsumoInput
+  detalles?: Prisma.FacturaDetalleUncheckedCreateNestedManyWithoutInsumoInput
 }
 
 export type InventarioCreateOrConnectWithoutConsultaUsoInput = {
@@ -532,6 +562,7 @@ export type InventarioUpdateWithoutConsultaUsoInput = {
   precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   movimientos?: Prisma.MovimientoInventarioUpdateManyWithoutInsumoNestedInput
+  detalles?: Prisma.FacturaDetalleUpdateManyWithoutInsumoNestedInput
 }
 
 export type InventarioUncheckedUpdateWithoutConsultaUsoInput = {
@@ -544,6 +575,7 @@ export type InventarioUncheckedUpdateWithoutConsultaUsoInput = {
   precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   movimientos?: Prisma.MovimientoInventarioUncheckedUpdateManyWithoutInsumoNestedInput
+  detalles?: Prisma.FacturaDetalleUncheckedUpdateManyWithoutInsumoNestedInput
 }
 
 export type InventarioCreateWithoutMovimientosInput = {
@@ -556,6 +588,7 @@ export type InventarioCreateWithoutMovimientosInput = {
   precioUnit: number
   createdAt?: Date | string
   consultaUso?: Prisma.ConsultaInsumoCreateNestedManyWithoutInsumoInput
+  detalles?: Prisma.FacturaDetalleCreateNestedManyWithoutInsumoInput
 }
 
 export type InventarioUncheckedCreateWithoutMovimientosInput = {
@@ -568,6 +601,7 @@ export type InventarioUncheckedCreateWithoutMovimientosInput = {
   precioUnit: number
   createdAt?: Date | string
   consultaUso?: Prisma.ConsultaInsumoUncheckedCreateNestedManyWithoutInsumoInput
+  detalles?: Prisma.FacturaDetalleUncheckedCreateNestedManyWithoutInsumoInput
 }
 
 export type InventarioCreateOrConnectWithoutMovimientosInput = {
@@ -596,6 +630,7 @@ export type InventarioUpdateWithoutMovimientosInput = {
   precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consultaUso?: Prisma.ConsultaInsumoUpdateManyWithoutInsumoNestedInput
+  detalles?: Prisma.FacturaDetalleUpdateManyWithoutInsumoNestedInput
 }
 
 export type InventarioUncheckedUpdateWithoutMovimientosInput = {
@@ -608,6 +643,75 @@ export type InventarioUncheckedUpdateWithoutMovimientosInput = {
   precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consultaUso?: Prisma.ConsultaInsumoUncheckedUpdateManyWithoutInsumoNestedInput
+  detalles?: Prisma.FacturaDetalleUncheckedUpdateManyWithoutInsumoNestedInput
+}
+
+export type InventarioCreateWithoutDetallesInput = {
+  id?: string
+  nombre: string
+  lote?: string | null
+  fechaVenc?: Date | string | null
+  stock?: number
+  stockMinimo?: number
+  precioUnit: number
+  createdAt?: Date | string
+  consultaUso?: Prisma.ConsultaInsumoCreateNestedManyWithoutInsumoInput
+  movimientos?: Prisma.MovimientoInventarioCreateNestedManyWithoutInsumoInput
+}
+
+export type InventarioUncheckedCreateWithoutDetallesInput = {
+  id?: string
+  nombre: string
+  lote?: string | null
+  fechaVenc?: Date | string | null
+  stock?: number
+  stockMinimo?: number
+  precioUnit: number
+  createdAt?: Date | string
+  consultaUso?: Prisma.ConsultaInsumoUncheckedCreateNestedManyWithoutInsumoInput
+  movimientos?: Prisma.MovimientoInventarioUncheckedCreateNestedManyWithoutInsumoInput
+}
+
+export type InventarioCreateOrConnectWithoutDetallesInput = {
+  where: Prisma.InventarioWhereUniqueInput
+  create: Prisma.XOR<Prisma.InventarioCreateWithoutDetallesInput, Prisma.InventarioUncheckedCreateWithoutDetallesInput>
+}
+
+export type InventarioUpsertWithoutDetallesInput = {
+  update: Prisma.XOR<Prisma.InventarioUpdateWithoutDetallesInput, Prisma.InventarioUncheckedUpdateWithoutDetallesInput>
+  create: Prisma.XOR<Prisma.InventarioCreateWithoutDetallesInput, Prisma.InventarioUncheckedCreateWithoutDetallesInput>
+  where?: Prisma.InventarioWhereInput
+}
+
+export type InventarioUpdateToOneWithWhereWithoutDetallesInput = {
+  where?: Prisma.InventarioWhereInput
+  data: Prisma.XOR<Prisma.InventarioUpdateWithoutDetallesInput, Prisma.InventarioUncheckedUpdateWithoutDetallesInput>
+}
+
+export type InventarioUpdateWithoutDetallesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  lote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaVenc?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stock?: Prisma.IntFieldUpdateOperationsInput | number
+  stockMinimo?: Prisma.IntFieldUpdateOperationsInput | number
+  precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  consultaUso?: Prisma.ConsultaInsumoUpdateManyWithoutInsumoNestedInput
+  movimientos?: Prisma.MovimientoInventarioUpdateManyWithoutInsumoNestedInput
+}
+
+export type InventarioUncheckedUpdateWithoutDetallesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  lote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaVenc?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stock?: Prisma.IntFieldUpdateOperationsInput | number
+  stockMinimo?: Prisma.IntFieldUpdateOperationsInput | number
+  precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  consultaUso?: Prisma.ConsultaInsumoUncheckedUpdateManyWithoutInsumoNestedInput
+  movimientos?: Prisma.MovimientoInventarioUncheckedUpdateManyWithoutInsumoNestedInput
 }
 
 
@@ -618,11 +722,13 @@ export type InventarioUncheckedUpdateWithoutMovimientosInput = {
 export type InventarioCountOutputType = {
   consultaUso: number
   movimientos: number
+  detalles: number
 }
 
 export type InventarioCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   consultaUso?: boolean | InventarioCountOutputTypeCountConsultaUsoArgs
   movimientos?: boolean | InventarioCountOutputTypeCountMovimientosArgs
+  detalles?: boolean | InventarioCountOutputTypeCountDetallesArgs
 }
 
 /**
@@ -649,6 +755,13 @@ export type InventarioCountOutputTypeCountMovimientosArgs<ExtArgs extends runtim
   where?: Prisma.MovimientoInventarioWhereInput
 }
 
+/**
+ * InventarioCountOutputType without action
+ */
+export type InventarioCountOutputTypeCountDetallesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FacturaDetalleWhereInput
+}
+
 
 export type InventarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -661,6 +774,7 @@ export type InventarioSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   createdAt?: boolean
   consultaUso?: boolean | Prisma.Inventario$consultaUsoArgs<ExtArgs>
   movimientos?: boolean | Prisma.Inventario$movimientosArgs<ExtArgs>
+  detalles?: boolean | Prisma.Inventario$detallesArgs<ExtArgs>
   _count?: boolean | Prisma.InventarioCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["inventario"]>
 
@@ -701,6 +815,7 @@ export type InventarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type InventarioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   consultaUso?: boolean | Prisma.Inventario$consultaUsoArgs<ExtArgs>
   movimientos?: boolean | Prisma.Inventario$movimientosArgs<ExtArgs>
+  detalles?: boolean | Prisma.Inventario$detallesArgs<ExtArgs>
   _count?: boolean | Prisma.InventarioCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InventarioIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -711,6 +826,7 @@ export type $InventarioPayload<ExtArgs extends runtime.Types.Extensions.Internal
   objects: {
     consultaUso: Prisma.$ConsultaInsumoPayload<ExtArgs>[]
     movimientos: Prisma.$MovimientoInventarioPayload<ExtArgs>[]
+    detalles: Prisma.$FacturaDetallePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1117,6 +1233,7 @@ export interface Prisma__InventarioClient<T, Null = never, ExtArgs extends runti
   readonly [Symbol.toStringTag]: "PrismaPromise"
   consultaUso<T extends Prisma.Inventario$consultaUsoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Inventario$consultaUsoArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConsultaInsumoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   movimientos<T extends Prisma.Inventario$movimientosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Inventario$movimientosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MovimientoInventarioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  detalles<T extends Prisma.Inventario$detallesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Inventario$detallesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FacturaDetallePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1592,6 +1709,30 @@ export type Inventario$movimientosArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.MovimientoInventarioScalarFieldEnum | Prisma.MovimientoInventarioScalarFieldEnum[]
+}
+
+/**
+ * Inventario.detalles
+ */
+export type Inventario$detallesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FacturaDetalle
+   */
+  select?: Prisma.FacturaDetalleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FacturaDetalle
+   */
+  omit?: Prisma.FacturaDetalleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FacturaDetalleInclude<ExtArgs> | null
+  where?: Prisma.FacturaDetalleWhereInput
+  orderBy?: Prisma.FacturaDetalleOrderByWithRelationInput | Prisma.FacturaDetalleOrderByWithRelationInput[]
+  cursor?: Prisma.FacturaDetalleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FacturaDetalleScalarFieldEnum | Prisma.FacturaDetalleScalarFieldEnum[]
 }
 
 /**

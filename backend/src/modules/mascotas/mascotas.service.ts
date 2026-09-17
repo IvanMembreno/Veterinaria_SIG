@@ -29,6 +29,23 @@ export class MascotasService {
         return mascota;
     }
 
+    async historial(id: string) {
+        const mascota = await this.prisma.mascota.findUnique({
+            where: { id },
+        });
+        if (!mascota) throw new NotFoundException('Mascota no encontrada');
+
+        return this.prisma.consulta.findMany({
+            where: { cita: { mascotaId: id } },
+            include: {
+                cita: true,
+                insumos: { include: { insumo: true } },
+                facturas: true,
+            },
+            orderBy: { cita: { fecha: 'desc' } },
+        });
+    }
+
     async update(id: string, dto: UpdateMascotaDto, imagenUrl?: string) {
         await this.findOne(id);
         return this.prisma.mascota.update({

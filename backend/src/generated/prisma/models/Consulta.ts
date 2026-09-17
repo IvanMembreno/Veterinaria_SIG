@@ -244,7 +244,7 @@ export type ConsultaWhereInput = {
   temperatura?: Prisma.FloatNullableFilter<"Consulta"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Consulta"> | Date | string
   citaId?: Prisma.StringFilter<"Consulta"> | string
-  factura?: Prisma.XOR<Prisma.FacturaNullableScalarRelationFilter, Prisma.FacturaWhereInput> | null
+  facturas?: Prisma.FacturaListRelationFilter
   cita?: Prisma.XOR<Prisma.CitaScalarRelationFilter, Prisma.CitaWhereInput>
   insumos?: Prisma.ConsultaInsumoListRelationFilter
 }
@@ -258,7 +258,7 @@ export type ConsultaOrderByWithRelationInput = {
   temperatura?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   citaId?: Prisma.SortOrder
-  factura?: Prisma.FacturaOrderByWithRelationInput
+  facturas?: Prisma.FacturaOrderByRelationAggregateInput
   cita?: Prisma.CitaOrderByWithRelationInput
   insumos?: Prisma.ConsultaInsumoOrderByRelationAggregateInput
 }
@@ -275,7 +275,7 @@ export type ConsultaWhereUniqueInput = Prisma.AtLeast<{
   peso?: Prisma.FloatNullableFilter<"Consulta"> | number | null
   temperatura?: Prisma.FloatNullableFilter<"Consulta"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Consulta"> | Date | string
-  factura?: Prisma.XOR<Prisma.FacturaNullableScalarRelationFilter, Prisma.FacturaWhereInput> | null
+  facturas?: Prisma.FacturaListRelationFilter
   cita?: Prisma.XOR<Prisma.CitaScalarRelationFilter, Prisma.CitaWhereInput>
   insumos?: Prisma.ConsultaInsumoListRelationFilter
 }, "id" | "citaId">
@@ -318,7 +318,7 @@ export type ConsultaCreateInput = {
   peso?: number | null
   temperatura?: number | null
   createdAt?: Date | string
-  factura?: Prisma.FacturaCreateNestedOneWithoutConsultaInput
+  facturas?: Prisma.FacturaCreateNestedManyWithoutConsultaInput
   cita: Prisma.CitaCreateNestedOneWithoutConsultaInput
   insumos?: Prisma.ConsultaInsumoCreateNestedManyWithoutConsultaInput
 }
@@ -332,7 +332,7 @@ export type ConsultaUncheckedCreateInput = {
   temperatura?: number | null
   createdAt?: Date | string
   citaId: string
-  factura?: Prisma.FacturaUncheckedCreateNestedOneWithoutConsultaInput
+  facturas?: Prisma.FacturaUncheckedCreateNestedManyWithoutConsultaInput
   insumos?: Prisma.ConsultaInsumoUncheckedCreateNestedManyWithoutConsultaInput
 }
 
@@ -344,7 +344,7 @@ export type ConsultaUpdateInput = {
   peso?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   temperatura?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  factura?: Prisma.FacturaUpdateOneWithoutConsultaNestedInput
+  facturas?: Prisma.FacturaUpdateManyWithoutConsultaNestedInput
   cita?: Prisma.CitaUpdateOneRequiredWithoutConsultaNestedInput
   insumos?: Prisma.ConsultaInsumoUpdateManyWithoutConsultaNestedInput
 }
@@ -358,7 +358,7 @@ export type ConsultaUncheckedUpdateInput = {
   temperatura?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   citaId?: Prisma.StringFieldUpdateOperationsInput | string
-  factura?: Prisma.FacturaUncheckedUpdateOneWithoutConsultaNestedInput
+  facturas?: Prisma.FacturaUncheckedUpdateManyWithoutConsultaNestedInput
   insumos?: Prisma.ConsultaInsumoUncheckedUpdateManyWithoutConsultaNestedInput
 }
 
@@ -493,18 +493,20 @@ export type ConsultaUpdateOneRequiredWithoutInsumosNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ConsultaUpdateToOneWithWhereWithoutInsumosInput, Prisma.ConsultaUpdateWithoutInsumosInput>, Prisma.ConsultaUncheckedUpdateWithoutInsumosInput>
 }
 
-export type ConsultaCreateNestedOneWithoutFacturaInput = {
-  create?: Prisma.XOR<Prisma.ConsultaCreateWithoutFacturaInput, Prisma.ConsultaUncheckedCreateWithoutFacturaInput>
-  connectOrCreate?: Prisma.ConsultaCreateOrConnectWithoutFacturaInput
+export type ConsultaCreateNestedOneWithoutFacturasInput = {
+  create?: Prisma.XOR<Prisma.ConsultaCreateWithoutFacturasInput, Prisma.ConsultaUncheckedCreateWithoutFacturasInput>
+  connectOrCreate?: Prisma.ConsultaCreateOrConnectWithoutFacturasInput
   connect?: Prisma.ConsultaWhereUniqueInput
 }
 
-export type ConsultaUpdateOneRequiredWithoutFacturaNestedInput = {
-  create?: Prisma.XOR<Prisma.ConsultaCreateWithoutFacturaInput, Prisma.ConsultaUncheckedCreateWithoutFacturaInput>
-  connectOrCreate?: Prisma.ConsultaCreateOrConnectWithoutFacturaInput
-  upsert?: Prisma.ConsultaUpsertWithoutFacturaInput
+export type ConsultaUpdateOneWithoutFacturasNestedInput = {
+  create?: Prisma.XOR<Prisma.ConsultaCreateWithoutFacturasInput, Prisma.ConsultaUncheckedCreateWithoutFacturasInput>
+  connectOrCreate?: Prisma.ConsultaCreateOrConnectWithoutFacturasInput
+  upsert?: Prisma.ConsultaUpsertWithoutFacturasInput
+  disconnect?: Prisma.ConsultaWhereInput | boolean
+  delete?: Prisma.ConsultaWhereInput | boolean
   connect?: Prisma.ConsultaWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ConsultaUpdateToOneWithWhereWithoutFacturaInput, Prisma.ConsultaUpdateWithoutFacturaInput>, Prisma.ConsultaUncheckedUpdateWithoutFacturaInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ConsultaUpdateToOneWithWhereWithoutFacturasInput, Prisma.ConsultaUpdateWithoutFacturasInput>, Prisma.ConsultaUncheckedUpdateWithoutFacturasInput>
 }
 
 export type ConsultaCreateWithoutCitaInput = {
@@ -515,7 +517,7 @@ export type ConsultaCreateWithoutCitaInput = {
   peso?: number | null
   temperatura?: number | null
   createdAt?: Date | string
-  factura?: Prisma.FacturaCreateNestedOneWithoutConsultaInput
+  facturas?: Prisma.FacturaCreateNestedManyWithoutConsultaInput
   insumos?: Prisma.ConsultaInsumoCreateNestedManyWithoutConsultaInput
 }
 
@@ -527,7 +529,7 @@ export type ConsultaUncheckedCreateWithoutCitaInput = {
   peso?: number | null
   temperatura?: number | null
   createdAt?: Date | string
-  factura?: Prisma.FacturaUncheckedCreateNestedOneWithoutConsultaInput
+  facturas?: Prisma.FacturaUncheckedCreateNestedManyWithoutConsultaInput
   insumos?: Prisma.ConsultaInsumoUncheckedCreateNestedManyWithoutConsultaInput
 }
 
@@ -555,7 +557,7 @@ export type ConsultaUpdateWithoutCitaInput = {
   peso?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   temperatura?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  factura?: Prisma.FacturaUpdateOneWithoutConsultaNestedInput
+  facturas?: Prisma.FacturaUpdateManyWithoutConsultaNestedInput
   insumos?: Prisma.ConsultaInsumoUpdateManyWithoutConsultaNestedInput
 }
 
@@ -567,7 +569,7 @@ export type ConsultaUncheckedUpdateWithoutCitaInput = {
   peso?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   temperatura?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  factura?: Prisma.FacturaUncheckedUpdateOneWithoutConsultaNestedInput
+  facturas?: Prisma.FacturaUncheckedUpdateManyWithoutConsultaNestedInput
   insumos?: Prisma.ConsultaInsumoUncheckedUpdateManyWithoutConsultaNestedInput
 }
 
@@ -579,7 +581,7 @@ export type ConsultaCreateWithoutInsumosInput = {
   peso?: number | null
   temperatura?: number | null
   createdAt?: Date | string
-  factura?: Prisma.FacturaCreateNestedOneWithoutConsultaInput
+  facturas?: Prisma.FacturaCreateNestedManyWithoutConsultaInput
   cita: Prisma.CitaCreateNestedOneWithoutConsultaInput
 }
 
@@ -592,7 +594,7 @@ export type ConsultaUncheckedCreateWithoutInsumosInput = {
   temperatura?: number | null
   createdAt?: Date | string
   citaId: string
-  factura?: Prisma.FacturaUncheckedCreateNestedOneWithoutConsultaInput
+  facturas?: Prisma.FacturaUncheckedCreateNestedManyWithoutConsultaInput
 }
 
 export type ConsultaCreateOrConnectWithoutInsumosInput = {
@@ -619,7 +621,7 @@ export type ConsultaUpdateWithoutInsumosInput = {
   peso?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   temperatura?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  factura?: Prisma.FacturaUpdateOneWithoutConsultaNestedInput
+  facturas?: Prisma.FacturaUpdateManyWithoutConsultaNestedInput
   cita?: Prisma.CitaUpdateOneRequiredWithoutConsultaNestedInput
 }
 
@@ -632,10 +634,10 @@ export type ConsultaUncheckedUpdateWithoutInsumosInput = {
   temperatura?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   citaId?: Prisma.StringFieldUpdateOperationsInput | string
-  factura?: Prisma.FacturaUncheckedUpdateOneWithoutConsultaNestedInput
+  facturas?: Prisma.FacturaUncheckedUpdateManyWithoutConsultaNestedInput
 }
 
-export type ConsultaCreateWithoutFacturaInput = {
+export type ConsultaCreateWithoutFacturasInput = {
   id?: string
   diagnostico?: string | null
   tratamiento?: string | null
@@ -647,7 +649,7 @@ export type ConsultaCreateWithoutFacturaInput = {
   insumos?: Prisma.ConsultaInsumoCreateNestedManyWithoutConsultaInput
 }
 
-export type ConsultaUncheckedCreateWithoutFacturaInput = {
+export type ConsultaUncheckedCreateWithoutFacturasInput = {
   id?: string
   diagnostico?: string | null
   tratamiento?: string | null
@@ -659,23 +661,23 @@ export type ConsultaUncheckedCreateWithoutFacturaInput = {
   insumos?: Prisma.ConsultaInsumoUncheckedCreateNestedManyWithoutConsultaInput
 }
 
-export type ConsultaCreateOrConnectWithoutFacturaInput = {
+export type ConsultaCreateOrConnectWithoutFacturasInput = {
   where: Prisma.ConsultaWhereUniqueInput
-  create: Prisma.XOR<Prisma.ConsultaCreateWithoutFacturaInput, Prisma.ConsultaUncheckedCreateWithoutFacturaInput>
+  create: Prisma.XOR<Prisma.ConsultaCreateWithoutFacturasInput, Prisma.ConsultaUncheckedCreateWithoutFacturasInput>
 }
 
-export type ConsultaUpsertWithoutFacturaInput = {
-  update: Prisma.XOR<Prisma.ConsultaUpdateWithoutFacturaInput, Prisma.ConsultaUncheckedUpdateWithoutFacturaInput>
-  create: Prisma.XOR<Prisma.ConsultaCreateWithoutFacturaInput, Prisma.ConsultaUncheckedCreateWithoutFacturaInput>
+export type ConsultaUpsertWithoutFacturasInput = {
+  update: Prisma.XOR<Prisma.ConsultaUpdateWithoutFacturasInput, Prisma.ConsultaUncheckedUpdateWithoutFacturasInput>
+  create: Prisma.XOR<Prisma.ConsultaCreateWithoutFacturasInput, Prisma.ConsultaUncheckedCreateWithoutFacturasInput>
   where?: Prisma.ConsultaWhereInput
 }
 
-export type ConsultaUpdateToOneWithWhereWithoutFacturaInput = {
+export type ConsultaUpdateToOneWithWhereWithoutFacturasInput = {
   where?: Prisma.ConsultaWhereInput
-  data: Prisma.XOR<Prisma.ConsultaUpdateWithoutFacturaInput, Prisma.ConsultaUncheckedUpdateWithoutFacturaInput>
+  data: Prisma.XOR<Prisma.ConsultaUpdateWithoutFacturasInput, Prisma.ConsultaUncheckedUpdateWithoutFacturasInput>
 }
 
-export type ConsultaUpdateWithoutFacturaInput = {
+export type ConsultaUpdateWithoutFacturasInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   diagnostico?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tratamiento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -687,7 +689,7 @@ export type ConsultaUpdateWithoutFacturaInput = {
   insumos?: Prisma.ConsultaInsumoUpdateManyWithoutConsultaNestedInput
 }
 
-export type ConsultaUncheckedUpdateWithoutFacturaInput = {
+export type ConsultaUncheckedUpdateWithoutFacturasInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   diagnostico?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tratamiento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -705,10 +707,12 @@ export type ConsultaUncheckedUpdateWithoutFacturaInput = {
  */
 
 export type ConsultaCountOutputType = {
+  facturas: number
   insumos: number
 }
 
 export type ConsultaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  facturas?: boolean | ConsultaCountOutputTypeCountFacturasArgs
   insumos?: boolean | ConsultaCountOutputTypeCountInsumosArgs
 }
 
@@ -720,6 +724,13 @@ export type ConsultaCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ext
    * Select specific fields to fetch from the ConsultaCountOutputType
    */
   select?: Prisma.ConsultaCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ConsultaCountOutputType without action
+ */
+export type ConsultaCountOutputTypeCountFacturasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FacturaWhereInput
 }
 
 /**
@@ -739,7 +750,7 @@ export type ConsultaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   temperatura?: boolean
   createdAt?: boolean
   citaId?: boolean
-  factura?: boolean | Prisma.Consulta$facturaArgs<ExtArgs>
+  facturas?: boolean | Prisma.Consulta$facturasArgs<ExtArgs>
   cita?: boolean | Prisma.CitaDefaultArgs<ExtArgs>
   insumos?: boolean | Prisma.Consulta$insumosArgs<ExtArgs>
   _count?: boolean | Prisma.ConsultaCountOutputTypeDefaultArgs<ExtArgs>
@@ -782,7 +793,7 @@ export type ConsultaSelectScalar = {
 
 export type ConsultaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "diagnostico" | "tratamiento" | "observaciones" | "peso" | "temperatura" | "createdAt" | "citaId", ExtArgs["result"]["consulta"]>
 export type ConsultaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  factura?: boolean | Prisma.Consulta$facturaArgs<ExtArgs>
+  facturas?: boolean | Prisma.Consulta$facturasArgs<ExtArgs>
   cita?: boolean | Prisma.CitaDefaultArgs<ExtArgs>
   insumos?: boolean | Prisma.Consulta$insumosArgs<ExtArgs>
   _count?: boolean | Prisma.ConsultaCountOutputTypeDefaultArgs<ExtArgs>
@@ -797,7 +808,7 @@ export type ConsultaIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type $ConsultaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Consulta"
   objects: {
-    factura: Prisma.$FacturaPayload<ExtArgs> | null
+    facturas: Prisma.$FacturaPayload<ExtArgs>[]
     cita: Prisma.$CitaPayload<ExtArgs>
     insumos: Prisma.$ConsultaInsumoPayload<ExtArgs>[]
   }
@@ -1204,7 +1215,7 @@ readonly fields: ConsultaFieldRefs;
  */
 export interface Prisma__ConsultaClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  factura<T extends Prisma.Consulta$facturaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Consulta$facturaArgs<ExtArgs>>): Prisma.Prisma__FacturaClient<runtime.Types.Result.GetResult<Prisma.$FacturaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  facturas<T extends Prisma.Consulta$facturasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Consulta$facturasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FacturaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cita<T extends Prisma.CitaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CitaDefaultArgs<ExtArgs>>): Prisma.Prisma__CitaClient<runtime.Types.Result.GetResult<Prisma.$CitaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   insumos<T extends Prisma.Consulta$insumosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Consulta$insumosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConsultaInsumoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1645,9 +1656,9 @@ export type ConsultaDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * Consulta.factura
+ * Consulta.facturas
  */
-export type Consulta$facturaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Consulta$facturasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Factura
    */
@@ -1661,6 +1672,11 @@ export type Consulta$facturaArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   include?: Prisma.FacturaInclude<ExtArgs> | null
   where?: Prisma.FacturaWhereInput
+  orderBy?: Prisma.FacturaOrderByWithRelationInput | Prisma.FacturaOrderByWithRelationInput[]
+  cursor?: Prisma.FacturaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FacturaScalarFieldEnum | Prisma.FacturaScalarFieldEnum[]
 }
 
 /**

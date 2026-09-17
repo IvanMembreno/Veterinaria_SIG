@@ -61,7 +61,8 @@ export const ModelName = {
   ConsultaInsumo: 'ConsultaInsumo',
   MovimientoInventario: 'MovimientoInventario',
   Factura: 'Factura',
-  FacturaDetalle: 'FacturaDetalle'
+  FacturaDetalle: 'FacturaDetalle',
+  Recordatorio: 'Recordatorio'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -198,6 +199,8 @@ export const FacturaScalarFieldEnum = {
   id: 'id',
   total: 'total',
   fecha: 'fecha',
+  estado: 'estado',
+  metodoPago: 'metodoPago',
   consultaId: 'consultaId'
 } as const
 
@@ -209,10 +212,25 @@ export const FacturaDetalleScalarFieldEnum = {
   cantidad: 'cantidad',
   precio: 'precio',
   facturaId: 'facturaId',
-  servicioId: 'servicioId'
+  servicioId: 'servicioId',
+  insumoId: 'insumoId'
 } as const
 
 export type FacturaDetalleScalarFieldEnum = (typeof FacturaDetalleScalarFieldEnum)[keyof typeof FacturaDetalleScalarFieldEnum]
+
+
+export const RecordatorioScalarFieldEnum = {
+  id: 'id',
+  tipo: 'tipo',
+  fechaProgramada: 'fechaProgramada',
+  estado: 'estado',
+  nota: 'nota',
+  contactoEnviado: 'contactoEnviado',
+  createdAt: 'createdAt',
+  mascotaId: 'mascotaId'
+} as const
+
+export type RecordatorioScalarFieldEnum = (typeof RecordatorioScalarFieldEnum)[keyof typeof RecordatorioScalarFieldEnum]
 
 
 export const SortOrder = {

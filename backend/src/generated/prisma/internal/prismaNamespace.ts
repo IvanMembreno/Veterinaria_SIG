@@ -407,7 +407,8 @@ export const ModelName = {
   ConsultaInsumo: 'ConsultaInsumo',
   MovimientoInventario: 'MovimientoInventario',
   Factura: 'Factura',
-  FacturaDetalle: 'FacturaDetalle'
+  FacturaDetalle: 'FacturaDetalle',
+  Recordatorio: 'Recordatorio'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -423,7 +424,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "usuario" | "cliente" | "mascota" | "cita" | "consulta" | "servicio" | "inventario" | "consultaInsumo" | "movimientoInventario" | "factura" | "facturaDetalle"
+    modelProps: "usuario" | "cliente" | "mascota" | "cita" | "consulta" | "servicio" | "inventario" | "consultaInsumo" | "movimientoInventario" | "factura" | "facturaDetalle" | "recordatorio"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1241,6 +1242,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Recordatorio: {
+      payload: Prisma.$RecordatorioPayload<ExtArgs>
+      fields: Prisma.RecordatorioFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RecordatorioFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecordatorioPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RecordatorioFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecordatorioPayload>
+        }
+        findFirst: {
+          args: Prisma.RecordatorioFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecordatorioPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RecordatorioFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecordatorioPayload>
+        }
+        findMany: {
+          args: Prisma.RecordatorioFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecordatorioPayload>[]
+        }
+        create: {
+          args: Prisma.RecordatorioCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecordatorioPayload>
+        }
+        createMany: {
+          args: Prisma.RecordatorioCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RecordatorioCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecordatorioPayload>[]
+        }
+        delete: {
+          args: Prisma.RecordatorioDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecordatorioPayload>
+        }
+        update: {
+          args: Prisma.RecordatorioUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecordatorioPayload>
+        }
+        deleteMany: {
+          args: Prisma.RecordatorioDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RecordatorioUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RecordatorioUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecordatorioPayload>[]
+        }
+        upsert: {
+          args: Prisma.RecordatorioUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecordatorioPayload>
+        }
+        aggregate: {
+          args: Prisma.RecordatorioAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRecordatorio>
+        }
+        groupBy: {
+          args: Prisma.RecordatorioGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RecordatorioGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RecordatorioCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RecordatorioCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1398,6 +1473,8 @@ export const FacturaScalarFieldEnum = {
   id: 'id',
   total: 'total',
   fecha: 'fecha',
+  estado: 'estado',
+  metodoPago: 'metodoPago',
   consultaId: 'consultaId'
 } as const
 
@@ -1409,10 +1486,25 @@ export const FacturaDetalleScalarFieldEnum = {
   cantidad: 'cantidad',
   precio: 'precio',
   facturaId: 'facturaId',
-  servicioId: 'servicioId'
+  servicioId: 'servicioId',
+  insumoId: 'insumoId'
 } as const
 
 export type FacturaDetalleScalarFieldEnum = (typeof FacturaDetalleScalarFieldEnum)[keyof typeof FacturaDetalleScalarFieldEnum]
+
+
+export const RecordatorioScalarFieldEnum = {
+  id: 'id',
+  tipo: 'tipo',
+  fechaProgramada: 'fechaProgramada',
+  estado: 'estado',
+  nota: 'nota',
+  contactoEnviado: 'contactoEnviado',
+  createdAt: 'createdAt',
+  mascotaId: 'mascotaId'
+} as const
+
+export type RecordatorioScalarFieldEnum = (typeof RecordatorioScalarFieldEnum)[keyof typeof RecordatorioScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1561,6 +1653,48 @@ export type EnumTipoMovimientoFieldRefInput<$PrismaModel> = FieldRefInputType<$P
  * Reference to a field of type 'TipoMovimiento[]'
  */
 export type ListEnumTipoMovimientoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoMovimiento[]'>
+    
+
+
+/**
+ * Reference to a field of type 'EstadoFactura'
+ */
+export type EnumEstadoFacturaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoFactura'>
+    
+
+
+/**
+ * Reference to a field of type 'EstadoFactura[]'
+ */
+export type ListEnumEstadoFacturaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoFactura[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TipoRecordatorio'
+ */
+export type EnumTipoRecordatorioFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoRecordatorio'>
+    
+
+
+/**
+ * Reference to a field of type 'TipoRecordatorio[]'
+ */
+export type ListEnumTipoRecordatorioFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoRecordatorio[]'>
+    
+
+
+/**
+ * Reference to a field of type 'EstadoRecordatorio'
+ */
+export type EnumEstadoRecordatorioFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoRecordatorio'>
+    
+
+
+/**
+ * Reference to a field of type 'EstadoRecordatorio[]'
+ */
+export type ListEnumEstadoRecordatorioFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoRecordatorio[]'>
     
 
 /**
@@ -1725,6 +1859,7 @@ export type GlobalOmitConfig = {
   movimientoInventario?: Prisma.MovimientoInventarioOmit
   factura?: Prisma.FacturaOmit
   facturaDetalle?: Prisma.FacturaDetalleOmit
+  recordatorio?: Prisma.RecordatorioOmit
 }
 
 /* Types for Logging */

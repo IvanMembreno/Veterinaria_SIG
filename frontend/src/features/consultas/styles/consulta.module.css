@@ -1,0 +1,120 @@
+/* #region Encabezado */
+.formHint {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin: -8px 0 20px 0;
+}
+/* #endregion */
+
+/* #region Estructura del formulario */
+.formGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    width: 100%;
+}
+
+.fullWidth {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.halfWidth {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: calc(50% - 8px);
+}
+
+.twoThirdsWidth {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: calc(75% - 12px);
+}
+
+.oneThirdsWidth {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: calc(25% - 4px);
+}
+/* #endregion */
+
+/* #region Campos */
+.formGrid label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-primary-soft);
+}
+
+.formGrid textarea,
+.formGrid input,
+.formGrid select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--color-border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    background-color: var(--color-surface);
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.formGrid textarea {
+    height: 90px;
+    resize: none;
+}
+
+.formGrid textarea:focus,
+.formGrid input:focus,
+.formGrid select:focus {
+    border-color: var(--color-accent);
+    background-color: var(--color-surface-alt);
+}
+/* #endregion */
+
+/* #region Acciones */
+.actionsContainer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.submitBtn {
+    padding: 12px 22px;
+    background-color: var(--color-primary-mid);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.submitBtn:hover {
+    background-color: var(--color-primary);
+}
+
+.cancelBtn {
+    padding: 12px 20px;
+    background-color: var(--color-surface-alt);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.cancelBtn:hover {
+    background-color: var(--color-border);
+}
+/* #endregion */

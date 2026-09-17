@@ -38,6 +38,8 @@ export type FacturaMinAggregateOutputType = {
   id: string | null
   total: number | null
   fecha: Date | null
+  estado: $Enums.EstadoFactura | null
+  metodoPago: string | null
   consultaId: string | null
 }
 
@@ -45,6 +47,8 @@ export type FacturaMaxAggregateOutputType = {
   id: string | null
   total: number | null
   fecha: Date | null
+  estado: $Enums.EstadoFactura | null
+  metodoPago: string | null
   consultaId: string | null
 }
 
@@ -52,6 +56,8 @@ export type FacturaCountAggregateOutputType = {
   id: number
   total: number
   fecha: number
+  estado: number
+  metodoPago: number
   consultaId: number
   _all: number
 }
@@ -69,6 +75,8 @@ export type FacturaMinAggregateInputType = {
   id?: true
   total?: true
   fecha?: true
+  estado?: true
+  metodoPago?: true
   consultaId?: true
 }
 
@@ -76,6 +84,8 @@ export type FacturaMaxAggregateInputType = {
   id?: true
   total?: true
   fecha?: true
+  estado?: true
+  metodoPago?: true
   consultaId?: true
 }
 
@@ -83,6 +93,8 @@ export type FacturaCountAggregateInputType = {
   id?: true
   total?: true
   fecha?: true
+  estado?: true
+  metodoPago?: true
   consultaId?: true
   _all?: true
 }
@@ -177,7 +189,9 @@ export type FacturaGroupByOutputType = {
   id: string
   total: number
   fecha: Date
-  consultaId: string
+  estado: $Enums.EstadoFactura
+  metodoPago: string | null
+  consultaId: string | null
   _count: FacturaCountAggregateOutputType | null
   _avg: FacturaAvgAggregateOutputType | null
   _sum: FacturaSumAggregateOutputType | null
@@ -207,8 +221,10 @@ export type FacturaWhereInput = {
   id?: Prisma.StringFilter<"Factura"> | string
   total?: Prisma.FloatFilter<"Factura"> | number
   fecha?: Prisma.DateTimeFilter<"Factura"> | Date | string
-  consultaId?: Prisma.StringFilter<"Factura"> | string
-  consulta?: Prisma.XOR<Prisma.ConsultaScalarRelationFilter, Prisma.ConsultaWhereInput>
+  estado?: Prisma.EnumEstadoFacturaFilter<"Factura"> | $Enums.EstadoFactura
+  metodoPago?: Prisma.StringNullableFilter<"Factura"> | string | null
+  consultaId?: Prisma.StringNullableFilter<"Factura"> | string | null
+  consulta?: Prisma.XOR<Prisma.ConsultaNullableScalarRelationFilter, Prisma.ConsultaWhereInput> | null
   detalles?: Prisma.FacturaDetalleListRelationFilter
 }
 
@@ -216,28 +232,34 @@ export type FacturaOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   total?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
-  consultaId?: Prisma.SortOrder
+  estado?: Prisma.SortOrder
+  metodoPago?: Prisma.SortOrderInput | Prisma.SortOrder
+  consultaId?: Prisma.SortOrderInput | Prisma.SortOrder
   consulta?: Prisma.ConsultaOrderByWithRelationInput
   detalles?: Prisma.FacturaDetalleOrderByRelationAggregateInput
 }
 
 export type FacturaWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  consultaId?: string
   AND?: Prisma.FacturaWhereInput | Prisma.FacturaWhereInput[]
   OR?: Prisma.FacturaWhereInput[]
   NOT?: Prisma.FacturaWhereInput | Prisma.FacturaWhereInput[]
   total?: Prisma.FloatFilter<"Factura"> | number
   fecha?: Prisma.DateTimeFilter<"Factura"> | Date | string
-  consulta?: Prisma.XOR<Prisma.ConsultaScalarRelationFilter, Prisma.ConsultaWhereInput>
+  estado?: Prisma.EnumEstadoFacturaFilter<"Factura"> | $Enums.EstadoFactura
+  metodoPago?: Prisma.StringNullableFilter<"Factura"> | string | null
+  consultaId?: Prisma.StringNullableFilter<"Factura"> | string | null
+  consulta?: Prisma.XOR<Prisma.ConsultaNullableScalarRelationFilter, Prisma.ConsultaWhereInput> | null
   detalles?: Prisma.FacturaDetalleListRelationFilter
-}, "id" | "consultaId">
+}, "id">
 
 export type FacturaOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   total?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
-  consultaId?: Prisma.SortOrder
+  estado?: Prisma.SortOrder
+  metodoPago?: Prisma.SortOrderInput | Prisma.SortOrder
+  consultaId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.FacturaCountOrderByAggregateInput
   _avg?: Prisma.FacturaAvgOrderByAggregateInput
   _max?: Prisma.FacturaMaxOrderByAggregateInput
@@ -252,14 +274,18 @@ export type FacturaScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Factura"> | string
   total?: Prisma.FloatWithAggregatesFilter<"Factura"> | number
   fecha?: Prisma.DateTimeWithAggregatesFilter<"Factura"> | Date | string
-  consultaId?: Prisma.StringWithAggregatesFilter<"Factura"> | string
+  estado?: Prisma.EnumEstadoFacturaWithAggregatesFilter<"Factura"> | $Enums.EstadoFactura
+  metodoPago?: Prisma.StringNullableWithAggregatesFilter<"Factura"> | string | null
+  consultaId?: Prisma.StringNullableWithAggregatesFilter<"Factura"> | string | null
 }
 
 export type FacturaCreateInput = {
   id?: string
   total: number
   fecha?: Date | string
-  consulta: Prisma.ConsultaCreateNestedOneWithoutFacturaInput
+  estado?: $Enums.EstadoFactura
+  metodoPago?: string | null
+  consulta?: Prisma.ConsultaCreateNestedOneWithoutFacturasInput
   detalles?: Prisma.FacturaDetalleCreateNestedManyWithoutFacturaInput
 }
 
@@ -267,7 +293,9 @@ export type FacturaUncheckedCreateInput = {
   id?: string
   total: number
   fecha?: Date | string
-  consultaId: string
+  estado?: $Enums.EstadoFactura
+  metodoPago?: string | null
+  consultaId?: string | null
   detalles?: Prisma.FacturaDetalleUncheckedCreateNestedManyWithoutFacturaInput
 }
 
@@ -275,7 +303,9 @@ export type FacturaUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   total?: Prisma.FloatFieldUpdateOperationsInput | number
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  consulta?: Prisma.ConsultaUpdateOneRequiredWithoutFacturaNestedInput
+  estado?: Prisma.EnumEstadoFacturaFieldUpdateOperationsInput | $Enums.EstadoFactura
+  metodoPago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consulta?: Prisma.ConsultaUpdateOneWithoutFacturasNestedInput
   detalles?: Prisma.FacturaDetalleUpdateManyWithoutFacturaNestedInput
 }
 
@@ -283,7 +313,9 @@ export type FacturaUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   total?: Prisma.FloatFieldUpdateOperationsInput | number
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  consultaId?: Prisma.StringFieldUpdateOperationsInput | string
+  estado?: Prisma.EnumEstadoFacturaFieldUpdateOperationsInput | $Enums.EstadoFactura
+  metodoPago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consultaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   detalles?: Prisma.FacturaDetalleUncheckedUpdateManyWithoutFacturaNestedInput
 }
 
@@ -291,31 +323,44 @@ export type FacturaCreateManyInput = {
   id?: string
   total: number
   fecha?: Date | string
-  consultaId: string
+  estado?: $Enums.EstadoFactura
+  metodoPago?: string | null
+  consultaId?: string | null
 }
 
 export type FacturaUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   total?: Prisma.FloatFieldUpdateOperationsInput | number
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  estado?: Prisma.EnumEstadoFacturaFieldUpdateOperationsInput | $Enums.EstadoFactura
+  metodoPago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type FacturaUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   total?: Prisma.FloatFieldUpdateOperationsInput | number
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  consultaId?: Prisma.StringFieldUpdateOperationsInput | string
+  estado?: Prisma.EnumEstadoFacturaFieldUpdateOperationsInput | $Enums.EstadoFactura
+  metodoPago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consultaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
-export type FacturaNullableScalarRelationFilter = {
-  is?: Prisma.FacturaWhereInput | null
-  isNot?: Prisma.FacturaWhereInput | null
+export type FacturaListRelationFilter = {
+  every?: Prisma.FacturaWhereInput
+  some?: Prisma.FacturaWhereInput
+  none?: Prisma.FacturaWhereInput
+}
+
+export type FacturaOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type FacturaCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   total?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
+  estado?: Prisma.SortOrder
+  metodoPago?: Prisma.SortOrder
   consultaId?: Prisma.SortOrder
 }
 
@@ -327,6 +372,8 @@ export type FacturaMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   total?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
+  estado?: Prisma.SortOrder
+  metodoPago?: Prisma.SortOrder
   consultaId?: Prisma.SortOrder
 }
 
@@ -334,6 +381,8 @@ export type FacturaMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   total?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
+  estado?: Prisma.SortOrder
+  metodoPago?: Prisma.SortOrder
   consultaId?: Prisma.SortOrder
 }
 
@@ -346,36 +395,50 @@ export type FacturaScalarRelationFilter = {
   isNot?: Prisma.FacturaWhereInput
 }
 
-export type FacturaCreateNestedOneWithoutConsultaInput = {
-  create?: Prisma.XOR<Prisma.FacturaCreateWithoutConsultaInput, Prisma.FacturaUncheckedCreateWithoutConsultaInput>
-  connectOrCreate?: Prisma.FacturaCreateOrConnectWithoutConsultaInput
-  connect?: Prisma.FacturaWhereUniqueInput
+export type FacturaCreateNestedManyWithoutConsultaInput = {
+  create?: Prisma.XOR<Prisma.FacturaCreateWithoutConsultaInput, Prisma.FacturaUncheckedCreateWithoutConsultaInput> | Prisma.FacturaCreateWithoutConsultaInput[] | Prisma.FacturaUncheckedCreateWithoutConsultaInput[]
+  connectOrCreate?: Prisma.FacturaCreateOrConnectWithoutConsultaInput | Prisma.FacturaCreateOrConnectWithoutConsultaInput[]
+  createMany?: Prisma.FacturaCreateManyConsultaInputEnvelope
+  connect?: Prisma.FacturaWhereUniqueInput | Prisma.FacturaWhereUniqueInput[]
 }
 
-export type FacturaUncheckedCreateNestedOneWithoutConsultaInput = {
-  create?: Prisma.XOR<Prisma.FacturaCreateWithoutConsultaInput, Prisma.FacturaUncheckedCreateWithoutConsultaInput>
-  connectOrCreate?: Prisma.FacturaCreateOrConnectWithoutConsultaInput
-  connect?: Prisma.FacturaWhereUniqueInput
+export type FacturaUncheckedCreateNestedManyWithoutConsultaInput = {
+  create?: Prisma.XOR<Prisma.FacturaCreateWithoutConsultaInput, Prisma.FacturaUncheckedCreateWithoutConsultaInput> | Prisma.FacturaCreateWithoutConsultaInput[] | Prisma.FacturaUncheckedCreateWithoutConsultaInput[]
+  connectOrCreate?: Prisma.FacturaCreateOrConnectWithoutConsultaInput | Prisma.FacturaCreateOrConnectWithoutConsultaInput[]
+  createMany?: Prisma.FacturaCreateManyConsultaInputEnvelope
+  connect?: Prisma.FacturaWhereUniqueInput | Prisma.FacturaWhereUniqueInput[]
 }
 
-export type FacturaUpdateOneWithoutConsultaNestedInput = {
-  create?: Prisma.XOR<Prisma.FacturaCreateWithoutConsultaInput, Prisma.FacturaUncheckedCreateWithoutConsultaInput>
-  connectOrCreate?: Prisma.FacturaCreateOrConnectWithoutConsultaInput
-  upsert?: Prisma.FacturaUpsertWithoutConsultaInput
-  disconnect?: Prisma.FacturaWhereInput | boolean
-  delete?: Prisma.FacturaWhereInput | boolean
-  connect?: Prisma.FacturaWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.FacturaUpdateToOneWithWhereWithoutConsultaInput, Prisma.FacturaUpdateWithoutConsultaInput>, Prisma.FacturaUncheckedUpdateWithoutConsultaInput>
+export type FacturaUpdateManyWithoutConsultaNestedInput = {
+  create?: Prisma.XOR<Prisma.FacturaCreateWithoutConsultaInput, Prisma.FacturaUncheckedCreateWithoutConsultaInput> | Prisma.FacturaCreateWithoutConsultaInput[] | Prisma.FacturaUncheckedCreateWithoutConsultaInput[]
+  connectOrCreate?: Prisma.FacturaCreateOrConnectWithoutConsultaInput | Prisma.FacturaCreateOrConnectWithoutConsultaInput[]
+  upsert?: Prisma.FacturaUpsertWithWhereUniqueWithoutConsultaInput | Prisma.FacturaUpsertWithWhereUniqueWithoutConsultaInput[]
+  createMany?: Prisma.FacturaCreateManyConsultaInputEnvelope
+  set?: Prisma.FacturaWhereUniqueInput | Prisma.FacturaWhereUniqueInput[]
+  disconnect?: Prisma.FacturaWhereUniqueInput | Prisma.FacturaWhereUniqueInput[]
+  delete?: Prisma.FacturaWhereUniqueInput | Prisma.FacturaWhereUniqueInput[]
+  connect?: Prisma.FacturaWhereUniqueInput | Prisma.FacturaWhereUniqueInput[]
+  update?: Prisma.FacturaUpdateWithWhereUniqueWithoutConsultaInput | Prisma.FacturaUpdateWithWhereUniqueWithoutConsultaInput[]
+  updateMany?: Prisma.FacturaUpdateManyWithWhereWithoutConsultaInput | Prisma.FacturaUpdateManyWithWhereWithoutConsultaInput[]
+  deleteMany?: Prisma.FacturaScalarWhereInput | Prisma.FacturaScalarWhereInput[]
 }
 
-export type FacturaUncheckedUpdateOneWithoutConsultaNestedInput = {
-  create?: Prisma.XOR<Prisma.FacturaCreateWithoutConsultaInput, Prisma.FacturaUncheckedCreateWithoutConsultaInput>
-  connectOrCreate?: Prisma.FacturaCreateOrConnectWithoutConsultaInput
-  upsert?: Prisma.FacturaUpsertWithoutConsultaInput
-  disconnect?: Prisma.FacturaWhereInput | boolean
-  delete?: Prisma.FacturaWhereInput | boolean
-  connect?: Prisma.FacturaWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.FacturaUpdateToOneWithWhereWithoutConsultaInput, Prisma.FacturaUpdateWithoutConsultaInput>, Prisma.FacturaUncheckedUpdateWithoutConsultaInput>
+export type FacturaUncheckedUpdateManyWithoutConsultaNestedInput = {
+  create?: Prisma.XOR<Prisma.FacturaCreateWithoutConsultaInput, Prisma.FacturaUncheckedCreateWithoutConsultaInput> | Prisma.FacturaCreateWithoutConsultaInput[] | Prisma.FacturaUncheckedCreateWithoutConsultaInput[]
+  connectOrCreate?: Prisma.FacturaCreateOrConnectWithoutConsultaInput | Prisma.FacturaCreateOrConnectWithoutConsultaInput[]
+  upsert?: Prisma.FacturaUpsertWithWhereUniqueWithoutConsultaInput | Prisma.FacturaUpsertWithWhereUniqueWithoutConsultaInput[]
+  createMany?: Prisma.FacturaCreateManyConsultaInputEnvelope
+  set?: Prisma.FacturaWhereUniqueInput | Prisma.FacturaWhereUniqueInput[]
+  disconnect?: Prisma.FacturaWhereUniqueInput | Prisma.FacturaWhereUniqueInput[]
+  delete?: Prisma.FacturaWhereUniqueInput | Prisma.FacturaWhereUniqueInput[]
+  connect?: Prisma.FacturaWhereUniqueInput | Prisma.FacturaWhereUniqueInput[]
+  update?: Prisma.FacturaUpdateWithWhereUniqueWithoutConsultaInput | Prisma.FacturaUpdateWithWhereUniqueWithoutConsultaInput[]
+  updateMany?: Prisma.FacturaUpdateManyWithWhereWithoutConsultaInput | Prisma.FacturaUpdateManyWithWhereWithoutConsultaInput[]
+  deleteMany?: Prisma.FacturaScalarWhereInput | Prisma.FacturaScalarWhereInput[]
+}
+
+export type EnumEstadoFacturaFieldUpdateOperationsInput = {
+  set?: $Enums.EstadoFactura
 }
 
 export type FacturaCreateNestedOneWithoutDetallesInput = {
@@ -396,6 +459,8 @@ export type FacturaCreateWithoutConsultaInput = {
   id?: string
   total: number
   fecha?: Date | string
+  estado?: $Enums.EstadoFactura
+  metodoPago?: string | null
   detalles?: Prisma.FacturaDetalleCreateNestedManyWithoutFacturaInput
 }
 
@@ -403,6 +468,8 @@ export type FacturaUncheckedCreateWithoutConsultaInput = {
   id?: string
   total: number
   fecha?: Date | string
+  estado?: $Enums.EstadoFactura
+  metodoPago?: string | null
   detalles?: Prisma.FacturaDetalleUncheckedCreateNestedManyWithoutFacturaInput
 }
 
@@ -411,43 +478,55 @@ export type FacturaCreateOrConnectWithoutConsultaInput = {
   create: Prisma.XOR<Prisma.FacturaCreateWithoutConsultaInput, Prisma.FacturaUncheckedCreateWithoutConsultaInput>
 }
 
-export type FacturaUpsertWithoutConsultaInput = {
-  update: Prisma.XOR<Prisma.FacturaUpdateWithoutConsultaInput, Prisma.FacturaUncheckedUpdateWithoutConsultaInput>
-  create: Prisma.XOR<Prisma.FacturaCreateWithoutConsultaInput, Prisma.FacturaUncheckedCreateWithoutConsultaInput>
-  where?: Prisma.FacturaWhereInput
+export type FacturaCreateManyConsultaInputEnvelope = {
+  data: Prisma.FacturaCreateManyConsultaInput | Prisma.FacturaCreateManyConsultaInput[]
+  skipDuplicates?: boolean
 }
 
-export type FacturaUpdateToOneWithWhereWithoutConsultaInput = {
-  where?: Prisma.FacturaWhereInput
+export type FacturaUpsertWithWhereUniqueWithoutConsultaInput = {
+  where: Prisma.FacturaWhereUniqueInput
+  update: Prisma.XOR<Prisma.FacturaUpdateWithoutConsultaInput, Prisma.FacturaUncheckedUpdateWithoutConsultaInput>
+  create: Prisma.XOR<Prisma.FacturaCreateWithoutConsultaInput, Prisma.FacturaUncheckedCreateWithoutConsultaInput>
+}
+
+export type FacturaUpdateWithWhereUniqueWithoutConsultaInput = {
+  where: Prisma.FacturaWhereUniqueInput
   data: Prisma.XOR<Prisma.FacturaUpdateWithoutConsultaInput, Prisma.FacturaUncheckedUpdateWithoutConsultaInput>
 }
 
-export type FacturaUpdateWithoutConsultaInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  total?: Prisma.FloatFieldUpdateOperationsInput | number
-  fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  detalles?: Prisma.FacturaDetalleUpdateManyWithoutFacturaNestedInput
+export type FacturaUpdateManyWithWhereWithoutConsultaInput = {
+  where: Prisma.FacturaScalarWhereInput
+  data: Prisma.XOR<Prisma.FacturaUpdateManyMutationInput, Prisma.FacturaUncheckedUpdateManyWithoutConsultaInput>
 }
 
-export type FacturaUncheckedUpdateWithoutConsultaInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  total?: Prisma.FloatFieldUpdateOperationsInput | number
-  fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  detalles?: Prisma.FacturaDetalleUncheckedUpdateManyWithoutFacturaNestedInput
+export type FacturaScalarWhereInput = {
+  AND?: Prisma.FacturaScalarWhereInput | Prisma.FacturaScalarWhereInput[]
+  OR?: Prisma.FacturaScalarWhereInput[]
+  NOT?: Prisma.FacturaScalarWhereInput | Prisma.FacturaScalarWhereInput[]
+  id?: Prisma.StringFilter<"Factura"> | string
+  total?: Prisma.FloatFilter<"Factura"> | number
+  fecha?: Prisma.DateTimeFilter<"Factura"> | Date | string
+  estado?: Prisma.EnumEstadoFacturaFilter<"Factura"> | $Enums.EstadoFactura
+  metodoPago?: Prisma.StringNullableFilter<"Factura"> | string | null
+  consultaId?: Prisma.StringNullableFilter<"Factura"> | string | null
 }
 
 export type FacturaCreateWithoutDetallesInput = {
   id?: string
   total: number
   fecha?: Date | string
-  consulta: Prisma.ConsultaCreateNestedOneWithoutFacturaInput
+  estado?: $Enums.EstadoFactura
+  metodoPago?: string | null
+  consulta?: Prisma.ConsultaCreateNestedOneWithoutFacturasInput
 }
 
 export type FacturaUncheckedCreateWithoutDetallesInput = {
   id?: string
   total: number
   fecha?: Date | string
-  consultaId: string
+  estado?: $Enums.EstadoFactura
+  metodoPago?: string | null
+  consultaId?: string | null
 }
 
 export type FacturaCreateOrConnectWithoutDetallesInput = {
@@ -470,14 +549,52 @@ export type FacturaUpdateWithoutDetallesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   total?: Prisma.FloatFieldUpdateOperationsInput | number
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  consulta?: Prisma.ConsultaUpdateOneRequiredWithoutFacturaNestedInput
+  estado?: Prisma.EnumEstadoFacturaFieldUpdateOperationsInput | $Enums.EstadoFactura
+  metodoPago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consulta?: Prisma.ConsultaUpdateOneWithoutFacturasNestedInput
 }
 
 export type FacturaUncheckedUpdateWithoutDetallesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   total?: Prisma.FloatFieldUpdateOperationsInput | number
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  consultaId?: Prisma.StringFieldUpdateOperationsInput | string
+  estado?: Prisma.EnumEstadoFacturaFieldUpdateOperationsInput | $Enums.EstadoFactura
+  metodoPago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consultaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type FacturaCreateManyConsultaInput = {
+  id?: string
+  total: number
+  fecha?: Date | string
+  estado?: $Enums.EstadoFactura
+  metodoPago?: string | null
+}
+
+export type FacturaUpdateWithoutConsultaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  estado?: Prisma.EnumEstadoFacturaFieldUpdateOperationsInput | $Enums.EstadoFactura
+  metodoPago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detalles?: Prisma.FacturaDetalleUpdateManyWithoutFacturaNestedInput
+}
+
+export type FacturaUncheckedUpdateWithoutConsultaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  estado?: Prisma.EnumEstadoFacturaFieldUpdateOperationsInput | $Enums.EstadoFactura
+  metodoPago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detalles?: Prisma.FacturaDetalleUncheckedUpdateManyWithoutFacturaNestedInput
+}
+
+export type FacturaUncheckedUpdateManyWithoutConsultaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  estado?: Prisma.EnumEstadoFacturaFieldUpdateOperationsInput | $Enums.EstadoFactura
+  metodoPago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -515,8 +632,10 @@ export type FacturaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   total?: boolean
   fecha?: boolean
+  estado?: boolean
+  metodoPago?: boolean
   consultaId?: boolean
-  consulta?: boolean | Prisma.ConsultaDefaultArgs<ExtArgs>
+  consulta?: boolean | Prisma.Factura$consultaArgs<ExtArgs>
   detalles?: boolean | Prisma.Factura$detallesArgs<ExtArgs>
   _count?: boolean | Prisma.FacturaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["factura"]>
@@ -525,49 +644,57 @@ export type FacturaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   total?: boolean
   fecha?: boolean
+  estado?: boolean
+  metodoPago?: boolean
   consultaId?: boolean
-  consulta?: boolean | Prisma.ConsultaDefaultArgs<ExtArgs>
+  consulta?: boolean | Prisma.Factura$consultaArgs<ExtArgs>
 }, ExtArgs["result"]["factura"]>
 
 export type FacturaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   total?: boolean
   fecha?: boolean
+  estado?: boolean
+  metodoPago?: boolean
   consultaId?: boolean
-  consulta?: boolean | Prisma.ConsultaDefaultArgs<ExtArgs>
+  consulta?: boolean | Prisma.Factura$consultaArgs<ExtArgs>
 }, ExtArgs["result"]["factura"]>
 
 export type FacturaSelectScalar = {
   id?: boolean
   total?: boolean
   fecha?: boolean
+  estado?: boolean
+  metodoPago?: boolean
   consultaId?: boolean
 }
 
-export type FacturaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "total" | "fecha" | "consultaId", ExtArgs["result"]["factura"]>
+export type FacturaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "total" | "fecha" | "estado" | "metodoPago" | "consultaId", ExtArgs["result"]["factura"]>
 export type FacturaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  consulta?: boolean | Prisma.ConsultaDefaultArgs<ExtArgs>
+  consulta?: boolean | Prisma.Factura$consultaArgs<ExtArgs>
   detalles?: boolean | Prisma.Factura$detallesArgs<ExtArgs>
   _count?: boolean | Prisma.FacturaCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type FacturaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  consulta?: boolean | Prisma.ConsultaDefaultArgs<ExtArgs>
+  consulta?: boolean | Prisma.Factura$consultaArgs<ExtArgs>
 }
 export type FacturaIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  consulta?: boolean | Prisma.ConsultaDefaultArgs<ExtArgs>
+  consulta?: boolean | Prisma.Factura$consultaArgs<ExtArgs>
 }
 
 export type $FacturaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Factura"
   objects: {
-    consulta: Prisma.$ConsultaPayload<ExtArgs>
+    consulta: Prisma.$ConsultaPayload<ExtArgs> | null
     detalles: Prisma.$FacturaDetallePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     total: number
     fecha: Date
-    consultaId: string
+    estado: $Enums.EstadoFactura
+    metodoPago: string | null
+    consultaId: string | null
   }, ExtArgs["result"]["factura"]>
   composites: {}
 }
@@ -962,7 +1089,7 @@ readonly fields: FacturaFieldRefs;
  */
 export interface Prisma__FacturaClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  consulta<T extends Prisma.ConsultaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ConsultaDefaultArgs<ExtArgs>>): Prisma.Prisma__ConsultaClient<runtime.Types.Result.GetResult<Prisma.$ConsultaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  consulta<T extends Prisma.Factura$consultaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Factura$consultaArgs<ExtArgs>>): Prisma.Prisma__ConsultaClient<runtime.Types.Result.GetResult<Prisma.$ConsultaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   detalles<T extends Prisma.Factura$detallesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Factura$detallesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FacturaDetallePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -996,6 +1123,8 @@ export interface FacturaFieldRefs {
   readonly id: Prisma.FieldRef<"Factura", 'String'>
   readonly total: Prisma.FieldRef<"Factura", 'Float'>
   readonly fecha: Prisma.FieldRef<"Factura", 'DateTime'>
+  readonly estado: Prisma.FieldRef<"Factura", 'EstadoFactura'>
+  readonly metodoPago: Prisma.FieldRef<"Factura", 'String'>
   readonly consultaId: Prisma.FieldRef<"Factura", 'String'>
 }
     
@@ -1395,6 +1524,25 @@ export type FacturaDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Facturas to delete.
    */
   limit?: number
+}
+
+/**
+ * Factura.consulta
+ */
+export type Factura$consultaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Consulta
+   */
+  select?: Prisma.ConsultaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Consulta
+   */
+  omit?: Prisma.ConsultaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ConsultaInclude<ExtArgs> | null
+  where?: Prisma.ConsultaWhereInput
 }
 
 /**

@@ -297,6 +297,57 @@ export type EnumTipoMovimientoWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumTipoMovimientoFilter<$PrismaModel>
 }
 
+export type EnumEstadoFacturaFilter<$PrismaModel = never> = {
+  equals?: $Enums.EstadoFactura | Prisma.EnumEstadoFacturaFieldRefInput<$PrismaModel>
+  in?: $Enums.EstadoFactura[] | Prisma.ListEnumEstadoFacturaFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EstadoFactura[] | Prisma.ListEnumEstadoFacturaFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEstadoFacturaFilter<$PrismaModel> | $Enums.EstadoFactura
+}
+
+export type EnumEstadoFacturaWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.EstadoFactura | Prisma.EnumEstadoFacturaFieldRefInput<$PrismaModel>
+  in?: $Enums.EstadoFactura[] | Prisma.ListEnumEstadoFacturaFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EstadoFactura[] | Prisma.ListEnumEstadoFacturaFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEstadoFacturaWithAggregatesFilter<$PrismaModel> | $Enums.EstadoFactura
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumEstadoFacturaFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumEstadoFacturaFilter<$PrismaModel>
+}
+
+export type EnumTipoRecordatorioFilter<$PrismaModel = never> = {
+  equals?: $Enums.TipoRecordatorio | Prisma.EnumTipoRecordatorioFieldRefInput<$PrismaModel>
+  in?: $Enums.TipoRecordatorio[] | Prisma.ListEnumTipoRecordatorioFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TipoRecordatorio[] | Prisma.ListEnumTipoRecordatorioFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTipoRecordatorioFilter<$PrismaModel> | $Enums.TipoRecordatorio
+}
+
+export type EnumEstadoRecordatorioFilter<$PrismaModel = never> = {
+  equals?: $Enums.EstadoRecordatorio | Prisma.EnumEstadoRecordatorioFieldRefInput<$PrismaModel>
+  in?: $Enums.EstadoRecordatorio[] | Prisma.ListEnumEstadoRecordatorioFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EstadoRecordatorio[] | Prisma.ListEnumEstadoRecordatorioFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEstadoRecordatorioFilter<$PrismaModel> | $Enums.EstadoRecordatorio
+}
+
+export type EnumTipoRecordatorioWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TipoRecordatorio | Prisma.EnumTipoRecordatorioFieldRefInput<$PrismaModel>
+  in?: $Enums.TipoRecordatorio[] | Prisma.ListEnumTipoRecordatorioFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TipoRecordatorio[] | Prisma.ListEnumTipoRecordatorioFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTipoRecordatorioWithAggregatesFilter<$PrismaModel> | $Enums.TipoRecordatorio
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTipoRecordatorioFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTipoRecordatorioFilter<$PrismaModel>
+}
+
+export type EnumEstadoRecordatorioWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.EstadoRecordatorio | Prisma.EnumEstadoRecordatorioFieldRefInput<$PrismaModel>
+  in?: $Enums.EstadoRecordatorio[] | Prisma.ListEnumEstadoRecordatorioFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EstadoRecordatorio[] | Prisma.ListEnumEstadoRecordatorioFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEstadoRecordatorioWithAggregatesFilter<$PrismaModel> | $Enums.EstadoRecordatorio
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumEstadoRecordatorioFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumEstadoRecordatorioFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -580,6 +631,57 @@ export type NestedEnumTipoMovimientoWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumTipoMovimientoFilter<$PrismaModel>
   _max?: Prisma.NestedEnumTipoMovimientoFilter<$PrismaModel>
+}
+
+export type NestedEnumEstadoFacturaFilter<$PrismaModel = never> = {
+  equals?: $Enums.EstadoFactura | Prisma.EnumEstadoFacturaFieldRefInput<$PrismaModel>
+  in?: $Enums.EstadoFactura[] | Prisma.ListEnumEstadoFacturaFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EstadoFactura[] | Prisma.ListEnumEstadoFacturaFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEstadoFacturaFilter<$PrismaModel> | $Enums.EstadoFactura
+}
+
+export type NestedEnumEstadoFacturaWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.EstadoFactura | Prisma.EnumEstadoFacturaFieldRefInput<$PrismaModel>
+  in?: $Enums.EstadoFactura[] | Prisma.ListEnumEstadoFacturaFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EstadoFactura[] | Prisma.ListEnumEstadoFacturaFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEstadoFacturaWithAggregatesFilter<$PrismaModel> | $Enums.EstadoFactura
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumEstadoFacturaFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumEstadoFacturaFilter<$PrismaModel>
+}
+
+export type NestedEnumTipoRecordatorioFilter<$PrismaModel = never> = {
+  equals?: $Enums.TipoRecordatorio | Prisma.EnumTipoRecordatorioFieldRefInput<$PrismaModel>
+  in?: $Enums.TipoRecordatorio[] | Prisma.ListEnumTipoRecordatorioFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TipoRecordatorio[] | Prisma.ListEnumTipoRecordatorioFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTipoRecordatorioFilter<$PrismaModel> | $Enums.TipoRecordatorio
+}
+
+export type NestedEnumEstadoRecordatorioFilter<$PrismaModel = never> = {
+  equals?: $Enums.EstadoRecordatorio | Prisma.EnumEstadoRecordatorioFieldRefInput<$PrismaModel>
+  in?: $Enums.EstadoRecordatorio[] | Prisma.ListEnumEstadoRecordatorioFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EstadoRecordatorio[] | Prisma.ListEnumEstadoRecordatorioFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEstadoRecordatorioFilter<$PrismaModel> | $Enums.EstadoRecordatorio
+}
+
+export type NestedEnumTipoRecordatorioWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TipoRecordatorio | Prisma.EnumTipoRecordatorioFieldRefInput<$PrismaModel>
+  in?: $Enums.TipoRecordatorio[] | Prisma.ListEnumTipoRecordatorioFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TipoRecordatorio[] | Prisma.ListEnumTipoRecordatorioFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTipoRecordatorioWithAggregatesFilter<$PrismaModel> | $Enums.TipoRecordatorio
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTipoRecordatorioFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTipoRecordatorioFilter<$PrismaModel>
+}
+
+export type NestedEnumEstadoRecordatorioWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.EstadoRecordatorio | Prisma.EnumEstadoRecordatorioFieldRefInput<$PrismaModel>
+  in?: $Enums.EstadoRecordatorio[] | Prisma.ListEnumEstadoRecordatorioFieldRefInput<$PrismaModel>
+  notIn?: $Enums.EstadoRecordatorio[] | Prisma.ListEnumEstadoRecordatorioFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumEstadoRecordatorioWithAggregatesFilter<$PrismaModel> | $Enums.EstadoRecordatorio
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumEstadoRecordatorioFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumEstadoRecordatorioFilter<$PrismaModel>
 }
 
 

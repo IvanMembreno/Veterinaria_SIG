@@ -53,6 +53,12 @@ export class MascotasController {
         return this.mascotasService.findOne(id);
     }
 
+    @Roles(Role.GERENTE, Role.VETERINARIO)
+    @Get(':id/historial')
+    historial(@Param('id') id: string) {
+        return this.mascotasService.historial(id);
+    }
+
     @Roles(Role.GERENTE, Role.RECEPCION)
     @Patch(':id')
     @UseInterceptors(FileInterceptor('imagen'))

@@ -1,0 +1,226 @@
+/* #region Contenedores */
+.pageContainer {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    font-family:
+        system-ui,
+        -apple-system,
+        sans-serif;
+    background-color: #fcfbfa;
+}
+
+.formSection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px max(4vw, 40px);
+}
+
+.formContentWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 420px;
+}
+/* #endregion */
+
+/* #region Identidad de Marca (Brand) */
+.brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    margin-bottom: 32px;
+    width: 100%;
+    max-width: 420px;
+}
+
+.subBrand {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #40916c;
+}
+
+.mainBrand {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1b4332;
+    margin: 0;
+    line-height: 1.1;
+}
+/* #endregion */
+
+/* #region Introducción & Textos */
+.intro h2 {
+    font-size: 24px;
+    color: #1b4332;
+    margin: 0 0 6px 0;
+}
+
+.intro p {
+    color: #6c757d;
+    margin: 0 0 24px 0;
+    font-size: 14px;
+}
+/* #endregion */
+
+/* #region Formulario & Campos */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.inputGroup label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #40916c;
+}
+
+.inputGroup input {
+    padding: 12px 14px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 15px;
+    background: #ffffff;
+    transition: all 0.2s;
+    outline: none;
+}
+
+.inputGroup input:focus {
+    border-color: #52b788;
+    background-color: #f7fffb;
+}
+
+.submitBtn {
+    padding: 14px;
+    background-color: #2d6a4f;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 6px;
+}
+
+.submitBtn:hover {
+    background-color: #1b4332;
+}
+
+.errorBanner {
+    background: #ffe3e3;
+    color: #c92a2a;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.formFooter {
+    margin-top: 24px;
+    text-align: center;
+    width: 100%;
+}
+
+.formFooter a {
+    color: #6c757d;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.formFooter a:hover {
+    text-decoration: underline;
+    color: #2d6a4f;
+}
+/* #endregion */
+
+/* #region Sección Visual Derecha */
+.visualSection {
+    flex: 1.2;
+    background: #d8f3dc;
+    margin: 16px;
+    border-radius: 32px 80px 32px 32px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.creativeCard {
+    background: #ffffff;
+    padding: 16px;
+    padding-bottom: 24px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(27, 67, 50, 0.12);
+    width: 80%;
+    max-width: 340px;
+    transform: rotate(-2deg);
+    transition: transform 0.3s ease;
+}
+
+.creativeCard:hover {
+    transform: rotate(0deg) scale(1.02);
+}
+
+.cardImagePlace {
+    background-image:
+        linear-gradient(rgba(216, 243, 220, 0.39), rgba(216, 243, 220, 0.205)),
+        url(https://petsbioforestal.es/wp-content/uploads/2020/07/alimentar-gatito.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 240px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    border: 1px dashed #b7e4c7;
+}
+
+.cardContent {
+    text-align: center;
+}
+
+.creativeCard h3 {
+    font-family:
+        'Apple Chancery', 'Brush Script MT', 'Segoe Script',
+        'Lucida Handwriting', cursive;
+    font-size: 28px;
+    color: #1b4332;
+    line-height: 1.2;
+    margin: 0 0 8px 0;
+}
+
+.signature {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #52b788;
+    font-weight: 700;
+}
+/* #endregion */
+
+/* #region Responsividad (Media Queries) */
+@media (max-width: 850px) {
+    .visualSection {
+        display: none;
+    }
+    .formSection {
+        max-width: 100%;
+    }
+}
+/* #endregion */

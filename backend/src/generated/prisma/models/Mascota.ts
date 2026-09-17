@@ -258,6 +258,7 @@ export type MascotaWhereInput = {
   clienteId?: Prisma.StringFilter<"Mascota"> | string
   cliente?: Prisma.XOR<Prisma.ClienteScalarRelationFilter, Prisma.ClienteWhereInput>
   citas?: Prisma.CitaListRelationFilter
+  recordatorios?: Prisma.RecordatorioListRelationFilter
 }
 
 export type MascotaOrderByWithRelationInput = {
@@ -273,6 +274,7 @@ export type MascotaOrderByWithRelationInput = {
   clienteId?: Prisma.SortOrder
   cliente?: Prisma.ClienteOrderByWithRelationInput
   citas?: Prisma.CitaOrderByRelationAggregateInput
+  recordatorios?: Prisma.RecordatorioOrderByRelationAggregateInput
 }
 
 export type MascotaWhereUniqueInput = Prisma.AtLeast<{
@@ -291,6 +293,7 @@ export type MascotaWhereUniqueInput = Prisma.AtLeast<{
   clienteId?: Prisma.StringFilter<"Mascota"> | string
   cliente?: Prisma.XOR<Prisma.ClienteScalarRelationFilter, Prisma.ClienteWhereInput>
   citas?: Prisma.CitaListRelationFilter
+  recordatorios?: Prisma.RecordatorioListRelationFilter
 }, "id">
 
 export type MascotaOrderByWithAggregationInput = {
@@ -339,6 +342,7 @@ export type MascotaCreateInput = {
   createdAt?: Date | string
   cliente: Prisma.ClienteCreateNestedOneWithoutMascotasInput
   citas?: Prisma.CitaCreateNestedManyWithoutMascotaInput
+  recordatorios?: Prisma.RecordatorioCreateNestedManyWithoutMascotaInput
 }
 
 export type MascotaUncheckedCreateInput = {
@@ -353,6 +357,7 @@ export type MascotaUncheckedCreateInput = {
   createdAt?: Date | string
   clienteId: string
   citas?: Prisma.CitaUncheckedCreateNestedManyWithoutMascotaInput
+  recordatorios?: Prisma.RecordatorioUncheckedCreateNestedManyWithoutMascotaInput
 }
 
 export type MascotaUpdateInput = {
@@ -367,6 +372,7 @@ export type MascotaUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cliente?: Prisma.ClienteUpdateOneRequiredWithoutMascotasNestedInput
   citas?: Prisma.CitaUpdateManyWithoutMascotaNestedInput
+  recordatorios?: Prisma.RecordatorioUpdateManyWithoutMascotaNestedInput
 }
 
 export type MascotaUncheckedUpdateInput = {
@@ -381,6 +387,7 @@ export type MascotaUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clienteId?: Prisma.StringFieldUpdateOperationsInput | string
   citas?: Prisma.CitaUncheckedUpdateManyWithoutMascotaNestedInput
+  recordatorios?: Prisma.RecordatorioUncheckedUpdateManyWithoutMascotaNestedInput
 }
 
 export type MascotaCreateManyInput = {
@@ -555,6 +562,20 @@ export type MascotaUpdateOneRequiredWithoutCitasNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MascotaUpdateToOneWithWhereWithoutCitasInput, Prisma.MascotaUpdateWithoutCitasInput>, Prisma.MascotaUncheckedUpdateWithoutCitasInput>
 }
 
+export type MascotaCreateNestedOneWithoutRecordatoriosInput = {
+  create?: Prisma.XOR<Prisma.MascotaCreateWithoutRecordatoriosInput, Prisma.MascotaUncheckedCreateWithoutRecordatoriosInput>
+  connectOrCreate?: Prisma.MascotaCreateOrConnectWithoutRecordatoriosInput
+  connect?: Prisma.MascotaWhereUniqueInput
+}
+
+export type MascotaUpdateOneRequiredWithoutRecordatoriosNestedInput = {
+  create?: Prisma.XOR<Prisma.MascotaCreateWithoutRecordatoriosInput, Prisma.MascotaUncheckedCreateWithoutRecordatoriosInput>
+  connectOrCreate?: Prisma.MascotaCreateOrConnectWithoutRecordatoriosInput
+  upsert?: Prisma.MascotaUpsertWithoutRecordatoriosInput
+  connect?: Prisma.MascotaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MascotaUpdateToOneWithWhereWithoutRecordatoriosInput, Prisma.MascotaUpdateWithoutRecordatoriosInput>, Prisma.MascotaUncheckedUpdateWithoutRecordatoriosInput>
+}
+
 export type MascotaCreateWithoutClienteInput = {
   id?: string
   nombre: string
@@ -566,6 +587,7 @@ export type MascotaCreateWithoutClienteInput = {
   imagenUrl?: string | null
   createdAt?: Date | string
   citas?: Prisma.CitaCreateNestedManyWithoutMascotaInput
+  recordatorios?: Prisma.RecordatorioCreateNestedManyWithoutMascotaInput
 }
 
 export type MascotaUncheckedCreateWithoutClienteInput = {
@@ -579,6 +601,7 @@ export type MascotaUncheckedCreateWithoutClienteInput = {
   imagenUrl?: string | null
   createdAt?: Date | string
   citas?: Prisma.CitaUncheckedCreateNestedManyWithoutMascotaInput
+  recordatorios?: Prisma.RecordatorioUncheckedCreateNestedManyWithoutMascotaInput
 }
 
 export type MascotaCreateOrConnectWithoutClienteInput = {
@@ -634,6 +657,7 @@ export type MascotaCreateWithoutCitasInput = {
   imagenUrl?: string | null
   createdAt?: Date | string
   cliente: Prisma.ClienteCreateNestedOneWithoutMascotasInput
+  recordatorios?: Prisma.RecordatorioCreateNestedManyWithoutMascotaInput
 }
 
 export type MascotaUncheckedCreateWithoutCitasInput = {
@@ -647,6 +671,7 @@ export type MascotaUncheckedCreateWithoutCitasInput = {
   imagenUrl?: string | null
   createdAt?: Date | string
   clienteId: string
+  recordatorios?: Prisma.RecordatorioUncheckedCreateNestedManyWithoutMascotaInput
 }
 
 export type MascotaCreateOrConnectWithoutCitasInput = {
@@ -676,6 +701,7 @@ export type MascotaUpdateWithoutCitasInput = {
   imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cliente?: Prisma.ClienteUpdateOneRequiredWithoutMascotasNestedInput
+  recordatorios?: Prisma.RecordatorioUpdateManyWithoutMascotaNestedInput
 }
 
 export type MascotaUncheckedUpdateWithoutCitasInput = {
@@ -689,6 +715,79 @@ export type MascotaUncheckedUpdateWithoutCitasInput = {
   imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clienteId?: Prisma.StringFieldUpdateOperationsInput | string
+  recordatorios?: Prisma.RecordatorioUncheckedUpdateManyWithoutMascotaNestedInput
+}
+
+export type MascotaCreateWithoutRecordatoriosInput = {
+  id?: string
+  nombre: string
+  especie: string
+  raza?: string | null
+  sexo: $Enums.Sexo
+  fechaNac?: Date | string | null
+  peso?: number | null
+  imagenUrl?: string | null
+  createdAt?: Date | string
+  cliente: Prisma.ClienteCreateNestedOneWithoutMascotasInput
+  citas?: Prisma.CitaCreateNestedManyWithoutMascotaInput
+}
+
+export type MascotaUncheckedCreateWithoutRecordatoriosInput = {
+  id?: string
+  nombre: string
+  especie: string
+  raza?: string | null
+  sexo: $Enums.Sexo
+  fechaNac?: Date | string | null
+  peso?: number | null
+  imagenUrl?: string | null
+  createdAt?: Date | string
+  clienteId: string
+  citas?: Prisma.CitaUncheckedCreateNestedManyWithoutMascotaInput
+}
+
+export type MascotaCreateOrConnectWithoutRecordatoriosInput = {
+  where: Prisma.MascotaWhereUniqueInput
+  create: Prisma.XOR<Prisma.MascotaCreateWithoutRecordatoriosInput, Prisma.MascotaUncheckedCreateWithoutRecordatoriosInput>
+}
+
+export type MascotaUpsertWithoutRecordatoriosInput = {
+  update: Prisma.XOR<Prisma.MascotaUpdateWithoutRecordatoriosInput, Prisma.MascotaUncheckedUpdateWithoutRecordatoriosInput>
+  create: Prisma.XOR<Prisma.MascotaCreateWithoutRecordatoriosInput, Prisma.MascotaUncheckedCreateWithoutRecordatoriosInput>
+  where?: Prisma.MascotaWhereInput
+}
+
+export type MascotaUpdateToOneWithWhereWithoutRecordatoriosInput = {
+  where?: Prisma.MascotaWhereInput
+  data: Prisma.XOR<Prisma.MascotaUpdateWithoutRecordatoriosInput, Prisma.MascotaUncheckedUpdateWithoutRecordatoriosInput>
+}
+
+export type MascotaUpdateWithoutRecordatoriosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  especie?: Prisma.StringFieldUpdateOperationsInput | string
+  raza?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sexo?: Prisma.EnumSexoFieldUpdateOperationsInput | $Enums.Sexo
+  fechaNac?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  peso?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cliente?: Prisma.ClienteUpdateOneRequiredWithoutMascotasNestedInput
+  citas?: Prisma.CitaUpdateManyWithoutMascotaNestedInput
+}
+
+export type MascotaUncheckedUpdateWithoutRecordatoriosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  especie?: Prisma.StringFieldUpdateOperationsInput | string
+  raza?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sexo?: Prisma.EnumSexoFieldUpdateOperationsInput | $Enums.Sexo
+  fechaNac?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  peso?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  clienteId?: Prisma.StringFieldUpdateOperationsInput | string
+  citas?: Prisma.CitaUncheckedUpdateManyWithoutMascotaNestedInput
 }
 
 export type MascotaCreateManyClienteInput = {
@@ -714,6 +813,7 @@ export type MascotaUpdateWithoutClienteInput = {
   imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   citas?: Prisma.CitaUpdateManyWithoutMascotaNestedInput
+  recordatorios?: Prisma.RecordatorioUpdateManyWithoutMascotaNestedInput
 }
 
 export type MascotaUncheckedUpdateWithoutClienteInput = {
@@ -727,6 +827,7 @@ export type MascotaUncheckedUpdateWithoutClienteInput = {
   imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   citas?: Prisma.CitaUncheckedUpdateManyWithoutMascotaNestedInput
+  recordatorios?: Prisma.RecordatorioUncheckedUpdateManyWithoutMascotaNestedInput
 }
 
 export type MascotaUncheckedUpdateManyWithoutClienteInput = {
@@ -748,10 +849,12 @@ export type MascotaUncheckedUpdateManyWithoutClienteInput = {
 
 export type MascotaCountOutputType = {
   citas: number
+  recordatorios: number
 }
 
 export type MascotaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   citas?: boolean | MascotaCountOutputTypeCountCitasArgs
+  recordatorios?: boolean | MascotaCountOutputTypeCountRecordatoriosArgs
 }
 
 /**
@@ -771,6 +874,13 @@ export type MascotaCountOutputTypeCountCitasArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.CitaWhereInput
 }
 
+/**
+ * MascotaCountOutputType without action
+ */
+export type MascotaCountOutputTypeCountRecordatoriosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RecordatorioWhereInput
+}
+
 
 export type MascotaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -785,6 +895,7 @@ export type MascotaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   clienteId?: boolean
   cliente?: boolean | Prisma.ClienteDefaultArgs<ExtArgs>
   citas?: boolean | Prisma.Mascota$citasArgs<ExtArgs>
+  recordatorios?: boolean | Prisma.Mascota$recordatoriosArgs<ExtArgs>
   _count?: boolean | Prisma.MascotaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mascota"]>
 
@@ -833,6 +944,7 @@ export type MascotaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type MascotaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cliente?: boolean | Prisma.ClienteDefaultArgs<ExtArgs>
   citas?: boolean | Prisma.Mascota$citasArgs<ExtArgs>
+  recordatorios?: boolean | Prisma.Mascota$recordatoriosArgs<ExtArgs>
   _count?: boolean | Prisma.MascotaCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MascotaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -847,6 +959,7 @@ export type $MascotaPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     cliente: Prisma.$ClientePayload<ExtArgs>
     citas: Prisma.$CitaPayload<ExtArgs>[]
+    recordatorios: Prisma.$RecordatorioPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1255,6 +1368,7 @@ export interface Prisma__MascotaClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   cliente<T extends Prisma.ClienteDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClienteDefaultArgs<ExtArgs>>): Prisma.Prisma__ClienteClient<runtime.Types.Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   citas<T extends Prisma.Mascota$citasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Mascota$citasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CitaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  recordatorios<T extends Prisma.Mascota$recordatoriosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Mascota$recordatoriosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RecordatorioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1716,6 +1830,30 @@ export type Mascota$citasArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.CitaScalarFieldEnum | Prisma.CitaScalarFieldEnum[]
+}
+
+/**
+ * Mascota.recordatorios
+ */
+export type Mascota$recordatoriosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Recordatorio
+   */
+  select?: Prisma.RecordatorioSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Recordatorio
+   */
+  omit?: Prisma.RecordatorioOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RecordatorioInclude<ExtArgs> | null
+  where?: Prisma.RecordatorioWhereInput
+  orderBy?: Prisma.RecordatorioOrderByWithRelationInput | Prisma.RecordatorioOrderByWithRelationInput[]
+  cursor?: Prisma.RecordatorioWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RecordatorioScalarFieldEnum | Prisma.RecordatorioScalarFieldEnum[]
 }
 
 /**

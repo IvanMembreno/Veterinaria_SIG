@@ -118,7 +118,7 @@ export class ConsultasService {
             include: {
                 cita: { include: { mascota: true } },
                 insumos: { include: { insumo: true } },
-                factura: {
+                facturas: {
                     include: { detalles: { include: { servicio: true } } },
                 },
             },
@@ -129,7 +129,7 @@ export class ConsultasService {
 
     findAll() {
         return this.prisma.consulta.findMany({
-            include: { cita: { include: { mascota: true } }, factura: true },
+            include: { cita: { include: { mascota: true } }, facturas: true },
             orderBy: { createdAt: 'desc' },
         });
     }

@@ -41,7 +41,33 @@ export type Sexo = (typeof Sexo)[keyof typeof Sexo]
 export const TipoMovimiento = {
   ENTRADA: 'ENTRADA',
   SALIDA_CONSULTA: 'SALIDA_CONSULTA',
-  AJUSTE: 'AJUSTE'
+  AJUSTE: 'AJUSTE',
+  VENTA: 'VENTA'
 } as const
 
 export type TipoMovimiento = (typeof TipoMovimiento)[keyof typeof TipoMovimiento]
+
+
+export const EstadoFactura = {
+  PENDIENTE: 'PENDIENTE',
+  PAGADA: 'PAGADA'
+} as const
+
+export type EstadoFactura = (typeof EstadoFactura)[keyof typeof EstadoFactura]
+
+
+export const TipoRecordatorio = {
+  VACUNA: 'VACUNA',
+  CONTROL: 'CONTROL'
+} as const
+
+export type TipoRecordatorio = (typeof TipoRecordatorio)[keyof typeof TipoRecordatorio]
+
+
+export const EstadoRecordatorio = {
+  PENDIENTE: 'PENDIENTE',
+  ENVIADO: 'ENVIADO',
+  COMPLETADO: 'COMPLETADO'
+} as const
+
+export type EstadoRecordatorio = (typeof EstadoRecordatorio)[keyof typeof EstadoRecordatorio]

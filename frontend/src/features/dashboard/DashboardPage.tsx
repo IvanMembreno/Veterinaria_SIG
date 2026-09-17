@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import {
     BarChart,
     Bar,
@@ -8,139 +7,177 @@ import {
     ResponsiveContainer,
     CartesianGrid,
 } from 'recharts';
-import { getResumenDashboard } from '../../api/dashboard.api';
+import { useDashboard, type AlertaStock } from './hooks/useDashboard';
+import styles from './styles/dashboard.module.css';
 
-interface AlertaStock {
-    nombre: string;
-    stock: number;
-    stockMinimo: number;
-}
+import ticket_promedio from "../../assets/decorations/money.svg";
+import tasa_asistencia from "../../assets/decorations/people_check.svg";
+import tasa_ausencia from "../../assets/decorations/people_fail.svg";
+import alerta_stock from "../../assets/decorations/box.svg";
 
 export function DashboardPage() {
-    const { data, isLoading } = useQuery({
-        queryKey: ['dashboard'],
-        queryFn: getResumenDashboard,
-    });
-
-    if (isLoading) return <p>Cargando dashboard...</p>;
-    if (!data) return null;
-
     const {
         ingresosPorServicio,
         consultasPorVeterinario,
         ticketPromedio,
         ocupacionAgenda,
         alertasStockBajo,
-    } = data;
+        isLoading,
+        hasData,
+    } = useDashboard();
+
+    if (isLoading) {
+        return (
+            <div className={styles.loaderContainer}>
+                <p>Calculando los indicadores de La Garrita Feliz...</p>
+            </div>
+        );
+    }
+
+    if (!hasData || !ticketPromedio || !ocupacionAgenda) return null;
 
     return (
-        <div>
-            <h2>Dashboard gerencial</h2>
+        <div className={styles.pageWrapper}>
+            <header className={styles.pageHeader}>
+                <div>
+                    <span className={styles.subBrand}>
+                        VETERINARIA LA GARRITA FELIZ
+                    </span>
+                    <h1 className={styles.mainTitle}>Panel Gerencial</h1>
+                    <p className={styles.subtitle}>
+                        Resumen operativo y financiero de la clínica.
+                    </p>
+                </div>
+            </header>
 
-            <div
-                style={{
-                    display: 'flex',
-                    gap: 16,
-                    marginBottom: 24,
-                    flexWrap: 'wrap',
-                }}
-            >
+            <div className={styles.kpiGrid}>
                 <KpiCard
+                    icon={ticket_promedio}
                     titulo="Ticket promedio"
                     valor={`$${ticketPromedio.ticketPromedio}`}
                     sub={`${ticketPromedio.totalFacturas} facturas`}
                 />
                 <KpiCard
+                    icon={tasa_asistencia}
                     titulo="Tasa de asistencia"
                     valor={`${ocupacionAgenda.tasaAsistencia}%`}
                     sub={`${ocupacionAgenda.atendidas} de ${ocupacionAgenda.totalCitas} citas`}
                 />
                 <KpiCard
+                    icon={tasa_ausencia}
                     titulo="Ausentismo"
                     valor={`${ocupacionAgenda.tasaAusentismo}%`}
                     sub={`${ocupacionAgenda.noAsistio} no-shows`}
                 />
                 <KpiCard
+                    icon={alerta_stock}
                     titulo="Alertas de stock"
-                    valor={alertasStockBajo.length}
+                    valor={alertasStockBajo?.length ?? 0}
                     sub="insumos bajo mínimo"
-                    alerta={alertasStockBajo.length > 0}
+                    alerta={(alertasStockBajo?.length ?? 0) > 0}
                 />
             </div>
 
-            <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-                <div style={{ width: 450, height: 300 }}>
-                    <h4>Ingresos por servicio</h4>
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={ingresosPorServicio}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="servicio" />
-                            <YAxis />
-                            <Tooltip />
-                            <Bar dataKey="totalIngresos" fill="#4f46e5" />
-                        </BarChart>
-                    </ResponsiveContainer>
+            <div className={styles.chartsGrid}>
+                <div className={styles.chartCard}>
+                    <h4 className={styles.chartTitle}>Ingresos por servicio</h4>
+                    <div className={styles.chartArea}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={ingresosPorServicio}>
+                                <CartesianGrid
+                                    strokeDasharray="3 3"
+                                    stroke="#e9ecef"
+                                />
+                                <XAxis
+                                    dataKey="servicio"
+                                    tick={{ fill: '#6c757d', fontSize: 12 }}
+                                />
+                                <YAxis
+                                    tick={{ fill: '#6c757d', fontSize: 12 }}
+                                />
+                                <Tooltip />
+                                <Bar
+                                    dataKey="totalIngresos"
+                                    fill="#2d6a4f"
+                                    radius={[6, 6, 0, 0]}
+                                />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
                 </div>
 
-                <div style={{ width: 450, height: 300 }}>
-                    <h4>Consultas por veterinario</h4>
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={consultasPorVeterinario}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="nombre" />
-                            <YAxis allowDecimals={false} />
-                            <Tooltip />
-                            <Bar dataKey="total" fill="#16a34a" />
-                        </BarChart>
-                    </ResponsiveContainer>
+                <div className={styles.chartCard}>
+                    <h4 className={styles.chartTitle}>
+                        Consultas por veterinario
+                    </h4>
+                    <div className={styles.chartArea}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={consultasPorVeterinario}>
+                                <CartesianGrid
+                                    strokeDasharray="3 3"
+                                    stroke="#e9ecef"
+                                />
+                                <XAxis
+                                    dataKey="nombre"
+                                    tick={{ fill: '#6c757d', fontSize: 12 }}
+                                />
+                                <YAxis
+                                    allowDecimals={false}
+                                    tick={{ fill: '#6c757d', fontSize: 12 }}
+                                />
+                                <Tooltip />
+                                <Bar
+                                    dataKey="total"
+                                    fill="#52b788"
+                                    radius={[6, 6, 0, 0]}
+                                />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
                 </div>
             </div>
 
-            {alertasStockBajo.length > 0 && (
-                <div style={{ marginTop: 24 }}>
-                    <h4>⚠ Insumos con stock bajo</h4>
-                    <ul>
+            {alertasStockBajo && alertasStockBajo.length > 0 && (
+                <section className={styles.alertSection}>
+                    <h4 className={styles.alertTitle}>
+                        <span className={styles.alertIcon}>⚠️</span>
+                        Insumos con stock bajo
+                    </h4>
+                    <ul className={styles.alertList}>
                         {alertasStockBajo.map((a: AlertaStock) => (
-                            <li key={a.nombre}>
-                                {a.nombre}: {a.stock} unidades (mínimo{' '}
-                                {a.stockMinimo})
+                            <li key={a.nombre} className={styles.alertItem}>
+                                <span className={styles.alertName}>
+                                    {a.nombre}
+                                </span>
+                                <span className={styles.alertDetail}>
+                                    {a.stock} unidades (mínimo {a.stockMinimo})
+                                </span>
                             </li>
                         ))}
                     </ul>
-                </div>
+                </section>
             )}
         </div>
     );
 }
 
-function KpiCard({
-    titulo,
-    valor,
-    sub,
-    alerta,
-}: {
+interface KpiCardProps {
+    icon: string;
     titulo: string;
     valor: string | number;
     sub?: string;
     alerta?: boolean;
-}) {
+}
+
+function KpiCard({ icon, titulo, valor, sub, alerta }: KpiCardProps) {
     return (
         <div
-            style={{
-                border: '1px solid #ccc',
-                borderRadius: 8,
-                padding: 16,
-                width: 180,
-                background: alerta ? '#fee2e2' : 'white',
-            }}
+            className={`${styles.kpiCard} ${alerta ? styles.kpiCardAlert : ''}`}
         >
-            <p style={{ margin: 0, fontSize: 12, color: '#666' }}>{titulo}</p>
-            <p style={{ margin: '4px 0', fontSize: 24, fontWeight: 'bold' }}>
-                {valor}
-            </p>
-            {sub && (
-                <p style={{ margin: 0, fontSize: 11, color: '#999' }}>{sub}</p>
-            )}
+            <img src={icon} alt="" className={styles.kpiIcon} />
+            <p className={styles.kpiLabel}>{titulo}</p>
+            <p className={styles.kpiValue}>{valor}</p>
+            {sub && <p className={styles.kpiSub}>{sub}</p>}
         </div>
     );
 }

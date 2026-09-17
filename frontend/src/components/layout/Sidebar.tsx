@@ -15,6 +15,7 @@ import clientes from '../../assets/clients.svg';
 import mascotas from '../../assets/pets.svg';
 import citas from '../../assets/appointment.svg';
 import inventario from '../../assets/inventory.svg';
+import puntoDeVenta from '../../assets/pos.svg';
 
 const links = [
     {
@@ -46,6 +47,12 @@ const links = [
         label: 'Inventario',
         icon: inventario,
         roles: ['GERENTE', 'INVENTARIO'],
+    },
+    {
+        to: '/punto-de-venta',
+        label: 'Punto de Venta',
+        icon: puntoDeVenta,
+        roles: ['GERENTE', 'RECEPCION'],
     },
 ];
 

@@ -7,6 +7,7 @@ import { CitasPage } from '../features/citas/CitasPage';
 import { ProtectedRoute } from './ProtectedRoute';
 import { ProtectedLayout } from '../components/layout/ProtectedLayout';
 import { InventarioPage } from '../features/inventario/InventarioPage';
+import { VentasPage } from '../features/ventas/VentasPage';
 import { useAuthStore } from '../features/auth/useAuthStore';
 import { homeByRole } from './homeByRole';
 
@@ -47,6 +48,16 @@ export function AppRouter() {
                             }
                         >
                             <Route index element={<InventarioPage />} />
+                        </Route>
+                        <Route
+                            path="/punto-de-venta"
+                            element={
+                                <ProtectedRoute
+                                    allowedRoles={['RECEPCION', 'GERENTE']}
+                                />
+                            }
+                        >
+                            <Route index element={<VentasPage />} />
                         </Route>
                     </Route>
                 </Route>

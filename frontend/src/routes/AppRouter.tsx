@@ -3,6 +3,7 @@ import { LoginPage } from '../features/auth/LoginPage';
 import { DashboardPage } from '../features/dashboard/DashboardPage';
 import { ClientesPage } from '../features/clientes/ClientesPage';
 import { MascotasPage } from '../features/mascotas/MascotasPage';
+import { MascotaDetallePage } from '../features/mascotas/MascotaDetallePage';
 import { CitasPage } from '../features/citas/CitasPage';
 import { ProtectedRoute } from './ProtectedRoute';
 import { ProtectedLayout } from '../components/layout/ProtectedLayout';
@@ -41,6 +42,16 @@ export function AppRouter() {
                         </Route>
                         <Route path="/clientes" element={<ClientesPage />} />
                         <Route path="/mascotas" element={<MascotasPage />} />
+                        <Route
+                            path="/mascotas/:id"
+                            element={
+                                <ProtectedRoute
+                                    allowedRoles={['GERENTE', 'VETERINARIO']}
+                                />
+                            }
+                        >
+                            <Route index element={<MascotaDetallePage />} />
+                        </Route>
                         <Route path="/citas" element={<CitasPage />} />
                         <Route
                             path="/inventario"

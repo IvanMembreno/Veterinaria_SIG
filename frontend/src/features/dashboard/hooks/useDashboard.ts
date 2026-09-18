@@ -7,6 +7,13 @@ export interface AlertaStock {
     stockMinimo: number;
 }
 
+export interface AlertaVencimiento {
+    nombre: string;
+    lote?: string | null;
+    fechaVenc: string;
+    stock: number;
+}
+
 export function useDashboard() {
     const { data, isLoading } = useQuery({
         queryKey: ['dashboard'],
@@ -19,6 +26,8 @@ export function useDashboard() {
         ticketPromedio: data?.ticketPromedio,
         ocupacionAgenda: data?.ocupacionAgenda,
         alertasStockBajo: data?.alertasStockBajo as AlertaStock[] | undefined,
+        alertasVencimiento: data?.alertasVencimiento as
+            AlertaVencimiento[] | undefined,
         isLoading,
         hasData: Boolean(data),
     };

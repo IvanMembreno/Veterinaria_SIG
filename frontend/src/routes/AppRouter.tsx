@@ -12,6 +12,7 @@ import { VentasPage } from '../features/ventas/VentasPage';
 import { UsuariosPage } from '../features/usuarios/UsuariosPage';
 import { ServiciosPage } from '../features/servicios/ServiciosPage';
 import { FacturasPage } from '../features/facturas/FacturasPage';
+import { RecordatoriosPage } from '../features/recordatorios/RecordatoriosPage';
 import { useAuthStore } from '../features/auth/useAuthStore';
 import { homeByRole } from './homeByRole';
 
@@ -98,6 +99,20 @@ export function AppRouter() {
                             }
                         >
                             <Route index element={<FacturasPage />} />
+                        </Route>
+                        <Route
+                            path="/recordatorios"
+                            element={
+                                <ProtectedRoute
+                                    allowedRoles={[
+                                        'GERENTE',
+                                        'VETERINARIO',
+                                        'RECEPCION',
+                                    ]}
+                                />
+                            }
+                        >
+                            <Route index element={<RecordatoriosPage />} />
                         </Route>
                     </Route>
                 </Route>

@@ -78,6 +78,63 @@
 }
 /* #endregion */
 
+/* #region Líneas de servicios e insumos */
+.lineaRow {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.lineaRow select {
+    flex: 1;
+}
+
+.lineaRowInsumo {
+    display: grid;
+    grid-template-columns: 1fr 80px auto;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.removeLineaBtn {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.removeLineaBtn:hover {
+    background-color: var(--color-danger);
+    color: white;
+}
+
+.addLineaBtn {
+    padding: 8px 14px;
+    background-color: var(--color-accent-soft);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 2px;
+    transition: all 0.2s ease;
+}
+
+.addLineaBtn:hover {
+    background-color: var(--color-primary-mid);
+    color: white;
+}
+/* #endregion */
+
 /* #region Acciones */
 .actionsContainer {
     display: flex;

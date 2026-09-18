@@ -4,6 +4,15 @@ import { createConsulta } from '../../../api/consultas.api';
 import { getServicios } from '../../../api/servicios.api';
 import { getInventario } from '../../../api/inventario.api';
 
+export interface ServicioLinea {
+    servicioId: string;
+}
+
+export interface InsumoLinea {
+    insumoId: string;
+    cantidad: string;
+}
+
 export function useConsultaForm(citaId: string, onClose: () => void) {
     const queryClient = useQueryClient();
     const { data: servicios } = useQuery({
@@ -19,9 +28,37 @@ export function useConsultaForm(citaId: string, onClose: () => void) {
     const [tratamiento, setTratamiento] = useState('');
     const [peso, setPeso] = useState('');
     const [temperatura, setTemperatura] = useState('');
-    const [servicioId, setServicioId] = useState('');
-    const [insumoId, setInsumoId] = useState('');
-    const [cantidadInsumo, setCantidadInsumo] = useState('1');
+    const [serviciosLineas, setServiciosLineas] = useState<ServicioLinea[]>([
+        { servicioId: '' },
+    ]);
+    const [insumosLineas, setInsumosLineas] = useState<InsumoLinea[]>([]);
+
+    const agregarServicioLinea = () =>
+        setServiciosLineas((prev) => [...prev, { servicioId: '' }]);
+
+    const actualizarServicioLinea = (index: number, servicioId: string) =>
+        setServiciosLineas((prev) =>
+            prev.map((linea, i) => (i === index ? { servicioId } : linea)),
+        );
+
+    const quitarServicioLinea = (index: number) =>
+        setServiciosLineas((prev) => prev.filter((_, i) => i !== index));
+
+    const agregarInsumoLinea = () =>
+        setInsumosLineas((prev) => [...prev, { insumoId: '', cantidad: '1' }]);
+
+    const actualizarInsumoLinea = (
+        index: number,
+        cambios: Partial<InsumoLinea>,
+    ) =>
+        setInsumosLineas((prev) =>
+            prev.map((linea, i) =>
+                i === index ? { ...linea, ...cambios } : linea,
+            ),
+        );
+
+    const quitarInsumoLinea = (index: number) =>
+        setInsumosLineas((prev) => prev.filter((_, i) => i !== index));
 
     const mutation = useMutation({
         mutationFn: createConsulta,
@@ -40,10 +77,15 @@ export function useConsultaForm(citaId: string, onClose: () => void) {
             tratamiento,
             peso: peso ? Number(peso) : undefined,
             temperatura: temperatura ? Number(temperatura) : undefined,
-            servicios: servicioId ? [{ servicioId, cantidad: 1 }] : [],
-            insumos: insumoId
-                ? [{ insumoId, quantity: Number(cantidadInsumo) }]
-                : [],
+            servicios: serviciosLineas
+                .filter((linea) => linea.servicioId)
+                .map((linea) => ({ servicioId: linea.servicioId })),
+            insumos: insumosLineas
+                .filter((linea) => linea.insumoId)
+                .map((linea) => ({
+                    insumoId: linea.insumoId,
+                    cantidad: Number(linea.cantidad) || 1,
+                })),
         });
     };
 
@@ -58,12 +100,14 @@ export function useConsultaForm(citaId: string, onClose: () => void) {
         setPeso,
         temperatura,
         setTemperatura,
-        servicioId,
-        setServicioId,
-        insumoId,
-        setInsumoId,
-        cantidadInsumo,
-        setCantidadInsumo,
+        serviciosLineas,
+        agregarServicioLinea,
+        actualizarServicioLinea,
+        quitarServicioLinea,
+        insumosLineas,
+        agregarInsumoLinea,
+        actualizarInsumoLinea,
+        quitarInsumoLinea,
         handleSubmit,
     };
 }

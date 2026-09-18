@@ -19,12 +19,14 @@ export function ConsultaForm({ citaId, onClose }: Props) {
         setPeso,
         temperatura,
         setTemperatura,
-        servicioId,
-        setServicioId,
-        insumoId,
-        setInsumoId,
-        cantidadInsumo,
-        setCantidadInsumo,
+        serviciosLineas,
+        agregarServicioLinea,
+        actualizarServicioLinea,
+        quitarServicioLinea,
+        insumosLineas,
+        agregarInsumoLinea,
+        actualizarInsumoLinea,
+        quitarInsumoLinea,
         handleSubmit,
     } = useConsultaForm(citaId, onClose);
 
@@ -84,57 +86,99 @@ export function ConsultaForm({ citaId, onClose }: Props) {
                 </div>
 
                 <div className={styles.fullWidth}>
-                    <label htmlFor="sel-servicio">Servicio a facturar</label>
-                    <select
-                        id="sel-servicio"
-                        value={servicioId}
-                        onChange={(e) => setServicioId(e.target.value)}
-                        required
+                    <label>Servicios a facturar</label>
+                    {serviciosLineas.map((linea, index) => (
+                        <div key={index} className={styles.lineaRow}>
+                            <select
+                                aria-label={`Servicio ${index + 1}`}
+                                value={linea.servicioId}
+                                onChange={(e) =>
+                                    actualizarServicioLinea(
+                                        index,
+                                        e.target.value,
+                                    )
+                                }
+                                required={index === 0}
+                            >
+                                <option value="">
+                                    Selecciona el procedimiento realizado
+                                </option>
+                                {servicios?.map((s) => (
+                                    <option key={s.id} value={s.id}>
+                                        {s.nombre} (${s.precio})
+                                    </option>
+                                ))}
+                            </select>
+                            {serviciosLineas.length > 1 && (
+                                <button
+                                    type="button"
+                                    className={styles.removeLineaBtn}
+                                    onClick={() => quitarServicioLinea(index)}
+                                    title="Quitar servicio"
+                                >
+                                    ✕
+                                </button>
+                            )}
+                        </div>
+                    ))}
+                    <button
+                        type="button"
+                        className={styles.addLineaBtn}
+                        onClick={agregarServicioLinea}
                     >
-                        <option value="">
-                            Selecciona el procedimiento realizado
-                        </option>
-                        {servicios?.map((s) => (
-                            <option key={s.id} value={s.id}>
-                                {s.nombre} (${s.precio})
-                            </option>
-                        ))}
-                    </select>
+                        + Agregar servicio
+                    </button>
                 </div>
 
-                <div
-                    className={
-                        insumoId ? styles.twoThirdsWidth : styles.fullWidth
-                    }
-                >
-                    <label htmlFor="sel-insumo">Insumo usado (Opcional)</label>
-                    <select
-                        id="sel-insumo"
-                        value={insumoId}
-                        onChange={(e) => setInsumoId(e.target.value)}
+                <div className={styles.fullWidth}>
+                    <label>Insumos usados (Opcional)</label>
+                    {insumosLineas.map((linea, index) => (
+                        <div key={index} className={styles.lineaRowInsumo}>
+                            <select
+                                aria-label={`Insumo ${index + 1}`}
+                                value={linea.insumoId}
+                                onChange={(e) =>
+                                    actualizarInsumoLinea(index, {
+                                        insumoId: e.target.value,
+                                    })
+                                }
+                            >
+                                <option value="">Selecciona un insumo</option>
+                                {inventario?.map((i) => (
+                                    <option key={i.id} value={i.id}>
+                                        {i.nombre} (Stock: {i.stock})
+                                    </option>
+                                ))}
+                            </select>
+                            <input
+                                type="number"
+                                min="1"
+                                aria-label={`Cantidad insumo ${index + 1}`}
+                                value={linea.cantidad}
+                                onChange={(e) =>
+                                    actualizarInsumoLinea(index, {
+                                        cantidad: e.target.value,
+                                    })
+                                }
+                            />
+                            <button
+                                type="button"
+                                className={styles.removeLineaBtn}
+                                onClick={() => quitarInsumoLinea(index)}
+                                title="Quitar insumo"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    ))}
+                    <button
+                        type="button"
+                        className={styles.addLineaBtn}
+                        onClick={agregarInsumoLinea}
                     >
-                        <option value="">Ninguno</option>
-                        {inventario?.map((i) => (
-                            <option key={i.id} value={i.id}>
-                                {i.nombre} (Stock: {i.stock})
-                            </option>
-                        ))}
-                    </select>
+                        + Agregar insumo
+                    </button>
                 </div>
-
-                {insumoId && (
-                    <div className={styles.oneThirdsWidth}>
-                        <label htmlFor="num-cant">Cant.</label>
-                        <input
-                            id="num-cant"
-                            type="number"
-                            min="1"
-                            value={cantidadInsumo}
-                            onChange={(e) => setCantidadInsumo(e.target.value)}
-                            required
-                        />
-                    </div>
-                )}
 
                 <div
                     className={`${styles.fullWidth} ${styles.actionsContainer}`}

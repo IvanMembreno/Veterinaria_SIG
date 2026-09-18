@@ -7,13 +7,18 @@ import {
     ResponsiveContainer,
     CartesianGrid,
 } from 'recharts';
-import { useDashboard, type AlertaStock } from './hooks/useDashboard';
+import {
+    useDashboard,
+    type AlertaStock,
+    type AlertaVencimiento,
+} from './hooks/useDashboard';
 import styles from './styles/dashboard.module.css';
 
-import ticket_promedio from "../../assets/decorations/money.svg";
-import tasa_asistencia from "../../assets/decorations/people_check.svg";
-import tasa_ausencia from "../../assets/decorations/people_fail.svg";
-import alerta_stock from "../../assets/decorations/box.svg";
+import ticket_promedio from '../../assets/decorations/money.svg';
+import tasa_asistencia from '../../assets/decorations/people_check.svg';
+import tasa_ausencia from '../../assets/decorations/people_fail.svg';
+import alerta_stock from '../../assets/decorations/box.svg';
+import alerta_vencimiento from '../../assets/decorations/clock.svg';
 
 export function DashboardPage() {
     const {
@@ -22,6 +27,7 @@ export function DashboardPage() {
         ticketPromedio,
         ocupacionAgenda,
         alertasStockBajo,
+        alertasVencimiento,
         isLoading,
         hasData,
     } = useDashboard();
@@ -75,6 +81,13 @@ export function DashboardPage() {
                     valor={alertasStockBajo?.length ?? 0}
                     sub="insumos bajo mínimo"
                     alerta={(alertasStockBajo?.length ?? 0) > 0}
+                />
+                <KpiCard
+                    icon={alerta_vencimiento}
+                    titulo="Alertas de vencimiento"
+                    valor={alertasVencimiento?.length ?? 0}
+                    sub="insumos vencidos o próximos a vencer"
+                    alerta={(alertasVencimiento?.length ?? 0) > 0}
                 />
             </div>
 
@@ -151,6 +164,30 @@ export function DashboardPage() {
                                 </span>
                                 <span className={styles.alertDetail}>
                                     {a.stock} unidades (mínimo {a.stockMinimo})
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )}
+
+            {alertasVencimiento && alertasVencimiento.length > 0 && (
+                <section className={styles.alertSection}>
+                    <h4 className={styles.alertTitle}>
+                        <span className={styles.alertIcon}>⏰</span>
+                        Insumos vencidos o próximos a vencer
+                    </h4>
+                    <ul className={styles.alertList}>
+                        {alertasVencimiento.map((a: AlertaVencimiento) => (
+                            <li key={a.nombre} className={styles.alertItem}>
+                                <span className={styles.alertName}>
+                                    {a.nombre}
+                                    {a.lote ? ` (Lote: ${a.lote})` : ''}
+                                </span>
+                                <span className={styles.alertDetail}>
+                                    Vence:{' '}
+                                    {new Date(a.fechaVenc).toLocaleDateString()}{' '}
+                                    · {a.stock} unidades en stock
                                 </span>
                             </li>
                         ))}

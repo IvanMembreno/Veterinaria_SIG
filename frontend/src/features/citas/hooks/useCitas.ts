@@ -1,11 +1,26 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getCitas, createCita, updateCitaEstado } from '../../../api/citas.api';
+import {
+    getCitas,
+    createCita,
+    updateCitaEstado,
+    type Cita,
+} from '../../../api/citas.api';
 import { getMascotas } from '../../../api/mascotas.api';
 import { getUsuarios } from '../../../api/usuarios.api';
 import { useAuthStore } from '../../auth/useAuthStore';
 
 const initialForm = { mascotaId: '', usuarioId: '', fecha: '', motivo: '' };
+
+export interface CitasFiltros {
+    estado: '' | Cita['estado'];
+    desde: string;
+    hasta: string;
+}
+
+const filtrosIniciales: CitasFiltros = { estado: '', desde: '', hasta: '' };
+
+export type VistaCitas = 'lista' | 'calendario';
 
 export function useCitas() {
     const queryClient = useQueryClient();
@@ -30,6 +45,29 @@ export function useCitas() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [form, setForm] = useState(initialForm);
     const [citaParaAtender, setCitaParaAtender] = useState<string | null>(null);
+
+    const [filtros, setFiltros] = useState<CitasFiltros>(filtrosIniciales);
+    const [vista, setVista] = useState<VistaCitas>('lista');
+
+    const limpiarFiltros = () => setFiltros(filtrosIniciales);
+
+    const citasFiltradas = useMemo(() => {
+        if (!citas) return citas;
+        return citas.filter((c) => {
+            if (filtros.estado && c.estado !== filtros.estado) return false;
+
+            const fechaCita = new Date(c.fecha);
+            if (filtros.desde && fechaCita < new Date(filtros.desde)) {
+                return false;
+            }
+            if (filtros.hasta) {
+                const hasta = new Date(filtros.hasta);
+                hasta.setHours(23, 59, 59, 999);
+                if (fechaCita > hasta) return false;
+            }
+            return true;
+        });
+    }, [citas, filtros]);
 
     const veterinarios = usuarios?.filter((u) => u.rol === 'VETERINARIO');
 
@@ -56,7 +94,8 @@ export function useCitas() {
     };
 
     return {
-        citas,
+        citas: citasFiltradas,
+        totalCitas: citas?.length ?? 0,
         mascotas,
         veterinarios,
         isLoading,
@@ -69,5 +108,10 @@ export function useCitas() {
         setCitaParaAtender,
         cancelarMutation,
         handleSubmit,
+        filtros,
+        setFiltros,
+        limpiarFiltros,
+        vista,
+        setVista,
     };
 }

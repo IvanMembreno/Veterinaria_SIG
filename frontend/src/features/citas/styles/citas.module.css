@@ -159,19 +159,330 @@
     letter-spacing: 0.4px;
 }
 
-.statusActive {
+.statusProgramada {
     background-color: var(--color-accent-soft);
     color: var(--color-primary);
 }
 
-.statusCancelled {
+.statusConfirmada {
+    background-color: var(--color-primary-mid);
+    color: white;
+}
+
+.statusAtendida {
+    background-color: var(--color-surface-alt);
+    color: var(--color-text-muted);
+}
+
+.statusCancelada {
     background-color: var(--color-danger-soft);
     color: var(--color-danger);
 }
 
-.statusDone {
+.statusNoAsistio {
+    background-color: var(--color-warning-soft);
+    color: var(--color-warning);
+}
+/* #endregion */
+
+/* #region Barra de filtros */
+.filtrosBar {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 14px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+}
+
+.filtroField {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filtroField label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-primary-soft);
+}
+
+.filtroField input,
+.filtroField select {
+    padding: 10px 12px;
+    border: 2px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-surface);
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s ease;
+    min-width: 160px;
+}
+
+.filtroField input:focus,
+.filtroField select:focus {
+    border-color: var(--color-accent);
+    background-color: var(--color-surface-alt);
+}
+
+.clearBtn {
+    padding: 10px 16px;
     background-color: var(--color-surface-alt);
     color: var(--color-text-muted);
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.clearBtn:hover {
+    background-color: var(--color-border);
+    color: var(--color-primary);
+}
+/* #endregion */
+
+/* #region Toggle de vista */
+.viewToggle {
+    display: flex;
+    background-color: var(--color-surface-alt);
+    border-radius: 10px;
+    padding: 4px;
+    gap: 4px;
+}
+
+.viewBtn,
+.viewBtnActive {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.viewBtn {
+    background-color: transparent;
+    color: var(--color-text-muted);
+}
+
+.viewBtn:hover {
+    color: var(--color-primary);
+}
+
+.viewBtnActive {
+    background-color: var(--color-primary-mid);
+    color: white;
+}
+/* #endregion */
+
+/* #region Calendario semanal */
+.calendarWrapper {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 20px;
+}
+
+.calendarNav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.navBtn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    color: var(--color-primary);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.navBtn:hover {
+    background-color: var(--color-accent-soft);
+}
+
+.calendarRango {
+    font-weight: 700;
+    color: var(--color-primary);
+    min-width: 200px;
+    text-align: center;
+}
+
+.todayBtn {
+    padding: 8px 14px;
+    background-color: var(--color-surface-alt);
+    color: var(--color-primary-soft);
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.todayBtn:hover {
+    background-color: var(--color-border);
+}
+
+.weekGrid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 10px;
+}
+
+@media (max-width: 1100px) {
+    .weekGrid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
+
+.dayColumn {
+    background-color: var(--color-surface-alt);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 220px;
+}
+
+.dayHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 6px;
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.dayHeaderToday {
+    background-color: var(--color-primary-mid);
+}
+
+.dayHeaderToday .dayName,
+.dayHeaderToday .dayNumber {
+    color: white;
+}
+
+.dayName {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+}
+
+.dayNumber {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--color-primary);
+}
+
+.dayBody {
+    flex: 1;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dayEmpty {
+    color: var(--color-text-muted);
+    font-style: italic;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 12px;
+}
+
+.calendarCard {
+    background-color: var(--color-surface);
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: var(--shadow-card);
+}
+
+.calendarCardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.calendarHora {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--color-primary);
+}
+
+.calendarPet {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.calendarVet {
+    font-size: 11px;
+    color: var(--color-text-muted);
+}
+
+.calendarActions {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.attendBtnSmall {
+    flex: 1;
+    padding: 5px 8px;
+    background-color: var(--color-primary-mid);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 11px;
+    transition: background-color 0.2s ease;
+}
+
+.attendBtnSmall:hover {
+    background-color: var(--color-primary);
+}
+
+.cancelBtnSmall {
+    flex: 1;
+    padding: 5px 8px;
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 11px;
+    transition: all 0.2s ease;
+}
+
+.cancelBtnSmall:hover {
+    background-color: var(--color-danger);
+    color: white;
 }
 /* #endregion */
 

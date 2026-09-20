@@ -1,20 +1,16 @@
 import { useCitas } from './hooks/useCitas';
 import { ConsultaForm } from '../consultas/ConsultaForm';
 import { Modal } from '../../components/ui/Modal';
+import { FiltrosCitas } from './componentes/FiltrosCitas';
+import { CalendarioCitas } from './componentes/CalendarioCitas';
+import { ESTADO_LABEL, estadoBadgeClass } from './estado';
 import { type Cita } from '../../api/citas.api';
 import styles from './styles/citas.module.css';
-
-function estadoClase(estado: string) {
-    if (estado === 'PROGRAMADA' || estado === 'CONFIRMADA')
-        return 'statusActive';
-    if (estado === 'CANCELADA' || estado === 'NO_ASISTIO')
-        return 'statusCancelled';
-    return 'statusDone';
-}
 
 export function CitasPage() {
     const {
         citas,
+        totalCitas,
         mascotas,
         veterinarios,
         isLoading,
@@ -27,6 +23,11 @@ export function CitasPage() {
         setCitaParaAtender,
         cancelarMutation,
         handleSubmit,
+        filtros,
+        setFiltros,
+        limpiarFiltros,
+        vista,
+        setVista,
     } = useCitas();
 
     if (isLoading) {
@@ -52,7 +53,31 @@ export function CitasPage() {
                 </div>
                 <div className={styles.headerActions}>
                     <div className={styles.statsBadge}>
-                        Total citas: <b>{citas?.length || 0}</b>
+                        Total citas: <b>{totalCitas}</b>
+                    </div>
+                    <div className={styles.viewToggle}>
+                        <button
+                            type="button"
+                            className={
+                                vista === 'lista'
+                                    ? styles.viewBtnActive
+                                    : styles.viewBtn
+                            }
+                            onClick={() => setVista('lista')}
+                        >
+                            Lista
+                        </button>
+                        <button
+                            type="button"
+                            className={
+                                vista === 'calendario'
+                                    ? styles.viewBtnActive
+                                    : styles.viewBtn
+                            }
+                            onClick={() => setVista('calendario')}
+                        >
+                            Calendario
+                        </button>
                     </div>
                     {puedeCrear && (
                         <button
@@ -65,96 +90,119 @@ export function CitasPage() {
                 </div>
             </header>
 
-            <div className={styles.card}>
-                <table className={styles.citasTable}>
-                    <thead>
-                        <tr>
-                            <th>Mascota</th>
-                            <th>Veterinario</th>
-                            <th>Fecha y Hora</th>
-                            <th>Estado</th>
-                            <th className={styles.textCenter}>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {citas && citas.length > 0 ? (
-                            citas.map((c: Cita) => {
-                                const isScheduled =
-                                    c.estado === 'PROGRAMADA' ||
-                                    c.estado === 'CONFIRMADA';
-                                return (
-                                    <tr key={c.id} className={styles.tableRow}>
-                                        <td className={styles.petCell}>
-                                            {c.mascota?.nombre}
-                                        </td>
-                                        <td className={styles.vetCell}>
-                                            {c.usuario?.nombre}
-                                        </td>
-                                        <td className={styles.dateCell}>
-                                            {new Date(c.fecha).toLocaleString()}
-                                        </td>
-                                        <td>
-                                            <span
-                                                className={`${styles.statusBadge} ${styles[estadoClase(c.estado)]}`}
-                                            >
-                                                {c.estado}
-                                            </span>
-                                        </td>
-                                        <td className={styles.actionsCell}>
-                                            {isScheduled ? (
-                                                <div
-                                                    className={
-                                                        styles.actionGroup
-                                                    }
-                                                >
-                                                    <button
-                                                        onClick={() =>
-                                                            setCitaParaAtender(
-                                                                c.id,
-                                                            )
-                                                        }
-                                                        className={
-                                                            styles.attendBtn
-                                                        }
-                                                    >
-                                                        Atender
-                                                    </button>
-                                                    <button
-                                                        onClick={() =>
-                                                            cancelarMutation.mutate(
-                                                                c.id,
-                                                            )
-                                                        }
-                                                        className={
-                                                            styles.cancelBtn
-                                                        }
-                                                    >
-                                                        Cancelar
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <span
-                                                    className={
-                                                        styles.emptyActions
-                                                    }
-                                                >
-                                                    -
-                                                </span>
-                                            )}
-                                        </td>
-                                    </tr>
-                                );
-                            })
-                        ) : (
+            <FiltrosCitas
+                filtros={filtros}
+                setFiltros={setFiltros}
+                onLimpiar={limpiarFiltros}
+            />
+
+            {vista === 'lista' ? (
+                <div className={styles.card}>
+                    <table className={styles.citasTable}>
+                        <thead>
                             <tr>
-                                <td colSpan={5} className={styles.emptyState}>
-                                    No hay citas registradas en el sistema.
-                                </td>
+                                <th>Mascota</th>
+                                <th>Veterinario</th>
+                                <th>Fecha y Hora</th>
+                                <th>Estado</th>
+                                <th className={styles.textCenter}>Acciones</th>
                             </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            {citas && citas.length > 0 ? (
+                                citas.map((c: Cita) => {
+                                    const isScheduled =
+                                        c.estado === 'PROGRAMADA' ||
+                                        c.estado === 'CONFIRMADA';
+                                    return (
+                                        <tr
+                                            key={c.id}
+                                            className={styles.tableRow}
+                                        >
+                                            <td className={styles.petCell}>
+                                                {c.mascota?.nombre}
+                                            </td>
+                                            <td className={styles.vetCell}>
+                                                {c.usuario?.nombre}
+                                            </td>
+                                            <td className={styles.dateCell}>
+                                                {new Date(
+                                                    c.fecha,
+                                                ).toLocaleString()}
+                                            </td>
+                                            <td>
+                                                <span
+                                                    className={`${styles.statusBadge} ${styles[estadoBadgeClass(c.estado)]}`}
+                                                >
+                                                    {ESTADO_LABEL[c.estado]}
+                                                </span>
+                                            </td>
+                                            <td className={styles.actionsCell}>
+                                                {isScheduled ? (
+                                                    <div
+                                                        className={
+                                                            styles.actionGroup
+                                                        }
+                                                    >
+                                                        <button
+                                                            onClick={() =>
+                                                                setCitaParaAtender(
+                                                                    c.id,
+                                                                )
+                                                            }
+                                                            className={
+                                                                styles.attendBtn
+                                                            }
+                                                        >
+                                                            Atender
+                                                        </button>
+                                                        <button
+                                                            onClick={() =>
+                                                                cancelarMutation.mutate(
+                                                                    c.id,
+                                                                )
+                                                            }
+                                                            className={
+                                                                styles.cancelBtn
+                                                            }
+                                                        >
+                                                            Cancelar
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <span
+                                                        className={
+                                                            styles.emptyActions
+                                                        }
+                                                    >
+                                                        -
+                                                    </span>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <tr>
+                                    <td
+                                        colSpan={5}
+                                        className={styles.emptyState}
+                                    >
+                                        No hay citas que coincidan con los
+                                        filtros aplicados.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            ) : (
+                <CalendarioCitas
+                    citas={citas ?? []}
+                    onAtender={setCitaParaAtender}
+                    onCancelar={(id) => cancelarMutation.mutate(id)}
+                />
+            )}
 
             <Modal
                 isOpen={isModalOpen}

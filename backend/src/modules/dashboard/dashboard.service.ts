@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../config/prisma.service.js';
 
+const capitalizar = (texto: string) =>
+    texto.charAt(0).toUpperCase() + texto.slice(1);
+
 @Injectable()
 export class DashboardService {
     constructor(private readonly prisma: PrismaService) {}
@@ -35,6 +38,59 @@ export class DashboardService {
             .sort((a, b) => b.totalIngresos - a.totalIngresos);
     }
 
+    async ingresosPorMes() {
+        const hoy = new Date();
+        const desde = new Date(hoy.getFullYear(), hoy.getMonth() - 5, 1);
+
+        const facturas = await this.prisma.factura.findMany({
+            where: { estado: 'PAGADA', fecha: { gte: desde } },
+            select: { fecha: true, total: true },
+        });
+
+        const meses = Array.from({ length: 6 }, (_, i) => {
+            const fecha = new Date(
+                desde.getFullYear(),
+                desde.getMonth() + i,
+                1,
+            );
+            return {
+                anio: fecha.getFullYear(),
+                mes: fecha.getMonth(),
+                etiqueta: capitalizar(
+                    fecha.toLocaleDateString('es', { month: 'short' }),
+                ),
+                total: 0,
+            };
+        });
+
+        for (const f of facturas) {
+            const destino = meses.find(
+                (m) =>
+                    m.anio === f.fecha.getFullYear() &&
+                    m.mes === f.fecha.getMonth(),
+            );
+            if (destino) destino.total += f.total;
+        }
+
+        return meses.map((m) => ({
+            mes: m.etiqueta,
+            total: Number(m.total.toFixed(2)),
+        }));
+    }
+
+    async ingresosPorMetodoPago() {
+        const grupos = await this.prisma.factura.groupBy({
+            by: ['metodoPago'],
+            where: { estado: 'PAGADA' },
+            _sum: { total: true },
+        });
+
+        return grupos.map((g) => ({
+            metodo: capitalizar(g.metodoPago ?? 'sin especificar'),
+            total: Number((g._sum.total ?? 0).toFixed(2)),
+        }));
+    }
+
     async consultasPorVeterinario() {
         const citas = await this.prisma.cita.findMany({
             where: { estado: 'ATENDIDA' },
@@ -51,6 +107,17 @@ export class DashboardService {
             conteo.set(c.usuarioId, actual);
         }
         return Array.from(conteo.values());
+    }
+
+    async mascotasPorEspecie() {
+        const grupos = await this.prisma.mascota.groupBy({
+            by: ['especie'],
+            _count: { _all: true },
+        });
+
+        return grupos
+            .map((g) => ({ especie: g.especie, total: g._count._all }))
+            .sort((a, b) => b.total - a.total);
     }
 
     async ticketPromedio() {
@@ -96,6 +163,7 @@ export class DashboardService {
         return insumos
             .filter((i) => i.stock <= i.stockMinimo)
             .map((i) => ({
+                id: i.id,
                 nombre: i.nombre,
                 stock: i.stock,
                 stockMinimo: i.stockMinimo,
@@ -122,15 +190,21 @@ export class DashboardService {
 
     async resumen() {
         const [
-            ingresos,
-            porVeterinario,
-            ticket,
-            ocupacion,
-            alertasStock,
+            ingresosPorServicio,
+            ingresosPorMes,
+            ingresosPorMetodoPago,
+            consultasPorVeterinario,
+            mascotasPorEspecie,
+            ticketPromedio,
+            ocupacionAgenda,
+            alertasStockBajo,
             alertasVencimiento,
         ] = await Promise.all([
             this.ingresosPorServicio(),
+            this.ingresosPorMes(),
+            this.ingresosPorMetodoPago(),
             this.consultasPorVeterinario(),
+            this.mascotasPorEspecie(),
             this.ticketPromedio(),
             this.tasaOcupacion(),
             this.stockBajo(),
@@ -138,11 +212,14 @@ export class DashboardService {
         ]);
 
         return {
-            ingresosPorServicio: ingresos,
-            consultasPorVeterinario: porVeterinario,
-            ticketPromedio: ticket,
-            ocupacionAgenda: ocupacion,
-            alertasStockBajo: alertasStock,
+            ingresosPorServicio,
+            ingresosPorMes,
+            ingresosPorMetodoPago,
+            consultasPorVeterinario,
+            mascotasPorEspecie,
+            ticketPromedio,
+            ocupacionAgenda,
+            alertasStockBajo,
             alertasVencimiento,
         };
     }

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from '../../generated/prisma/client.js';
 import { PrismaService } from '../../config/prisma.service.js';
 import { ListFacturasQueryDto } from './dto/list-facturas-query.dto.js';
@@ -24,7 +28,7 @@ export class FacturasService {
             ...((query.desde || query.hasta) && {
                 fecha: {
                     ...(query.desde && { gte: new Date(query.desde) }),
-                    ...(query.hasta && { lte: new Date(query.hasta) }),
+                    ...(query.hasta && { lte: finDelDia(query.hasta) }),
                 },
             }),
             ...(query.clienteId && {
@@ -57,10 +61,18 @@ export class FacturasService {
     }
 
     async pagar(id: string, dto: PagarFacturaDto) {
-        await this.findOne(id);
+        const factura = await this.findOne(id);
+        if (factura.estado === 'PAGADA')
+            throw new BadRequestException('La factura ya está pagada');
         return this.prisma.factura.update({
             where: { id },
             data: { estado: 'PAGADA', metodoPago: dto.metodoPago },
         });
     }
+}
+
+function finDelDia(fecha: string) {
+    const d = new Date(fecha);
+    if (fecha.length <= 10) d.setUTCHours(23, 59, 59, 999);
+    return d;
 }

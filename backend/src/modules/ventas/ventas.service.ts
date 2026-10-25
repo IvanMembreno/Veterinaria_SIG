@@ -71,6 +71,7 @@ export class VentasService {
                 data: {
                     consultaId: null,
                     total,
+                    estado: 'PAGADA',
                     metodoPago: dto.metodoPago,
                     detalles: { create: detalles },
                 },

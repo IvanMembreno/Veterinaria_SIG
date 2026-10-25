@@ -22,6 +22,10 @@ export class ConsultasService {
             throw new BadRequestException(
                 'Esta cita ya tiene una consulta registrada',
             );
+        if (cita.estado === 'CANCELADA' || cita.estado === 'NO_ASISTIO')
+            throw new BadRequestException(
+                'No se puede atender una cita cancelada o no asistida',
+            );
 
         return this.prisma.$transaction(async (tx) => {
             const consulta = await tx.consulta.create({

@@ -6,20 +6,33 @@ export class DashboardService {
     constructor(private readonly prisma: PrismaService) {}
 
     async ingresosPorServicio() {
-        const detalles = await this.prisma.facturaDetalle.groupBy({
-            by: ['servicioId'],
-            _sum: { precio: true, cantidad: true },
+        const detalles = await this.prisma.facturaDetalle.findMany({
+            where: { factura: { estado: 'PAGADA' } },
+            include: { servicio: { select: { nombre: true } } },
         });
 
-        const servicios = await this.prisma.servicio.findMany();
-        return detalles.map((d) => {
-            const servicio = servicios.find((s) => s.id === d.servicioId);
-            return {
-                servicio: servicio?.nombre ?? 'Desconocido',
-                totalIngresos: (d._sum.precio ?? 0) * (d._sum.cantidad ?? 1),
-                vecesVendido: d._sum.cantidad ?? 0,
+        const acumulado = new Map<
+            string,
+            { servicio: string; totalIngresos: number; vecesVendido: number }
+        >();
+        for (const d of detalles) {
+            const nombre = d.servicio?.nombre ?? 'Venta de productos';
+            const actual = acumulado.get(nombre) ?? {
+                servicio: nombre,
+                totalIngresos: 0,
+                vecesVendido: 0,
             };
-        });
+            actual.totalIngresos += d.precio * d.cantidad;
+            actual.vecesVendido += d.cantidad;
+            acumulado.set(nombre, actual);
+        }
+
+        return Array.from(acumulado.values())
+            .map((a) => ({
+                ...a,
+                totalIngresos: Number(a.totalIngresos.toFixed(2)),
+            }))
+            .sort((a, b) => b.totalIngresos - a.totalIngresos);
     }
 
     async consultasPorVeterinario() {
@@ -42,6 +55,7 @@ export class DashboardService {
 
     async ticketPromedio() {
         const facturas = await this.prisma.factura.findMany({
+            where: { estado: 'PAGADA' },
             select: { total: true },
         });
         if (facturas.length === 0)
@@ -93,11 +107,12 @@ export class DashboardService {
         limite.setDate(limite.getDate() + 30);
 
         const insumos = await this.prisma.inventario.findMany({
-            where: { fechaVenc: { not: null, lte: limite } },
+            where: { fechaVenc: { not: null, lte: limite }, stock: { gt: 0 } },
             orderBy: { fechaVenc: 'asc' },
         });
 
         return insumos.map((i) => ({
+            id: i.id,
             nombre: i.nombre,
             lote: i.lote,
             fechaVenc: i.fechaVenc,

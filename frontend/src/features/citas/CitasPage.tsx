@@ -15,6 +15,7 @@ export function CitasPage() {
         veterinarios,
         isLoading,
         puedeCrear,
+        puedeAtender,
         isModalOpen,
         setIsModalOpen,
         form,
@@ -139,24 +140,13 @@ export function CitasPage() {
                                             </td>
                                             <td className={styles.actionsCell}>
                                                 {isScheduled ? (
-                                                    <div
-                                                        className={
-                                                            styles.actionGroup
-                                                        }
-                                                    >
-                                                        <button
-                                                            onClick={() =>
-                                                                setCitaParaAtender(
-                                                                    c.id,
-                                                                )
-                                                            }
-                                                            className={
-                                                                styles.attendBtn
-                                                            }
-                                                        >
+                                                    <div className={styles.actionGroup}>
+
+                                                        {puedeAtender && (<button onClick={() => setCitaParaAtender(c.id) } className={styles.attendBtn}>
                                                             Atender
-                                                        </button>
-                                                        <button
+                                                        </button>)}
+
+                                                        {puedeCrear && (<button
                                                             onClick={() =>
                                                                 cancelarMutation.mutate(
                                                                     c.id,
@@ -167,7 +157,7 @@ export function CitasPage() {
                                                             }
                                                         >
                                                             Cancelar
-                                                        </button>
+                                                        </button>)}
                                                     </div>
                                                 ) : (
                                                     <span

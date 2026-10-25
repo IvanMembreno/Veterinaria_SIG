@@ -42,6 +42,10 @@ export function useCitas() {
         ? ['GERENTE', 'RECEPCION'].includes(usuario.rol)
         : false;
 
+    const puedeAtender = usuario
+        ? ['GERENTE', 'VETERINARIO'].includes(usuario.rol)
+        : false;
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [form, setForm] = useState(initialForm);
     const [citaParaAtender, setCitaParaAtender] = useState<string | null>(null);
@@ -100,6 +104,7 @@ export function useCitas() {
         veterinarios,
         isLoading,
         puedeCrear,
+        puedeAtender,
         isModalOpen,
         setIsModalOpen,
         form,

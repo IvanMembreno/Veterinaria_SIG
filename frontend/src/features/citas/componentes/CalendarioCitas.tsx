@@ -5,7 +5,10 @@ import styles from '../styles/citas.module.css';
 
 interface CalendarioCitasProps {
     citas: Cita[];
+    puedeAtender: boolean;
+    puedeGestionar: boolean;
     onAtender: (id: string) => void;
+    onEditar: (cita: Cita) => void;
     onCancelar: (id: string) => void;
 }
 
@@ -30,7 +33,10 @@ function mismoDia(a: Date, b: Date): boolean {
 
 export function CalendarioCitas({
     citas,
+    puedeAtender,
+    puedeGestionar,
     onAtender,
+    onEditar,
     onCancelar,
 }: CalendarioCitasProps) {
     const [semanaBase, setSemanaBase] = useState(() =>
@@ -179,34 +185,57 @@ export function CalendarioCitas({
                                                 >
                                                     {c.usuario?.nombre ?? '-'}
                                                 </span>
-                                                {isScheduled && (
+                                                {isScheduled &&
+                                                    (puedeAtender ||
+                                                        puedeGestionar) && (
                                                     <div
                                                         className={
                                                             styles.calendarActions
                                                         }
                                                     >
-                                                        <button
-                                                            type="button"
-                                                            className={
-                                                                styles.attendBtnSmall
-                                                            }
-                                                            onClick={() =>
-                                                                onAtender(c.id)
-                                                            }
-                                                        >
-                                                            Atender
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className={
-                                                                styles.cancelBtnSmall
-                                                            }
-                                                            onClick={() =>
-                                                                onCancelar(c.id)
-                                                            }
-                                                        >
-                                                            Cancelar
-                                                        </button>
+                                                        {puedeAtender && (
+                                                            <button
+                                                                type="button"
+                                                                className={
+                                                                    styles.attendBtnSmall
+                                                                }
+                                                                onClick={() =>
+                                                                    onAtender(
+                                                                        c.id,
+                                                                    )
+                                                                }
+                                                            >
+                                                                Atender
+                                                            </button>
+                                                        )}
+                                                        {puedeGestionar && (
+                                                            <button
+                                                                type="button"
+                                                                className={
+                                                                    styles.editBtnSmall
+                                                                }
+                                                                onClick={() =>
+                                                                    onEditar(c)
+                                                                }
+                                                            >
+                                                                Editar
+                                                            </button>
+                                                        )}
+                                                        {puedeGestionar && (
+                                                            <button
+                                                                type="button"
+                                                                className={
+                                                                    styles.cancelBtnSmall
+                                                                }
+                                                                onClick={() =>
+                                                                    onCancelar(
+                                                                        c.id,
+                                                                    )
+                                                                }
+                                                            >
+                                                                Cancelar
+                                                            </button>
+                                                        )}
                                                     </div>
                                                 )}
                                             </div>

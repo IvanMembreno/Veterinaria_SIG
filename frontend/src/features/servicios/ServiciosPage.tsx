@@ -19,6 +19,8 @@ export function ServiciosPage() {
         cerrarModal,
         handleSubmit,
         desactivarMutation,
+        reactivarMutation,
+        totalActivos,
         isSaving,
         isError,
         error,
@@ -46,7 +48,7 @@ export function ServiciosPage() {
                 </div>
                 <div className={styles.headerActions}>
                     <div className={styles.statsBadge}>
-                        Activos: <b>{servicios?.length || 0}</b>
+                        Activos: <b>{totalActivos}</b>
                     </div>
                     <button className={styles.newBtn} onClick={abrirNuevo}>
                         + Nuevo Servicio
@@ -60,7 +62,7 @@ export function ServiciosPage() {
                         <tr>
                             <th>Servicio</th>
                             <th>Precio</th>
-                            <th>Estado</th>
+                            <th className={styles.textCenter}>Estado</th>
                             <th className={styles.textCenter}>Acciones</th>
                         </tr>
                     </thead>
@@ -74,45 +76,80 @@ export function ServiciosPage() {
                                     <td className={styles.priceCell}>
                                         ${s.precio.toFixed(2)}
                                     </td>
-                                    <td>
-                                        <span className={styles.estadoActivo}>
-                                            Activo
+                                    <td className={styles.textCenter}>
+                                        <span
+                                            className={
+                                                s.activo
+                                                    ? styles.estadoActivo
+                                                    : styles.estadoInactivo
+                                            }
+                                        >
+                                            {s.activo ? 'Activo' : 'Inactivo'}
                                         </span>
                                     </td>
                                     <td className={styles.actionsCell}>
-                                        <button
-                                            className={styles.btnEdit}
-                                            onClick={() => abrirEdicion(s)}
-                                            title="Editar servicio"
-                                        >
-                                            <img
-                                                src={lapiz}
-                                                alt=""
-                                                className={styles.actionIcon}
-                                            />
-                                            Editar
-                                        </button>
-                                        <button
-                                            className={styles.btnDeactivate}
-                                            onClick={() =>
-                                                desactivarMutation.mutate(s.id)
-                                            }
-                                            title="Desactivar servicio"
-                                        >
-                                            <img
-                                                src={bloquear}
-                                                alt=""
-                                                className={styles.actionIcon}
-                                            />
-                                            Desactivar
-                                        </button>
+                                        <div className={styles.actionsGroup}>
+                                            <button
+                                                className={styles.btnEdit}
+                                                onClick={() => abrirEdicion(s)}
+                                                title="Editar servicio"
+                                            >
+                                                <img
+                                                    src={lapiz}
+                                                    alt=""
+                                                    className={
+                                                        styles.actionIcon
+                                                    }
+                                                />
+                                                Editar
+                                            </button>
+                                            {s.activo ? (
+                                                <button
+                                                    className={
+                                                        styles.btnDeactivate
+                                                    }
+                                                    onClick={() =>
+                                                        desactivarMutation.mutate(
+                                                            s.id,
+                                                        )
+                                                    }
+                                                    title="Desactivar servicio"
+                                                >
+                                                    <img
+                                                        src={bloquear}
+                                                        alt=""
+                                                        className={
+                                                            styles.actionIcon
+                                                        }
+                                                    />
+                                                    Desactivar
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    className={
+                                                        styles.btnReactivate
+                                                    }
+                                                    onClick={() =>
+                                                        reactivarMutation.mutate(
+                                                            s.id,
+                                                        )
+                                                    }
+                                                    disabled={
+                                                        reactivarMutation.isPending
+                                                    }
+                                                    title="Reactivar servicio"
+                                                >
+                                                    Reactivar
+                                                </button>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
                                 <td colSpan={4} className={styles.emptyState}>
-                                    No hay servicios activos en el sistema.
+                                    No hay servicios registrados en el sistema.
                                 </td>
                             </tr>
                         )}

@@ -6,6 +6,7 @@ import {
     Param,
     Patch,
     Post,
+    Query,
     UseGuards,
 } from '@nestjs/common';
 import { ServiciosService } from './servicios.service.js';
@@ -28,8 +29,8 @@ export class ServiciosController {
     }
 
     @Get()
-    findAll() {
-        return this.serviciosService.findAll();
+    findAll(@Query('incluirInactivos') incluirInactivos?: string) {
+        return this.serviciosService.findAll(incluirInactivos === 'true');
     }
 
     @Roles(Role.GERENTE)

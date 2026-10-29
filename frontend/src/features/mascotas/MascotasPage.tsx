@@ -5,6 +5,7 @@ import { type Mascota } from '../../api/mascotas.api';
 import { Modal } from '../../components/ui/Modal';
 import styles from './styles/mascotas.module.css';
 import basurero from '../../assets/actions/trash.svg';
+import lapiz from '../../assets/actions/pencil.svg';
 
 export function MascotasPage() {
     const navigate = useNavigate();
@@ -18,13 +19,17 @@ export function MascotasPage() {
         isLoading,
         puedeCrear,
         isModalOpen,
-        setIsModalOpen,
+        editingId,
         form,
         setForm,
         imagen,
         setImagen,
+        abrirNuevo,
+        abrirEdicion,
+        cerrarModal,
         deleteMutation,
         handleSubmit,
+        isSaving,
     } = useMascotas();
 
     if (isLoading) {
@@ -52,10 +57,7 @@ export function MascotasPage() {
                         Total pacientes: <b>{mascotas?.length || 0}</b>
                     </div>
                     {puedeCrear && (
-                        <button
-                            className={styles.newBtn}
-                            onClick={() => setIsModalOpen(true)}
-                        >
+                        <button className={styles.newBtn} onClick={abrirNuevo}>
                             + Nueva Mascota
                         </button>
                     )}
@@ -68,7 +70,7 @@ export function MascotasPage() {
                         <tr>
                             <th>Mascota</th>
                             <th>Especie / Raza</th>
-                            <th>Sexo</th>
+                            <th className={styles.textCenter}>Sexo</th>
                             <th>Propietario</th>
                             <th className={styles.textCenter}>Acciones</th>
                         </tr>
@@ -91,22 +93,24 @@ export function MascotasPage() {
                                     }
                                 >
                                     <td className={styles.petCell}>
-                                        {m.imagenUrl ? (
-                                            <img
-                                                src={m.imagenUrl}
-                                                alt=""
-                                                className={styles.petPhoto}
-                                            />
-                                        ) : (
-                                            <div className={styles.avatar}>
-                                                {m.nombre
-                                                    .charAt(0)
-                                                    .toUpperCase()}
-                                            </div>
-                                        )}
-                                        <span className={styles.petName}>
-                                            {m.nombre}
-                                        </span>
+                                        <div className={styles.cellContent}>
+                                            {m.imagenUrl ? (
+                                                <img
+                                                    src={m.imagenUrl}
+                                                    alt=""
+                                                    className={styles.petPhoto}
+                                                />
+                                            ) : (
+                                                <div className={styles.avatar}>
+                                                    {m.nombre
+                                                        .charAt(0)
+                                                        .toUpperCase()}
+                                                </div>
+                                            )}
+                                            <span className={styles.petName}>
+                                                {m.nombre}
+                                            </span>
+                                        </div>
                                     </td>
                                     <td className={styles.speciesCell}>
                                         <span className={styles.speciesText}>
@@ -118,7 +122,7 @@ export function MascotasPage() {
                                             </small>
                                         )}
                                     </td>
-                                    <td>
+                                    <td className={styles.textCenter}>
                                         <span
                                             className={`${styles.sexBadge} ${m.sexo === 'MACHO' ? styles.sexMacho : styles.sexHembra}`}
                                         >
@@ -133,21 +137,42 @@ export function MascotasPage() {
                                         )}
                                     </td>
                                     <td className={styles.actionsCell}>
-                                        <button
-                                            className={styles.btnDelete}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                deleteMutation.mutate(m.id);
-                                            }}
-                                            title="Eliminar mascota permanente"
-                                        >
-                                            <img
-                                                src={basurero}
-                                                alt=""
-                                                className={styles.trash}
-                                            />
-                                            Eliminar
-                                        </button>
+                                        <div className={styles.actionsGroup}>
+                                            {puedeCrear && (
+                                                <button
+                                                    className={styles.btnEdit}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        abrirEdicion(m);
+                                                    }}
+                                                    title="Editar mascota"
+                                                >
+                                                    <img
+                                                        src={lapiz}
+                                                        alt=""
+                                                        className={
+                                                            styles.actionIcon
+                                                        }
+                                                    />
+                                                    Editar
+                                                </button>
+                                            )}
+                                            <button
+                                                className={styles.btnDelete}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    deleteMutation.mutate(m.id);
+                                                }}
+                                                title="Eliminar mascota permanente"
+                                            >
+                                                <img
+                                                    src={basurero}
+                                                    alt=""
+                                                    className={styles.trash}
+                                                />
+                                                Eliminar
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))
@@ -164,8 +189,8 @@ export function MascotasPage() {
 
             <Modal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                title="Registrar Nueva Mascota"
+                onClose={cerrarModal}
+                title={editingId ? 'Editar Mascota' : 'Registrar Nueva Mascota'}
             >
                 <form onSubmit={handleSubmit} className={styles.formGrid}>
                     <div className={styles.formRow}>
@@ -284,7 +309,11 @@ export function MascotasPage() {
                             <span className={styles.fileIconPlaceholder}>
                                 📷
                             </span>
-                            {imagen ? imagen.name : 'Subir foto (opcional)'}
+                            {imagen
+                                ? imagen.name
+                                : editingId
+                                  ? 'Cambiar foto (opcional)'
+                                  : 'Subir foto (opcional)'}
                         </label>
                         <input
                             id="input-imagen"
@@ -297,8 +326,16 @@ export function MascotasPage() {
                         />
                     </div>
 
-                    <button type="submit" className={styles.submitBtn}>
-                        Agregar Mascota
+                    <button
+                        type="submit"
+                        className={styles.submitBtn}
+                        disabled={isSaving}
+                    >
+                        {isSaving
+                            ? 'Guardando...'
+                            : editingId
+                              ? 'Guardar Cambios'
+                              : 'Agregar Mascota'}
                     </button>
                 </form>
             </Modal>

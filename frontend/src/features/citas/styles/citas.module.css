@@ -1,6 +1,5 @@
 /* #region Estructura general */
 .pageWrapper {
-    margin-left: 68px;
     min-height: 100vh;
     padding: 40px max(4vw, 40px);
     font-family:
@@ -8,7 +7,7 @@
         -apple-system,
         sans-serif;
     box-sizing: border-box;
-    width: calc(100% - 68px);
+    width: 100%;
 }
 
 .loaderContainer {
@@ -16,7 +15,6 @@
     justify-content: center;
     align-items: center;
     min-height: 60vh;
-    margin-left: 68px;
     color: var(--color-primary-mid);
 }
 /* #endregion */
@@ -116,6 +114,7 @@
 
 .textCenter {
     text-align: center;
+    vertical-align: middle;
 }
 
 .tableRow {
@@ -129,6 +128,14 @@
 
 .tableRow:hover {
     background-color: var(--color-surface-alt);
+}
+
+/* Celdas de datos: mismo padding, alineación y altura mínima de fila en todas las vistas. */
+.tableRow > td {
+    padding: 14px 20px;
+    height: 66px;
+    box-sizing: border-box;
+    vertical-align: middle;
 }
 
 .petCell {
@@ -484,15 +491,37 @@
     background-color: var(--color-danger);
     color: white;
 }
+
+.editBtnSmall {
+    flex: 1;
+    padding: 5px 8px;
+    background-color: var(--color-surface-alt);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 11px;
+    transition: all 0.2s ease;
+}
+
+.editBtnSmall:hover {
+    background-color: var(--color-primary-mid);
+    color: white;
+}
 /* #endregion */
 
 /* #region Acciones */
 .actionsCell {
     padding: 14px 20px;
+    text-align: center;
+    vertical-align: middle;
 }
 
-.actionGroup {
+.actionsGroup {
     display: flex;
+    justify-content: center;
+    align-items: center;
     gap: 8px;
 }
 
@@ -510,6 +539,24 @@
 
 .attendBtn:hover {
     background-color: var(--color-primary);
+}
+
+.editBtn {
+    padding: 8px 14px;
+    background-color: var(--color-surface-alt);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.editBtn:hover {
+    background-color: var(--color-primary-mid);
+    color: white;
 }
 
 .cancelBtn {
@@ -597,7 +644,38 @@
     transition: background-color 0.2s ease;
 }
 
-.submitBtn:hover {
+.submitBtn:hover:not(:disabled) {
     background-color: var(--color-primary);
+}
+
+.submitBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.errorMsg {
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.infoMsg {
+    margin: -6px 0 0;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-style: italic;
+}
+
+.warningMsg {
+    margin: -6px 0 0;
+    background-color: var(--color-warning-soft);
+    color: var(--color-warning);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
 }
 /* #endregion */

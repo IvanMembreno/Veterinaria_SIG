@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../features/auth/useAuthStore';
 import styles from './styles/sidebar.module.css';
@@ -84,19 +83,19 @@ const links = [
     },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+    isOpen: boolean;
+    onToggle: () => void;
+}
+
+export function Sidebar({ isOpen, onToggle }: SidebarProps) {
     const { usuario, logout } = useAuthStore();
     const navigate = useNavigate();
     const location = useLocation();
-    const [isOpen, setIsOpen] = useState(false);
 
     const handleLogout = () => {
         logout();
         navigate('/login');
-    };
-
-    const toggleSidebar = () => {
-        setIsOpen(!isOpen);
     };
 
     return (
@@ -104,7 +103,7 @@ export function Sidebar() {
             className={`${styles.sidebarNav} ${isOpen ? styles.sidebarOpen : styles.sidebarCollapsed}`}
         >
             <div className={styles.brandContainer}>
-                <button onClick={toggleSidebar} className={styles.toggleBtn}>
+                <button onClick={onToggle} className={styles.toggleBtn}>
                     {isOpen ? (
                         <img src={x} alt="" className={styles.burger} />
                     ) : (

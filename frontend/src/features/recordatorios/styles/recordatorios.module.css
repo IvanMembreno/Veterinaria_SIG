@@ -1,6 +1,5 @@
 /* #region Estructura general */
 .pageWrapper {
-    margin-left: 68px;
     min-height: 100vh;
     padding: 40px max(4vw, 40px);
     font-family:
@@ -8,7 +7,7 @@
         -apple-system,
         sans-serif;
     box-sizing: border-box;
-    width: calc(100% - 68px);
+    width: 100%;
 }
 
 .loaderContainer {
@@ -16,7 +15,6 @@
     justify-content: center;
     align-items: center;
     min-height: 60vh;
-    margin-left: 68px;
     color: var(--color-primary-mid);
 }
 /* #endregion */
@@ -178,6 +176,7 @@
 
 .textCenter {
     text-align: center;
+    vertical-align: middle;
 }
 
 .tableRow {
@@ -191,6 +190,14 @@
 
 .tableRow:hover {
     background-color: var(--color-surface-alt);
+}
+
+/* Celdas de datos: mismo padding, alineación y altura mínima de fila en todas las vistas. */
+.tableRow > td {
+    padding: 14px 20px;
+    height: 66px;
+    box-sizing: border-box;
+    vertical-align: middle;
 }
 
 .mascotaCell {
@@ -217,6 +224,7 @@
 .actionsCell {
     padding: 14px 20px;
     text-align: center;
+    vertical-align: middle;
 }
 
 .emptyActions {
@@ -299,6 +307,31 @@
 .sendBtn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.actionsGroup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.editBtn {
+    padding: 8px 14px;
+    background-color: var(--color-surface-alt);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.editBtn:hover {
+    background-color: var(--color-primary-mid);
+    color: white;
 }
 /* #endregion */
 

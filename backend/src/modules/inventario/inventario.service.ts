@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../config/prisma.service.js';
 import { CreateInsumoDto } from './dto/create-insumo.dto.js';
+import { UpdateInsumoDto } from './dto/update-insumo.dto.js';
 import { RegistrarEntradaDto } from './dto/registrar-entrada.dto.js';
 
 @Injectable()
@@ -26,6 +27,19 @@ export class InventarioService {
         });
         if (!insumo) throw new NotFoundException('Insumo no encontrado');
         return insumo;
+    }
+
+    async update(id: string, dto: UpdateInsumoDto) {
+        await this.findOne(id);
+        return this.prisma.inventario.update({
+            where: { id },
+            data: {
+                ...dto,
+                ...(dto.fechaVenc !== undefined && {
+                    fechaVenc: dto.fechaVenc ? new Date(dto.fechaVenc) : null,
+                }),
+            },
+        });
     }
 
     async registrarEntrada(id: string, dto: RegistrarEntradaDto) {

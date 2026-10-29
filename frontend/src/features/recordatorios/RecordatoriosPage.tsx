@@ -24,12 +24,16 @@ export function RecordatoriosPage() {
         setFiltros,
         limpiarFiltros,
         isModalOpen,
+        editingId,
         abrirNuevo,
+        abrirEdicion,
         cerrarModal,
         form,
         setForm,
         handleSubmit,
-        createMutation,
+        isSaving,
+        isError,
+        error,
         enviarRecordatorio,
         enviarMutation,
     } = useRecordatorios();
@@ -78,9 +82,9 @@ export function RecordatoriosPage() {
                         <tr>
                             <th>Mascota</th>
                             <th>Cliente</th>
-                            <th>Tipo</th>
+                            <th className={styles.textCenter}>Tipo</th>
                             <th>Fecha Programada</th>
-                            <th>Estado</th>
+                            <th className={styles.textCenter}>Estado</th>
                             <th className={styles.textCenter}>Acciones</th>
                         </tr>
                     </thead>
@@ -98,7 +102,7 @@ export function RecordatoriosPage() {
                                             </span>
                                         )}
                                     </td>
-                                    <td>
+                                    <td className={styles.textCenter}>
                                         <span className={styles.tipoBadge}>
                                             {TIPO_LABEL[r.tipo]}
                                         </span>
@@ -108,7 +112,7 @@ export function RecordatoriosPage() {
                                             r.fechaProgramada,
                                         ).toLocaleDateString()}
                                     </td>
-                                    <td>
+                                    <td className={styles.textCenter}>
                                         <span
                                             className={
                                                 styles[estadoClase(r.estado)]
@@ -119,23 +123,36 @@ export function RecordatoriosPage() {
                                     </td>
                                     <td className={styles.actionsCell}>
                                         {r.estado === 'PENDIENTE' ? (
-                                            <button
-                                                className={styles.sendBtn}
-                                                disabled={
-                                                    !r.mascota?.cliente
-                                                        ?.telefono
-                                                }
-                                                title={
-                                                    r.mascota?.cliente?.telefono
-                                                        ? 'Enviar recordatorio por WhatsApp'
-                                                        : 'El cliente no tiene teléfono registrado'
-                                                }
-                                                onClick={() =>
-                                                    enviarRecordatorio(r)
-                                                }
+                                            <div
+                                                className={styles.actionsGroup}
                                             >
-                                                Enviar recordatorio
-                                            </button>
+                                                <button
+                                                    className={styles.editBtn}
+                                                    onClick={() =>
+                                                        abrirEdicion(r)
+                                                    }
+                                                >
+                                                    Editar
+                                                </button>
+                                                <button
+                                                    className={styles.sendBtn}
+                                                    disabled={
+                                                        !r.mascota?.cliente
+                                                            ?.telefono
+                                                    }
+                                                    title={
+                                                        r.mascota?.cliente
+                                                            ?.telefono
+                                                            ? 'Enviar recordatorio por WhatsApp'
+                                                            : 'El cliente no tiene teléfono registrado'
+                                                    }
+                                                    onClick={() =>
+                                                        enviarRecordatorio(r)
+                                                    }
+                                                >
+                                                    Enviar recordatorio
+                                                </button>
+                                            </div>
                                         ) : (
                                             <span
                                                 className={styles.emptyActions}
@@ -160,14 +177,15 @@ export function RecordatoriosPage() {
 
             <ModalNuevoRecordatorio
                 isOpen={isModalOpen}
+                isEditing={editingId !== null}
                 onClose={cerrarModal}
                 mascotas={mascotas}
                 form={form}
                 setForm={setForm}
                 onSubmit={handleSubmit}
-                isSaving={createMutation.isPending}
-                isError={createMutation.isError}
-                error={createMutation.error}
+                isSaving={isSaving}
+                isError={isError}
+                error={error}
             />
 
             {enviarMutation.isError && (

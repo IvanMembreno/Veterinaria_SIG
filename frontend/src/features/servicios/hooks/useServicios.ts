@@ -3,7 +3,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
     createServicio,
     desactivarServicio,
-    getServicios,
+    getServiciosAdmin,
+    reactivarServicio,
     updateServicio,
     type Servicio,
     type UpdateServicioPayload,
@@ -14,8 +15,10 @@ const initialForm = { nombre: '', precio: '' };
 export function useServicios() {
     const queryClient = useQueryClient();
     const { data: servicios, isLoading } = useQuery({
-        queryKey: ['servicios'],
-        queryFn: getServicios,
+        // Clave propia: consulta y ventas usan ['servicios'] solo con activos.
+        // Invalidar ['servicios'] refresca ambas cachés.
+        queryKey: ['servicios', 'admin'],
+        queryFn: getServiciosAdmin,
     });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,6 +61,11 @@ export function useServicios() {
         onSuccess: invalidar,
     });
 
+    const reactivarMutation = useMutation({
+        mutationFn: reactivarServicio,
+        onSuccess: invalidar,
+    });
+
     const abrirNuevo = () => {
         setEditingId(null);
         setForm(initialForm);
@@ -95,6 +103,8 @@ export function useServicios() {
         cerrarModal,
         handleSubmit,
         desactivarMutation,
+        reactivarMutation,
+        totalActivos: servicios?.filter((s) => s.activo).length ?? 0,
         isSaving: createMutation.isPending || updateMutation.isPending,
         isError: createMutation.isError || updateMutation.isError,
         error: createMutation.error ?? updateMutation.error,

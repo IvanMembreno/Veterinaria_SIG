@@ -16,6 +16,17 @@ export const getInventario = () =>
 export const createInsumo = (data: Omit<Insumo, 'id'>) =>
     api.post('/inventario', data).then((r) => r.data);
 
+export interface UpdateInsumoPayload {
+    nombre?: string;
+    lote?: string | null;
+    fechaVenc?: string | null;
+    stockMinimo?: number;
+    precioUnit?: number;
+}
+
+export const updateInsumo = (id: string, data: UpdateInsumoPayload) =>
+    api.patch<Insumo>(`/inventario/${id}`, data).then((r) => r.data);
+
 export const registrarEntrada = (id: string, cantidad: number, nota?: string) =>
     api
         .post(`/inventario/${id}/entrada`, { cantidad, nota })

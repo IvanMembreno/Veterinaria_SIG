@@ -8,6 +8,7 @@ import {
     type Recordatorio,
     type RecordatoriosFiltros,
     type TipoRecordatorio,
+    type UpdateRecordatorioPayload,
 } from '../../../api/recordatorios.api';
 import { getMascotas } from '../../../api/mascotas.api';
 import { construirLinkWhatsapp } from '../whatsapp';
@@ -54,14 +55,34 @@ export function useRecordatorios() {
         queryClient.invalidateQueries({ queryKey: ['recordatorios'] });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
     const [form, setForm] = useState(initialForm);
+
+    const cerrarModal = () => {
+        setIsModalOpen(false);
+        setEditingId(null);
+        setForm(initialForm);
+    };
 
     const createMutation = useMutation({
         mutationFn: createRecordatorio,
         onSuccess: () => {
             invalidar();
-            setIsModalOpen(false);
-            setForm(initialForm);
+            cerrarModal();
+        },
+    });
+
+    const updateMutation = useMutation({
+        mutationFn: ({
+            id,
+            data,
+        }: {
+            id: string;
+            data: UpdateRecordatorioPayload;
+        }) => updateRecordatorio(id, data),
+        onSuccess: () => {
+            invalidar();
+            cerrarModal();
         },
     });
 
@@ -77,17 +98,35 @@ export function useRecordatorios() {
     const limpiarFiltros = () => setFiltros(filtrosIniciales);
 
     const abrirNuevo = () => {
+        setEditingId(null);
         setForm(initialForm);
         setIsModalOpen(true);
     };
 
-    const cerrarModal = () => {
-        setIsModalOpen(false);
-        setForm(initialForm);
+    const abrirEdicion = (recordatorio: Recordatorio) => {
+        setEditingId(recordatorio.id);
+        setForm({
+            mascotaId: recordatorio.mascotaId,
+            tipo: recordatorio.tipo,
+            fechaProgramada: recordatorio.fechaProgramada.slice(0, 10),
+            nota: recordatorio.nota ?? '',
+        });
+        setIsModalOpen(true);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (editingId) {
+            updateMutation.mutate({
+                id: editingId,
+                data: {
+                    tipo: form.tipo,
+                    fechaProgramada: form.fechaProgramada,
+                    nota: form.nota,
+                },
+            });
+            return;
+        }
         const data: CreateRecordatorioPayload = {
             mascotaId: form.mascotaId,
             tipo: form.tipo,
@@ -111,12 +150,16 @@ export function useRecordatorios() {
         setFiltros,
         limpiarFiltros,
         isModalOpen,
+        editingId,
         abrirNuevo,
+        abrirEdicion,
         cerrarModal,
         form,
         setForm,
         handleSubmit,
-        createMutation,
+        isSaving: createMutation.isPending || updateMutation.isPending,
+        isError: createMutation.isError || updateMutation.isError,
+        error: createMutation.error ?? updateMutation.error,
         enviarRecordatorio,
         enviarMutation,
     };

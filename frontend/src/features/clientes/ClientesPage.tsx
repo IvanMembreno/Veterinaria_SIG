@@ -3,6 +3,7 @@ import { type Cliente } from '../../api/clientes.api';
 import { Modal } from '../../components/ui/Modal';
 import styles from './styles/clientes.module.css';
 import basurero from '../../assets/actions/trash.svg';
+import lapiz from '../../assets/actions/pencil.svg';
 
 export function ClientesPage() {
     const {
@@ -10,11 +11,15 @@ export function ClientesPage() {
         isLoading,
         puedeCrear,
         isModalOpen,
-        setIsModalOpen,
+        editingId,
         form,
         setForm,
+        abrirNuevo,
+        abrirEdicion,
+        cerrarModal,
         deleteMutation,
         handleSubmit,
+        isSaving,
     } = useClientes();
 
     if (isLoading) {
@@ -43,10 +48,7 @@ export function ClientesPage() {
                         Total dueños: <b>{clientes?.length || 0}</b>
                     </div>
                     {puedeCrear && (
-                        <button
-                            className={styles.newBtn}
-                            onClick={() => setIsModalOpen(true)}
-                        >
+                        <button className={styles.newBtn} onClick={abrirNuevo}>
                             + Nuevo Cliente
                         </button>
                     )}
@@ -68,22 +70,30 @@ export function ClientesPage() {
                             clientes.map((c: Cliente) => (
                                 <tr key={c.id} className={styles.tableRow}>
                                     <td className={styles.clientCell}>
-                                        <div className={styles.avatar}>
-                                            {c.nombre.charAt(0).toUpperCase()}
-                                        </div>
-                                        <div>
-                                            <span className={styles.clientName}>
-                                                {c.nombre}
-                                            </span>
-                                            {c.direccion && (
-                                                <small
+                                        <div className={styles.cellContent}>
+                                            <div className={styles.avatar}>
+                                                {c.nombre
+                                                    .charAt(0)
+                                                    .toUpperCase()}
+                                            </div>
+                                            <div>
+                                                <span
                                                     className={
-                                                        styles.clientDirection
+                                                        styles.clientName
                                                     }
                                                 >
-                                                    {c.direccion}
-                                                </small>
-                                            )}
+                                                    {c.nombre}
+                                                </span>
+                                                {c.direccion && (
+                                                    <small
+                                                        className={
+                                                            styles.clientDirection
+                                                        }
+                                                    >
+                                                        {c.direccion}
+                                                    </small>
+                                                )}
+                                            </div>
                                         </div>
                                     </td>
                                     <td className={styles.phoneCell}>
@@ -97,20 +107,40 @@ export function ClientesPage() {
                                         )}
                                     </td>
                                     <td className={styles.actionsCell}>
-                                        <button
-                                            className={styles.btnDelete}
-                                            onClick={() =>
-                                                deleteMutation.mutate(c.id)
-                                            }
-                                            title="Eliminar cliente permanente"
-                                        >
-                                            <img
-                                                src={basurero}
-                                                alt=""
-                                                className={styles.trash}
-                                            />
-                                            Eliminar
-                                        </button>
+                                        <div className={styles.actionsGroup}>
+                                            {puedeCrear && (
+                                                <button
+                                                    className={styles.btnEdit}
+                                                    onClick={() =>
+                                                        abrirEdicion(c)
+                                                    }
+                                                    title="Editar cliente"
+                                                >
+                                                    <img
+                                                        src={lapiz}
+                                                        alt=""
+                                                        className={
+                                                            styles.actionIcon
+                                                        }
+                                                    />
+                                                    Editar
+                                                </button>
+                                            )}
+                                            <button
+                                                className={styles.btnDelete}
+                                                onClick={() =>
+                                                    deleteMutation.mutate(c.id)
+                                                }
+                                                title="Eliminar cliente permanente"
+                                            >
+                                                <img
+                                                    src={basurero}
+                                                    alt=""
+                                                    className={styles.trash}
+                                                />
+                                                Eliminar
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))
@@ -127,8 +157,8 @@ export function ClientesPage() {
 
             <Modal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                title="Registrar Nuevo Cliente"
+                onClose={cerrarModal}
+                title={editingId ? 'Editar Cliente' : 'Registrar Nuevo Cliente'}
             >
                 <form onSubmit={handleSubmit} className={styles.formGrid}>
                     <div className={styles.field}>
@@ -187,8 +217,16 @@ export function ClientesPage() {
                         />
                     </div>
 
-                    <button type="submit" className={styles.submitBtn}>
-                        Agregar Cliente
+                    <button
+                        type="submit"
+                        className={styles.submitBtn}
+                        disabled={isSaving}
+                    >
+                        {isSaving
+                            ? 'Guardando...'
+                            : editingId
+                              ? 'Guardar Cambios'
+                              : 'Agregar Cliente'}
                     </button>
                 </form>
             </Modal>

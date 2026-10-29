@@ -1,6 +1,7 @@
-import { useCitas } from './hooks/useCitas';
+import { HORAS_LABORALES, useCitas } from './hooks/useCitas';
 import { ConsultaForm } from '../consultas/ConsultaForm';
 import { Modal } from '../../components/ui/Modal';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 import { FiltrosCitas } from './componentes/FiltrosCitas';
 import { CalendarioCitas } from './componentes/CalendarioCitas';
 import { ESTADO_LABEL, estadoBadgeClass } from './estado';
@@ -17,13 +18,29 @@ export function CitasPage() {
         puedeCrear,
         puedeAtender,
         isModalOpen,
-        setIsModalOpen,
+        editingId,
+        abrirNuevo,
+        abrirEdicion,
+        cerrarModal,
         form,
         setForm,
+        fechaForm,
+        horaForm,
+        setFechaForm,
+        setHoraForm,
+        fechaMinima,
+        horasDisponibles,
+        errorHorario,
+        advertenciaChoque,
+        sinBloquesHoy,
+        esHoraDeshabilitada,
         citaParaAtender,
         setCitaParaAtender,
         cancelarMutation,
         handleSubmit,
+        isSaving,
+        isError,
+        error,
         filtros,
         setFiltros,
         limpiarFiltros,
@@ -83,7 +100,7 @@ export function CitasPage() {
                     {puedeCrear && (
                         <button
                             className={styles.newBtn}
-                            onClick={() => setIsModalOpen(true)}
+                            onClick={abrirNuevo}
                         >
                             + Nueva Cita
                         </button>
@@ -105,7 +122,7 @@ export function CitasPage() {
                                 <th>Mascota</th>
                                 <th>Veterinario</th>
                                 <th>Fecha y Hora</th>
-                                <th>Estado</th>
+                                <th className={styles.textCenter}>Estado</th>
                                 <th className={styles.textCenter}>Acciones</th>
                             </tr>
                         </thead>
@@ -131,7 +148,7 @@ export function CitasPage() {
                                                     c.fecha,
                                                 ).toLocaleString()}
                                             </td>
-                                            <td>
+                                            <td className={styles.textCenter}>
                                                 <span
                                                     className={`${styles.statusBadge} ${styles[estadoBadgeClass(c.estado)]}`}
                                                 >
@@ -140,10 +157,21 @@ export function CitasPage() {
                                             </td>
                                             <td className={styles.actionsCell}>
                                                 {isScheduled ? (
-                                                    <div className={styles.actionGroup}>
+                                                    <div className={styles.actionsGroup}>
 
                                                         {puedeAtender && (<button onClick={() => setCitaParaAtender(c.id) } className={styles.attendBtn}>
                                                             Atender
+                                                        </button>)}
+
+                                                        {puedeCrear && (<button
+                                                            onClick={() =>
+                                                                abrirEdicion(c)
+                                                            }
+                                                            className={
+                                                                styles.editBtn
+                                                            }
+                                                        >
+                                                            Editar/Reprogramar
                                                         </button>)}
 
                                                         {puedeCrear && (<button
@@ -189,15 +217,18 @@ export function CitasPage() {
             ) : (
                 <CalendarioCitas
                     citas={citas ?? []}
+                    puedeAtender={puedeAtender}
+                    puedeGestionar={puedeCrear}
                     onAtender={setCitaParaAtender}
+                    onEditar={abrirEdicion}
                     onCancelar={(id) => cancelarMutation.mutate(id)}
                 />
             )}
 
             <Modal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                title="Agendar Nueva Cita"
+                onClose={cerrarModal}
+                title={editingId ? 'Editar Cita' : 'Agendar Nueva Cita'}
             >
                 <form onSubmit={handleSubmit} className={styles.formGrid}>
                     <div className={styles.formRow}>
@@ -245,18 +276,51 @@ export function CitasPage() {
                         </div>
                     </div>
 
-                    <div className={styles.field}>
-                        <label htmlFor="input-fecha">Fecha y Hora</label>
-                        <input
-                            id="input-fecha"
-                            type="datetime-local"
-                            value={form.fecha}
-                            onChange={(e) =>
-                                setForm({ ...form, fecha: e.target.value })
-                            }
-                            required
-                        />
+                    <div className={styles.formRow}>
+                        <div className={styles.field}>
+                            <label htmlFor="input-fecha">Fecha</label>
+                            <input
+                                id="input-fecha"
+                                type="date"
+                                min={fechaMinima}
+                                value={fechaForm}
+                                onChange={(e) => setFechaForm(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className={styles.field}>
+                            <label htmlFor="select-hora">Hora</label>
+                            <select
+                                id="select-hora"
+                                value={horaForm}
+                                onChange={(e) => setHoraForm(e.target.value)}
+                                required
+                            >
+                                {horasDisponibles.map((h) => (
+                                    <option
+                                        key={h}
+                                        value={h}
+                                        disabled={esHoraDeshabilitada(h)}
+                                    >
+                                        {HORAS_LABORALES.includes(h)
+                                            ? h
+                                            : `${h} (fuera de horario)`}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
+
+                    {sinBloquesHoy && (
+                        <p className={styles.infoMsg}>
+                            No hay horarios disponibles hoy; la primera fecha
+                            disponible es mañana.
+                        </p>
+                    )}
+
+                    {advertenciaChoque && (
+                        <p className={styles.warningMsg}>{advertenciaChoque}</p>
+                    )}
 
                     <div className={styles.field}>
                         <label htmlFor="input-motivo">Motivo</label>
@@ -271,8 +335,29 @@ export function CitasPage() {
                         />
                     </div>
 
-                    <button type="submit" className={styles.submitBtn}>
-                        Agendar Cita
+                    {errorHorario ? (
+                        <p className={styles.errorMsg}>{errorHorario}</p>
+                    ) : (
+                        isError && (
+                            <p className={styles.errorMsg}>
+                                {getErrorMessage(
+                                    error,
+                                    'No se pudo guardar la cita.',
+                                )}
+                            </p>
+                        )
+                    )}
+
+                    <button
+                        type="submit"
+                        className={styles.submitBtn}
+                        disabled={isSaving}
+                    >
+                        {isSaving
+                            ? 'Guardando...'
+                            : editingId
+                              ? 'Guardar Cambios'
+                              : 'Agendar Cita'}
                     </button>
                 </form>
             </Modal>

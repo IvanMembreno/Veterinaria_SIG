@@ -69,7 +69,7 @@ export function FacturasPage() {
                             <th>Fecha</th>
                             <th>Cliente</th>
                             <th>Total</th>
-                            <th>Estado</th>
+                            <th className={styles.textCenter}>Estado</th>
                             <th className={styles.textCenter}>Acciones</th>
                         </tr>
                     </thead>
@@ -94,7 +94,7 @@ export function FacturasPage() {
                                     <td className={styles.totalCell}>
                                         ${f.total.toFixed(2)}
                                     </td>
-                                    <td>
+                                    <td className={styles.textCenter}>
                                         <span
                                             className={
                                                 f.estado === 'PAGADA'
@@ -106,23 +106,27 @@ export function FacturasPage() {
                                         </span>
                                     </td>
                                     <td className={styles.actionsCell}>
-                                        {f.estado === 'PENDIENTE' ? (
-                                            <button
-                                                className={styles.payBtn}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    abrirPago(f.id);
-                                                }}
-                                            >
-                                                Marcar como pagada
-                                            </button>
-                                        ) : (
-                                            <span
-                                                className={styles.emptyActions}
-                                            >
-                                                -
-                                            </span>
-                                        )}
+                                        <div className={styles.actionsGroup}>
+                                            {f.estado === 'PENDIENTE' ? (
+                                                <button
+                                                    className={styles.payBtn}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        abrirPago(f.id);
+                                                    }}
+                                                >
+                                                    Marcar como pagada
+                                                </button>
+                                            ) : (
+                                                <span
+                                                    className={
+                                                        styles.emptyActions
+                                                    }
+                                                >
+                                                    -
+                                                </span>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))

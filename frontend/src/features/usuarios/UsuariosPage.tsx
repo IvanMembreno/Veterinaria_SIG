@@ -80,8 +80,8 @@ export function UsuariosPage() {
                         <tr>
                             <th>Nombre</th>
                             <th>Email</th>
-                            <th>Rol</th>
-                            <th>Estado</th>
+                            <th className={styles.textCenter}>Rol</th>
+                            <th className={styles.textCenter}>Estado</th>
                             <th className={styles.textCenter}>Acciones</th>
                         </tr>
                     </thead>
@@ -90,55 +90,69 @@ export function UsuariosPage() {
                             usuarios.map((u: Usuario) => (
                                 <tr key={u.id} className={styles.tableRow}>
                                     <td className={styles.userCell}>
-                                        <div className={styles.avatar}>
-                                            {u.nombre.charAt(0).toUpperCase()}
+                                        <div className={styles.cellContent}>
+                                            <div className={styles.avatar}>
+                                                {u.nombre
+                                                    .charAt(0)
+                                                    .toUpperCase()}
+                                            </div>
+                                            <span className={styles.userName}>
+                                                {u.nombre}
+                                            </span>
                                         </div>
-                                        <span className={styles.userName}>
-                                            {u.nombre}
-                                        </span>
                                     </td>
                                     <td className={styles.emailCell}>
                                         {u.email}
                                     </td>
-                                    <td>
+                                    <td className={styles.textCenter}>
                                         <span
                                             className={`${styles.rolBadge} ${rolBadgeClass(u.rol)}`}
                                         >
                                             {u.rol}
                                         </span>
                                     </td>
-                                    <td>
+                                    <td className={styles.textCenter}>
                                         <span className={styles.estadoActivo}>
                                             Activo
                                         </span>
                                     </td>
                                     <td className={styles.actionsCell}>
-                                        <button
-                                            className={styles.btnEdit}
-                                            onClick={() => abrirEdicion(u)}
-                                            title="Editar usuario"
-                                        >
-                                            <img
-                                                src={lapiz}
-                                                alt=""
-                                                className={styles.actionIcon}
-                                            />
-                                            Editar
-                                        </button>
-                                        <button
-                                            className={styles.btnDeactivate}
-                                            onClick={() =>
-                                                desactivarMutation.mutate(u.id)
-                                            }
-                                            title="Desactivar usuario"
-                                        >
-                                            <img
-                                                src={bloquear}
-                                                alt=""
-                                                className={styles.actionIcon}
-                                            />
-                                            Desactivar
-                                        </button>
+                                        <div className={styles.actionsGroup}>
+                                            <button
+                                                className={styles.btnEdit}
+                                                onClick={() => abrirEdicion(u)}
+                                                title="Editar usuario"
+                                            >
+                                                <img
+                                                    src={lapiz}
+                                                    alt=""
+                                                    className={
+                                                        styles.actionIcon
+                                                    }
+                                                />
+                                                Editar
+                                            </button>
+                                            <button
+                                                className={
+                                                    styles.btnDeactivate
+                                                }
+                                                onClick={() =>
+                                                    desactivarMutation.mutate(
+                                                        u.id,
+                                                    )
+                                                }
+                                                title="Desactivar usuario"
+                                            >
+                                                <img
+                                                    src={bloquear}
+                                                    alt=""
+                                                    className={
+                                                        styles.actionIcon
+                                                    }
+                                                />
+                                                Desactivar
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))

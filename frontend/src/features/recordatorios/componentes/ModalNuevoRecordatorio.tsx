@@ -1,6 +1,7 @@
 import type { Mascota } from '../../../api/mascotas.api';
 import type { TipoRecordatorio } from '../../../api/recordatorios.api';
 import { Modal } from '../../../components/ui/Modal';
+import { Autocomplete } from '../../../components/ui/Autocomplete';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
 import styles from '../styles/recordatorios.module.css';
 
@@ -13,6 +14,7 @@ interface FormRecordatorio {
 
 interface ModalNuevoRecordatorioProps {
     isOpen: boolean;
+    isEditing?: boolean;
     onClose: () => void;
     mascotas?: Mascota[];
     form: FormRecordatorio;
@@ -25,6 +27,7 @@ interface ModalNuevoRecordatorioProps {
 
 export function ModalNuevoRecordatorio({
     isOpen,
+    isEditing = false,
     onClose,
     mascotas,
     form,
@@ -38,29 +41,28 @@ export function ModalNuevoRecordatorio({
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title="Registrar Nuevo Recordatorio"
+            title={
+                isEditing
+                    ? 'Editar Recordatorio'
+                    : 'Registrar Nuevo Recordatorio'
+            }
         >
             <form onSubmit={onSubmit} className={styles.formGrid}>
                 <div className={styles.field}>
                     <label htmlFor="select-mascota">Mascota</label>
-                    <select
+                    <Autocomplete
                         id="select-mascota"
+                        placeholder="Escribe el nombre de la mascota"
+                        options={(mascotas ?? []).map((m) => ({
+                            value: m.id,
+                            label: m.nombre,
+                            hint: m.cliente?.nombre,
+                        }))}
                         value={form.mascotaId}
-                        onChange={(e) =>
-                            setForm({ ...form, mascotaId: e.target.value })
-                        }
+                        onChange={(mascotaId) => setForm({ ...form, mascotaId })}
+                        disabled={isEditing}
                         required
-                    >
-                        <option value="">-- Mascota --</option>
-                        {mascotas?.map((m) => (
-                            <option key={m.id} value={m.id}>
-                                {m.nombre}
-                                {m.cliente?.nombre
-                                    ? ` (${m.cliente.nombre})`
-                                    : ''}
-                            </option>
-                        ))}
-                    </select>
+                    />
                 </div>
 
                 <div className={styles.formRow}>
@@ -123,7 +125,11 @@ export function ModalNuevoRecordatorio({
                     className={styles.submitBtn}
                     disabled={isSaving}
                 >
-                    {isSaving ? 'Guardando...' : 'Crear Recordatorio'}
+                    {isSaving
+                        ? 'Guardando...'
+                        : isEditing
+                          ? 'Guardar Cambios'
+                          : 'Crear Recordatorio'}
                 </button>
             </form>
         </Modal>

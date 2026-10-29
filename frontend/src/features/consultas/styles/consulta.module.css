@@ -86,7 +86,8 @@
     margin-bottom: 8px;
 }
 
-.lineaRow select {
+/* Campo de autocompletado dentro de una línea de servicio o insumo. */
+.lineaCampo {
     flex: 1;
 }
 

@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
     getFactura,
     getFacturas,
     pagarFactura,
+    type Factura,
     type FacturasFiltros,
 } from '../../../api/facturas.api';
 import { getClientes } from '../../../api/clientes.api';
@@ -82,6 +83,26 @@ export function useFacturas() {
         pagarMutation.mutate({ id: facturaAPagarId, metodoPago });
     };
 
+    // La lista y el detalle ya traen detalles y consulta completos, así que se
+    // imprime con los datos en memoria sin volver a pedir la factura.
+    const [facturaAImprimir, setFacturaAImprimir] = useState<Factura | null>(
+        null,
+    );
+
+    useEffect(() => {
+        if (!facturaAImprimir) return;
+        const limpiar = () => setFacturaAImprimir(null);
+        window.addEventListener('afterprint', limpiar);
+        // Se espera un frame para que la plantilla ya esté montada al imprimir.
+        const frame = requestAnimationFrame(() => window.print());
+        return () => {
+            cancelAnimationFrame(frame);
+            window.removeEventListener('afterprint', limpiar);
+        };
+    }, [facturaAImprimir]);
+
+    const imprimir = (factura: Factura) => setFacturaAImprimir(factura);
+
     return {
         facturas,
         isLoading,
@@ -100,5 +121,8 @@ export function useFacturas() {
         cerrarPago,
         confirmarPago,
         pagarMutation,
+        facturaAImprimir,
+        imprimir,
+        isImprimiendo: facturaAImprimir !== null,
     };
 }

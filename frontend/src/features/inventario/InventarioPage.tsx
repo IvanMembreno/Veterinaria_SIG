@@ -1,6 +1,7 @@
 import { useInventario } from './hooks/useInventario';
 import { type Insumo } from '../../api/inventario.api';
 import { Modal } from '../../components/ui/Modal';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 import styles from './styles/inventario.module.css';
 
 function estadoVencimiento(fechaVenc?: string) {
@@ -32,14 +33,21 @@ export function InventarioPage() {
         insumos,
         isLoading,
         puedeCrear,
+        puedeEditar,
         isModalOpen,
-        setIsModalOpen,
+        editingId,
+        abrirNuevo,
+        abrirEdicion,
+        cerrarModal,
         form,
         setForm,
         entradas,
         setEntradas,
         entradaMutation,
         handleSubmit,
+        isSaving,
+        isError,
+        error,
     } = useInventario();
 
     if (isLoading) {
@@ -73,7 +81,7 @@ export function InventarioPage() {
                     {puedeCrear && (
                         <button
                             className={styles.newBtn}
-                            onClick={() => setIsModalOpen(true)}
+                            onClick={abrirNuevo}
                         >
                             + Nuevo Insumo
                         </button>
@@ -93,6 +101,9 @@ export function InventarioPage() {
                             <th className={styles.textCenter}>
                                 Registrar entrada
                             </th>
+                            {puedeEditar && (
+                                <th className={styles.textCenter}>Acciones</th>
+                            )}
                         </tr>
                     </thead>
                     <tbody>
@@ -202,12 +213,35 @@ export function InventarioPage() {
                                                 </button>
                                             </div>
                                         </td>
+                                        {puedeEditar && (
+                                            <td className={styles.entradaCell}>
+                                                <div
+                                                    className={
+                                                        styles.entradaGroup
+                                                    }
+                                                >
+                                                    <button
+                                                        className={
+                                                            styles.editBtn
+                                                        }
+                                                        onClick={() =>
+                                                            abrirEdicion(i)
+                                                        }
+                                                    >
+                                                        Editar
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        )}
                                     </tr>
                                 );
                             })
                         ) : (
                             <tr>
-                                <td colSpan={6} className={styles.emptyState}>
+                                <td
+                                    colSpan={puedeEditar ? 7 : 6}
+                                    className={styles.emptyState}
+                                >
                                     No hay insumos registrados en el sistema.
                                 </td>
                             </tr>
@@ -218,8 +252,8 @@ export function InventarioPage() {
 
             <Modal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                title="Registrar Nuevo Insumo"
+                onClose={cerrarModal}
+                title={editingId ? 'Editar Insumo' : 'Registrar Nuevo Insumo'}
             >
                 <form onSubmit={handleSubmit} className={styles.formGrid}>
                     <div className={styles.field}>
@@ -264,19 +298,26 @@ export function InventarioPage() {
                     </div>
 
                     <div className={styles.formRow}>
-                        <div className={styles.field}>
-                            <label htmlFor="input-stock">Stock inicial</label>
-                            <input
-                                id="input-stock"
-                                type="number"
-                                placeholder="0"
-                                value={form.stock}
-                                onChange={(e) =>
-                                    setForm({ ...form, stock: e.target.value })
-                                }
-                                required
-                            />
-                        </div>
+                        {!editingId && (
+                            <div className={styles.field}>
+                                <label htmlFor="input-stock">
+                                    Stock inicial
+                                </label>
+                                <input
+                                    id="input-stock"
+                                    type="number"
+                                    placeholder="0"
+                                    value={form.stock}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            stock: e.target.value,
+                                        })
+                                    }
+                                    required
+                                />
+                            </div>
+                        )}
                         <div className={styles.field}>
                             <label htmlFor="input-minimo">Stock mínimo</label>
                             <input
@@ -312,8 +353,25 @@ export function InventarioPage() {
                         />
                     </div>
 
-                    <button type="submit" className={styles.submitBtn}>
-                        Agregar Insumo
+                    {isError && (
+                        <p className={styles.errorMsg}>
+                            {getErrorMessage(
+                                error,
+                                'No se pudo guardar el insumo.',
+                            )}
+                        </p>
+                    )}
+
+                    <button
+                        type="submit"
+                        className={styles.submitBtn}
+                        disabled={isSaving}
+                    >
+                        {isSaving
+                            ? 'Guardando...'
+                            : editingId
+                              ? 'Guardar Cambios'
+                              : 'Agregar Insumo'}
                     </button>
                 </form>
             </Modal>

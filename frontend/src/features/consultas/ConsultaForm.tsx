@@ -1,5 +1,6 @@
 import { useConsultaForm } from './hooks/useConsulta';
 import { Modal } from '../../components/ui/Modal';
+import { Autocomplete } from '../../components/ui/Autocomplete';
 import styles from './styles/consulta.module.css';
 
 interface Props {
@@ -89,26 +90,21 @@ export function ConsultaForm({ citaId, onClose }: Props) {
                     <label>Servicios a facturar</label>
                     {serviciosLineas.map((linea, index) => (
                         <div key={index} className={styles.lineaRow}>
-                            <select
-                                aria-label={`Servicio ${index + 1}`}
+                            <Autocomplete
+                                className={styles.lineaCampo}
+                                ariaLabel={`Servicio ${index + 1}`}
+                                placeholder="Busca el procedimiento realizado"
+                                options={(servicios ?? []).map((s) => ({
+                                    value: s.id,
+                                    label: s.nombre,
+                                    hint: `$${s.precio.toFixed(2)}`,
+                                }))}
                                 value={linea.servicioId}
-                                onChange={(e) =>
-                                    actualizarServicioLinea(
-                                        index,
-                                        e.target.value,
-                                    )
+                                onChange={(servicioId) =>
+                                    actualizarServicioLinea(index, servicioId)
                                 }
                                 required={index === 0}
-                            >
-                                <option value="">
-                                    Selecciona el procedimiento realizado
-                                </option>
-                                {servicios?.map((s) => (
-                                    <option key={s.id} value={s.id}>
-                                        {s.nombre} (${s.precio})
-                                    </option>
-                                ))}
-                            </select>
+                            />
                             {serviciosLineas.length > 1 && (
                                 <button
                                     type="button"
@@ -134,22 +130,20 @@ export function ConsultaForm({ citaId, onClose }: Props) {
                     <label>Insumos usados (Opcional)</label>
                     {insumosLineas.map((linea, index) => (
                         <div key={index} className={styles.lineaRowInsumo}>
-                            <select
-                                aria-label={`Insumo ${index + 1}`}
+                            <Autocomplete
+                                className={styles.lineaCampo}
+                                ariaLabel={`Insumo ${index + 1}`}
+                                placeholder="Busca un insumo"
+                                options={(inventario ?? []).map((i) => ({
+                                    value: i.id,
+                                    label: i.nombre,
+                                    hint: `Stock: ${i.stock}`,
+                                }))}
                                 value={linea.insumoId}
-                                onChange={(e) =>
-                                    actualizarInsumoLinea(index, {
-                                        insumoId: e.target.value,
-                                    })
+                                onChange={(insumoId) =>
+                                    actualizarInsumoLinea(index, { insumoId })
                                 }
-                            >
-                                <option value="">Selecciona un insumo</option>
-                                {inventario?.map((i) => (
-                                    <option key={i.id} value={i.id}>
-                                        {i.nombre} (Stock: {i.stock})
-                                    </option>
-                                ))}
-                            </select>
+                            />
                             <input
                                 type="number"
                                 min="1"

@@ -1,5 +1,6 @@
 import type { Cliente } from '../../../api/clientes.api';
 import type { EstadoFactura, FacturasFiltros } from '../../../api/facturas.api';
+import { Autocomplete } from '../../../components/ui/Autocomplete';
 import styles from '../styles/facturas.module.css';
 
 interface FiltrosFacturasProps {
@@ -43,20 +44,19 @@ export function FiltrosFacturas({
 
             <div className={styles.filtroField}>
                 <label htmlFor="filtro-cliente">Cliente</label>
-                <select
+                <Autocomplete
                     id="filtro-cliente"
+                    placeholder="Todos"
+                    options={(clientes ?? []).map((c) => ({
+                        value: c.id,
+                        label: c.nombre,
+                        hint: c.telefono,
+                    }))}
                     value={filtros.clienteId ?? ''}
-                    onChange={(e) =>
-                        setFiltros({ ...filtros, clienteId: e.target.value })
+                    onChange={(clienteId) =>
+                        setFiltros({ ...filtros, clienteId })
                     }
-                >
-                    <option value="">Todos</option>
-                    {clientes?.map((c) => (
-                        <option key={c.id} value={c.id}>
-                            {c.nombre}
-                        </option>
-                    ))}
-                </select>
+                />
             </div>
 
             <div className={styles.filtroField}>

@@ -18,11 +18,19 @@ export type UpdateServicioPayload = Partial<CreateServicioPayload>;
 export const getServicios = () =>
     api.get<Servicio[]>('/servicios').then((r) => r.data);
 
+export const getServiciosAdmin = () =>
+    api
+        .get<Servicio[]>('/servicios', { params: { incluirInactivos: true } })
+        .then((r) => r.data);
+
 export const createServicio = (data: CreateServicioPayload) =>
     api.post<Servicio>('/servicios', data).then((r) => r.data);
 
 export const updateServicio = (id: string, data: UpdateServicioPayload) =>
     api.patch<Servicio>(`/servicios/${id}`, data).then((r) => r.data);
+
+export const reactivarServicio = (id: string) =>
+    updateServicio(id, { activo: true });
 
 export const desactivarServicio = (id: string) =>
     api.delete(`/servicios/${id}`).then((r) => r.data);

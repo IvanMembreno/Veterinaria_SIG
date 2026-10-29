@@ -1,6 +1,5 @@
 /* #region Estructura general */
 .pageWrapper {
-    margin-left: 68px;
     min-height: 100vh;
     padding: 40px max(4vw, 40px);
     font-family:
@@ -8,7 +7,7 @@
         -apple-system,
         sans-serif;
     box-sizing: border-box;
-    width: calc(100% - 68px);
+    width: 100%;
 }
 
 .loaderContainer {
@@ -16,7 +15,6 @@
     justify-content: center;
     align-items: center;
     min-height: 60vh;
-    margin-left: 68px;
     color: var(--color-primary-mid);
 }
 /* #endregion */
@@ -162,6 +160,7 @@
 
 .textCenter {
     text-align: center;
+    vertical-align: middle;
 }
 
 .tableRow {
@@ -176,6 +175,14 @@
 
 .tableRow:hover {
     background-color: var(--color-surface-alt);
+}
+
+/* Celdas de datos: mismo padding, alineación y altura mínima de fila en todas las vistas. */
+.tableRow > td {
+    padding: 14px 20px;
+    height: 66px;
+    box-sizing: border-box;
+    vertical-align: middle;
 }
 
 .dateCell {
@@ -205,6 +212,14 @@
 .actionsCell {
     padding: 14px 20px;
     text-align: center;
+    vertical-align: middle;
+}
+
+.actionsGroup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
 }
 
 .emptyActions {
@@ -260,6 +275,29 @@
 .payBtn:hover {
     background-color: var(--color-primary-mid);
     color: white;
+}
+
+.printBtn {
+    padding: 8px 14px;
+    background-color: var(--color-surface-alt);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.printBtn:hover:not(:disabled) {
+    background-color: var(--color-primary-mid);
+    color: white;
+}
+
+.printBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 /* #endregion */
 
@@ -437,5 +475,181 @@
     border-radius: 10px;
     font-size: 13px;
     font-weight: 600;
+}
+
+.secondaryBtn {
+    padding: 12px 20px;
+    background-color: var(--color-surface-alt);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.secondaryBtn:hover:not(:disabled) {
+    background-color: var(--color-primary-mid);
+    color: white;
+}
+
+.secondaryBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+/* #endregion */
+
+/* #region Comprobante imprimible */
+/* Plantilla en un solo color; fuera de impresión no se muestra. */
+.printArea {
+    display: none;
+    color: #000;
+    background-color: #fff;
+    font-family:
+        system-ui,
+        -apple-system,
+        sans-serif;
+    font-size: 12pt;
+}
+
+.printHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    padding-bottom: 12pt;
+    border-bottom: 2px solid #000;
+}
+
+.printClinica {
+    margin: 0 0 4pt;
+    font-size: 18pt;
+    font-weight: 800;
+    color: inherit;
+}
+
+.printClinicaDato {
+    margin: 0;
+    font-size: 10pt;
+}
+
+.printComprobante {
+    text-align: right;
+}
+
+.printTitulo {
+    margin: 0 0 4pt;
+    font-size: 14pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: inherit;
+}
+
+.printCodigo {
+    margin: 0;
+    font-size: 11pt;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.printDatos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6pt 24px;
+    margin: 16pt 0;
+}
+
+.printDato {
+    display: flex;
+    gap: 8px;
+    font-size: 11pt;
+}
+
+.printDato span:first-child {
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.printDato span:first-child::after {
+    content: ':';
+}
+
+.printTabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11pt;
+}
+
+.printTabla th {
+    text-align: left;
+    padding: 6pt 8pt;
+    border-bottom: 1.5px solid #000;
+    font-size: 10pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.printTabla td {
+    padding: 6pt 8pt;
+    border-bottom: 1px solid #000;
+}
+
+.printTabla tfoot td {
+    border-bottom: none;
+    border-top: 2px solid #000;
+    font-weight: 800;
+    font-size: 12pt;
+}
+
+.printTabla th.printNumero,
+.printTabla td.printNumero {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.printPie {
+    margin-top: 28pt;
+    text-align: center;
+}
+
+.printGracias {
+    margin: 0 0 4pt;
+    font-size: 12pt;
+    font-weight: 700;
+}
+
+.printLeyenda {
+    margin: 0;
+    font-size: 9pt;
+}
+
+@media print {
+    @page {
+        size: letter;
+        margin: 16mm;
+    }
+
+    /* Mientras hay un documento imprimible montado (factura o historial clínico), solo se imprime ese
+       documento: sidebar, filtros, tablas, modales y botones quedan ocultos. Sin documento montado,
+       la página se imprime normal (el CSS es global para toda la app). */
+    body:has(> .printArea) > *:not(.printArea) {
+        display: none !important;
+    }
+
+    :root:has(.printArea),
+    body:has(> .printArea) {
+        background: #fff !important;
+    }
+
+    .printArea {
+        display: block;
+    }
+
+    .printTabla tr {
+        break-inside: avoid;
+    }
 }
 /* #endregion */

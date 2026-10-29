@@ -11,7 +11,13 @@ export class ServiciosService {
         return this.prisma.servicio.create({ data: dto });
     }
 
-    findAll() {
+    // Por defecto solo activos (consulta y punto de venta); la administración pide todos.
+    findAll(incluirInactivos = false) {
+        if (incluirInactivos) {
+            return this.prisma.servicio.findMany({
+                orderBy: [{ activo: 'desc' }, { nombre: 'asc' }],
+            });
+        }
         return this.prisma.servicio.findMany({
             where: { activo: true },
             orderBy: { nombre: 'asc' },

@@ -1,6 +1,15 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    Param,
+    Patch,
+    Post,
+    UseGuards,
+} from '@nestjs/common';
 import { InventarioService } from './inventario.service.js';
 import { CreateInsumoDto } from './dto/create-insumo.dto.js';
+import { UpdateInsumoDto } from './dto/update-insumo.dto.js';
 import { RegistrarEntradaDto } from './dto/registrar-entrada.dto.js';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard.js';
 import { RolesGuard } from '../common/guards/roles.guard.js';
@@ -21,6 +30,12 @@ export class InventarioController {
     @Get()
     findAll() {
         return this.inventarioService.findAll();
+    }
+
+    @Roles(Role.GERENTE, Role.INVENTARIO)
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() dto: UpdateInsumoDto) {
+        return this.inventarioService.update(id, dto);
     }
 
     @Get(':id/movimientos')

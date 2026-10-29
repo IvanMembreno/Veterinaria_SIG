@@ -2,6 +2,7 @@ import { useFacturas } from './hooks/useFacturas';
 import { FiltrosFacturas } from './componentes/FiltrosFacturas';
 import { DetalleFactura } from './componentes/DetalleFactura';
 import { ModalPago } from './componentes/ModalPago';
+import { FacturaImprimible } from './componentes/FacturaImprimible';
 import { clienteDeFactura, type Factura } from '../../api/facturas.api';
 import { Modal } from '../../components/ui/Modal';
 import styles from './styles/facturas.module.css';
@@ -25,6 +26,9 @@ export function FacturasPage() {
         cerrarPago,
         confirmarPago,
         pagarMutation,
+        facturaAImprimir,
+        imprimir,
+        isImprimiendo,
     } = useFacturas();
 
     if (isLoading) {
@@ -69,7 +73,7 @@ export function FacturasPage() {
                             <th>Fecha</th>
                             <th>Cliente</th>
                             <th>Total</th>
-                            <th>Estado</th>
+                            <th className={styles.textCenter}>Estado</th>
                             <th className={styles.textCenter}>Acciones</th>
                         </tr>
                     </thead>
@@ -94,7 +98,7 @@ export function FacturasPage() {
                                     <td className={styles.totalCell}>
                                         ${f.total.toFixed(2)}
                                     </td>
-                                    <td>
+                                    <td className={styles.textCenter}>
                                         <span
                                             className={
                                                 f.estado === 'PAGADA'
@@ -106,23 +110,30 @@ export function FacturasPage() {
                                         </span>
                                     </td>
                                     <td className={styles.actionsCell}>
-                                        {f.estado === 'PENDIENTE' ? (
+                                        <div className={styles.actionsGroup}>
                                             <button
-                                                className={styles.payBtn}
+                                                className={styles.printBtn}
+                                                disabled={isImprimiendo}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    abrirPago(f.id);
+                                                    imprimir(f);
                                                 }}
+                                                title="Imprimir comprobante"
                                             >
-                                                Marcar como pagada
+                                                Imprimir
                                             </button>
-                                        ) : (
-                                            <span
-                                                className={styles.emptyActions}
-                                            >
-                                                -
-                                            </span>
-                                        )}
+                                            {f.estado === 'PENDIENTE' && (
+                                                <button
+                                                    className={styles.payBtn}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        abrirPago(f.id);
+                                                    }}
+                                                >
+                                                    Marcar como pagada
+                                                </button>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))
@@ -150,6 +161,10 @@ export function FacturasPage() {
                         if (facturaSeleccionada)
                             abrirPago(facturaSeleccionada.id);
                     }}
+                    onImprimir={() => {
+                        if (facturaSeleccionada) imprimir(facturaSeleccionada);
+                    }}
+                    isImprimiendo={isImprimiendo}
                 />
             </Modal>
 
@@ -163,6 +178,10 @@ export function FacturasPage() {
                 isError={pagarMutation.isError}
                 error={pagarMutation.error}
             />
+
+            {facturaAImprimir && (
+                <FacturaImprimible factura={facturaAImprimir} />
+            )}
         </div>
     );
 }

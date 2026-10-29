@@ -1,6 +1,10 @@
-import { useCitas } from './hooks/useCitas';
+import { Link } from 'react-router-dom';
+import { HORAS_LABORALES, useCitas } from './hooks/useCitas';
+import { useAuthStore } from '../auth/useAuthStore';
 import { ConsultaForm } from '../consultas/ConsultaForm';
 import { Modal } from '../../components/ui/Modal';
+import { Autocomplete } from '../../components/ui/Autocomplete';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 import { FiltrosCitas } from './componentes/FiltrosCitas';
 import { CalendarioCitas } from './componentes/CalendarioCitas';
 import { ESTADO_LABEL, estadoBadgeClass } from './estado';
@@ -17,19 +21,41 @@ export function CitasPage() {
         puedeCrear,
         puedeAtender,
         isModalOpen,
-        setIsModalOpen,
+        editingId,
+        abrirNuevo,
+        abrirEdicion,
+        cerrarModal,
         form,
         setForm,
+        fechaForm,
+        horaForm,
+        setFechaForm,
+        setHoraForm,
+        fechaMinima,
+        horasDisponibles,
+        errorHorario,
+        advertenciaChoque,
+        sinBloquesHoy,
+        esHoraDeshabilitada,
         citaParaAtender,
         setCitaParaAtender,
         cancelarMutation,
         handleSubmit,
+        isSaving,
+        isError,
+        error,
         filtros,
         setFiltros,
         limpiarFiltros,
         vista,
         setVista,
     } = useCitas();
+
+    // El historial clínico (/mascotas/:id) solo está disponible para GERENTE y VETERINARIO.
+    const usuario = useAuthStore((s) => s.usuario);
+    const puedeVerHistorial = usuario
+        ? ['GERENTE', 'VETERINARIO'].includes(usuario.rol)
+        : false;
 
     if (isLoading) {
         return (
@@ -83,7 +109,7 @@ export function CitasPage() {
                     {puedeCrear && (
                         <button
                             className={styles.newBtn}
-                            onClick={() => setIsModalOpen(true)}
+                            onClick={abrirNuevo}
                         >
                             + Nueva Cita
                         </button>
@@ -105,7 +131,7 @@ export function CitasPage() {
                                 <th>Mascota</th>
                                 <th>Veterinario</th>
                                 <th>Fecha y Hora</th>
-                                <th>Estado</th>
+                                <th className={styles.textCenter}>Estado</th>
                                 <th className={styles.textCenter}>Acciones</th>
                             </tr>
                         </thead>
@@ -131,7 +157,7 @@ export function CitasPage() {
                                                     c.fecha,
                                                 ).toLocaleString()}
                                             </td>
-                                            <td>
+                                            <td className={styles.textCenter}>
                                                 <span
                                                     className={`${styles.statusBadge} ${styles[estadoBadgeClass(c.estado)]}`}
                                                 >
@@ -139,14 +165,36 @@ export function CitasPage() {
                                                 </span>
                                             </td>
                                             <td className={styles.actionsCell}>
-                                                {isScheduled ? (
-                                                    <div className={styles.actionGroup}>
+                                                {isScheduled || puedeVerHistorial ? (
+                                                    <div className={styles.actionsGroup}>
 
-                                                        {puedeAtender && (<button onClick={() => setCitaParaAtender(c.id) } className={styles.attendBtn}>
+                                                        {isScheduled && puedeAtender && (<button onClick={() => setCitaParaAtender(c.id) } className={styles.attendBtn}>
                                                             Atender
                                                         </button>)}
 
-                                                        {puedeCrear && (<button
+                                                        {isScheduled && puedeCrear && (<button
+                                                            onClick={() =>
+                                                                abrirEdicion(c)
+                                                            }
+                                                            className={
+                                                                styles.editBtn
+                                                            }
+                                                        >
+                                                            Editar/Reprogramar
+                                                        </button>)}
+
+                                                        {puedeVerHistorial && (
+                                                            <Link
+                                                                to={`/mascotas/${c.mascotaId}`}
+                                                                className={
+                                                                    styles.historialBtn
+                                                                }
+                                                            >
+                                                                Ver historial
+                                                            </Link>
+                                                        )}
+
+                                                        {isScheduled && puedeCrear && (<button
                                                             onClick={() =>
                                                                 cancelarMutation.mutate(
                                                                     c.id,
@@ -189,74 +237,102 @@ export function CitasPage() {
             ) : (
                 <CalendarioCitas
                     citas={citas ?? []}
+                    puedeAtender={puedeAtender}
+                    puedeVerHistorial={puedeVerHistorial}
+                    puedeGestionar={puedeCrear}
                     onAtender={setCitaParaAtender}
+                    onEditar={abrirEdicion}
                     onCancelar={(id) => cancelarMutation.mutate(id)}
                 />
             )}
 
             <Modal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                title="Agendar Nueva Cita"
+                onClose={cerrarModal}
+                title={editingId ? 'Editar Cita' : 'Agendar Nueva Cita'}
             >
                 <form onSubmit={handleSubmit} className={styles.formGrid}>
                     <div className={styles.formRow}>
                         <div className={styles.field}>
                             <label htmlFor="select-mascota">Mascota</label>
-                            <select
+                            <Autocomplete
                                 id="select-mascota"
+                                placeholder="Escribe el nombre de la mascota"
+                                options={(mascotas ?? []).map((m) => ({
+                                    value: m.id,
+                                    label: m.nombre,
+                                    hint: m.cliente?.nombre,
+                                }))}
                                 value={form.mascotaId}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        mascotaId: e.target.value,
-                                    })
+                                onChange={(mascotaId) =>
+                                    setForm({ ...form, mascotaId })
                                 }
                                 required
-                            >
-                                <option value="">-- Mascota --</option>
-                                {mascotas?.map((m) => (
-                                    <option key={m.id} value={m.id}>
-                                        {m.nombre}
-                                    </option>
-                                ))}
-                            </select>
+                            />
                         </div>
                         <div className={styles.field}>
                             <label htmlFor="select-vet">Veterinario</label>
-                            <select
+                            <Autocomplete
                                 id="select-vet"
+                                placeholder="Escribe el nombre del veterinario"
+                                options={(veterinarios ?? []).map((v) => ({
+                                    value: v.id,
+                                    label: v.nombre,
+                                }))}
                                 value={form.usuarioId}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        usuarioId: e.target.value,
-                                    })
+                                onChange={(usuarioId) =>
+                                    setForm({ ...form, usuarioId })
                                 }
                                 required
+                            />
+                        </div>
+                    </div>
+
+                    <div className={styles.formRow}>
+                        <div className={styles.field}>
+                            <label htmlFor="input-fecha">Fecha</label>
+                            <input
+                                id="input-fecha"
+                                type="date"
+                                min={fechaMinima}
+                                value={fechaForm}
+                                onChange={(e) => setFechaForm(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className={styles.field}>
+                            <label htmlFor="select-hora">Hora</label>
+                            <select
+                                id="select-hora"
+                                value={horaForm}
+                                onChange={(e) => setHoraForm(e.target.value)}
+                                required
                             >
-                                <option value="">-- Veterinario --</option>
-                                {veterinarios?.map((v) => (
-                                    <option key={v.id} value={v.id}>
-                                        {v.nombre}
+                                {horasDisponibles.map((h) => (
+                                    <option
+                                        key={h}
+                                        value={h}
+                                        disabled={esHoraDeshabilitada(h)}
+                                    >
+                                        {HORAS_LABORALES.includes(h)
+                                            ? h
+                                            : `${h} (fuera de horario)`}
                                     </option>
                                 ))}
                             </select>
                         </div>
                     </div>
 
-                    <div className={styles.field}>
-                        <label htmlFor="input-fecha">Fecha y Hora</label>
-                        <input
-                            id="input-fecha"
-                            type="datetime-local"
-                            value={form.fecha}
-                            onChange={(e) =>
-                                setForm({ ...form, fecha: e.target.value })
-                            }
-                            required
-                        />
-                    </div>
+                    {sinBloquesHoy && (
+                        <p className={styles.infoMsg}>
+                            No hay horarios disponibles hoy; la primera fecha
+                            disponible es mañana.
+                        </p>
+                    )}
+
+                    {advertenciaChoque && (
+                        <p className={styles.warningMsg}>{advertenciaChoque}</p>
+                    )}
 
                     <div className={styles.field}>
                         <label htmlFor="input-motivo">Motivo</label>
@@ -271,8 +347,29 @@ export function CitasPage() {
                         />
                     </div>
 
-                    <button type="submit" className={styles.submitBtn}>
-                        Agendar Cita
+                    {errorHorario ? (
+                        <p className={styles.errorMsg}>{errorHorario}</p>
+                    ) : (
+                        isError && (
+                            <p className={styles.errorMsg}>
+                                {getErrorMessage(
+                                    error,
+                                    'No se pudo guardar la cita.',
+                                )}
+                            </p>
+                        )
+                    )}
+
+                    <button
+                        type="submit"
+                        className={styles.submitBtn}
+                        disabled={isSaving}
+                    >
+                        {isSaving
+                            ? 'Guardando...'
+                            : editingId
+                              ? 'Guardar Cambios'
+                              : 'Agendar Cita'}
                     </button>
                 </form>
             </Modal>

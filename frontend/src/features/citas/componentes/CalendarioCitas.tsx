@@ -1,11 +1,16 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { Cita } from '../../../api/citas.api';
 import { ESTADO_LABEL, estadoBadgeClass } from '../estado';
 import styles from '../styles/citas.module.css';
 
 interface CalendarioCitasProps {
     citas: Cita[];
+    puedeAtender: boolean;
+    puedeVerHistorial: boolean;
+    puedeGestionar: boolean;
     onAtender: (id: string) => void;
+    onEditar: (cita: Cita) => void;
     onCancelar: (id: string) => void;
 }
 
@@ -30,7 +35,11 @@ function mismoDia(a: Date, b: Date): boolean {
 
 export function CalendarioCitas({
     citas,
+    puedeAtender,
+    puedeVerHistorial,
+    puedeGestionar,
     onAtender,
+    onEditar,
     onCancelar,
 }: CalendarioCitasProps) {
     const [semanaBase, setSemanaBase] = useState(() =>
@@ -169,6 +178,7 @@ export function CalendarioCitas({
                                                     className={
                                                         styles.calendarPet
                                                     }
+                                                    title={c.mascota?.nombre}
                                                 >
                                                     {c.mascota?.nombre ?? '-'}
                                                 </span>
@@ -176,37 +186,71 @@ export function CalendarioCitas({
                                                     className={
                                                         styles.calendarVet
                                                     }
+                                                    title={c.usuario?.nombre}
                                                 >
                                                     {c.usuario?.nombre ?? '-'}
                                                 </span>
-                                                {isScheduled && (
+                                                {puedeVerHistorial && (
+                                                    <Link
+                                                        to={`/mascotas/${c.mascotaId}`}
+                                                        className={
+                                                            styles.historialLinkSmall
+                                                        }
+                                                    >
+                                                        Ver historial
+                                                    </Link>
+                                                )}
+                                                {isScheduled &&
+                                                    (puedeAtender ||
+                                                        puedeGestionar) && (
                                                     <div
                                                         className={
                                                             styles.calendarActions
                                                         }
                                                     >
-                                                        <button
-                                                            type="button"
-                                                            className={
-                                                                styles.attendBtnSmall
-                                                            }
-                                                            onClick={() =>
-                                                                onAtender(c.id)
-                                                            }
-                                                        >
-                                                            Atender
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className={
-                                                                styles.cancelBtnSmall
-                                                            }
-                                                            onClick={() =>
-                                                                onCancelar(c.id)
-                                                            }
-                                                        >
-                                                            Cancelar
-                                                        </button>
+                                                        {puedeAtender && (
+                                                            <button
+                                                                type="button"
+                                                                className={
+                                                                    styles.attendBtnSmall
+                                                                }
+                                                                onClick={() =>
+                                                                    onAtender(
+                                                                        c.id,
+                                                                    )
+                                                                }
+                                                            >
+                                                                Atender
+                                                            </button>
+                                                        )}
+                                                        {puedeGestionar && (
+                                                            <button
+                                                                type="button"
+                                                                className={
+                                                                    styles.editBtnSmall
+                                                                }
+                                                                onClick={() =>
+                                                                    onEditar(c)
+                                                                }
+                                                            >
+                                                                Editar
+                                                            </button>
+                                                        )}
+                                                        {puedeGestionar && (
+                                                            <button
+                                                                type="button"
+                                                                className={
+                                                                    styles.cancelBtnSmall
+                                                                }
+                                                                onClick={() =>
+                                                                    onCancelar(
+                                                                        c.id,
+                                                                    )
+                                                                }
+                                                            >
+                                                                Cancelar
+                                                            </button>
+                                                        )}
                                                     </div>
                                                 )}
                                             </div>

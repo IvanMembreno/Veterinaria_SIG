@@ -1,6 +1,5 @@
 /* #region Estructura general */
 .pageWrapper {
-    margin-left: 68px;
     min-height: 100vh;
     padding: 40px max(4vw, 40px);
     font-family:
@@ -8,7 +7,7 @@
         -apple-system,
         sans-serif;
     box-sizing: border-box;
-    width: calc(100% - 68px);
+    width: 100%;
 }
 
 .loaderContainer {
@@ -16,7 +15,6 @@
     justify-content: center;
     align-items: center;
     min-height: 60vh;
-    margin-left: 68px;
     color: var(--color-primary-mid);
 }
 /* #endregion */
@@ -116,6 +114,7 @@
 
 .textCenter {
     text-align: center;
+    vertical-align: middle;
 }
 
 .tableRow,
@@ -137,8 +136,20 @@
     background-color: var(--color-surface-alt);
 }
 
+/* Celdas de datos: mismo padding, alineación y altura mínima de fila en todas las vistas. */
+.tableRow > td,
+.tableRowStatic > td {
+    padding: 14px 20px;
+    height: 66px;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
 .petCell {
-    padding: 12px 20px;
+    padding: 14px 20px;
+}
+
+.cellContent {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -224,6 +235,55 @@
 /* #region Acciones */
 .actionsCell {
     padding: 14px 20px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.actionsGroup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.btnEdit {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background-color: var(--color-surface-alt);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.btnEdit:hover {
+    background-color: var(--color-primary-mid);
+    color: white;
+}
+
+.btnHistorial {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background-color: var(--color-accent-soft);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.btnHistorial:hover {
+    background-color: var(--color-primary-mid);
+    color: white;
 }
 
 .btnDelete {
@@ -246,7 +306,8 @@
     color: white;
 }
 
-.trash {
+.trash,
+.actionIcon {
     width: 14px;
 }
 
@@ -452,10 +513,23 @@
 
 /* #region Timeline de historial clínico */
 .historialVacio {
-    padding: 4px 20px 24px;
+    margin: 4px 20px 20px;
+    padding: 20px;
+    border: 1px dashed var(--color-border);
+    border-radius: 10px;
     color: var(--color-text-muted);
-    font-style: italic;
     font-size: 13px;
+    text-align: center;
+}
+
+.historialVacio p {
+    margin: 0;
+}
+
+.historialVacioTitulo {
+    margin-bottom: 4px !important;
+    font-weight: 700;
+    color: var(--color-primary);
 }
 
 .timeline {
@@ -529,5 +603,244 @@
     margin: 0;
     font-size: 13px;
     color: var(--color-text);
+}
+
+.timelineSignos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.timelineSignos b {
+    color: var(--color-text);
+}
+
+.timelineSeccion {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-border);
+}
+
+.timelineSeccionTitulo {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--color-text-muted);
+}
+
+.timelineLista {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.timelineFactura {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-border);
+    font-size: 13px;
+    color: var(--color-text);
+}
+
+/* Colores de estado sobre la forma de badge existente (.sexBadge), iguales a los de Facturación. */
+.facturaPagada {
+    background-color: var(--color-accent-soft);
+    color: var(--color-primary);
+}
+
+.facturaPendiente {
+    background-color: var(--color-warning-soft);
+    color: var(--color-warning);
+}
+/* #endregion */
+
+/* #region Resumen del expediente */
+.historialColumna {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+}
+
+.resumenGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    gap: 12px;
+}
+
+@media (max-width: 1200px) {
+    .resumenGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .resumenRecordatorios {
+        grid-column: 1 / -1;
+    }
+}
+
+.resumenCard {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.resumenLabel {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--color-text-muted);
+}
+
+.resumenValor {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--color-primary);
+}
+
+.resumenVacio {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--color-text-muted);
+}
+
+.recordatoriosLista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--color-text);
+}
+
+.recordatoriosLista li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.recordatorioTipo {
+    background-color: var(--color-surface-alt);
+    color: var(--color-primary-soft);
+}
+/* #endregion */
+
+/* #region Impresión del historial */
+.imprimirAccion {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.printHistorialBtn {
+    padding: 12px 20px;
+    background-color: var(--color-surface);
+    color: var(--color-primary);
+    border: 2px solid var(--color-border);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.printHistorialBtn:hover:not(:disabled) {
+    border-color: var(--color-primary-mid);
+    background-color: var(--color-surface-alt);
+}
+
+.printHistorialBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.imprimirNota {
+    margin: 0;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--color-text-muted);
+}
+
+.opcionesImpresion {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--color-text);
+}
+
+.opcionesImpresion label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+/* Plantilla impresa: el contenedor, encabezado, datos y pie vienen de los estilos de impresión
+   de la factura (facturas.module.css); aquí solo lo propio del historial. */
+.printFicha {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.printFoto {
+    width: 72pt;
+    height: 72pt;
+    margin-top: 16pt;
+    border-radius: 6pt;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.printFicha > div {
+    flex: 1;
+}
+
+.printConsulta {
+    break-inside: avoid;
+    padding: 8pt 0 10pt;
+    border-top: 1px solid #000;
+    font-size: 11pt;
+}
+
+.printConsultaHeader {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 6pt;
+}
+
+.printConsultaDatos {
+    display: grid;
+    grid-template-columns: 90pt 1fr;
+    gap: 3pt 12px;
+    margin: 0;
+}
+
+.printConsultaDatos dt {
+    font-weight: 700;
+}
+
+.printConsultaDatos dd {
+    margin: 0;
+    white-space: pre-wrap;
 }
 /* #endregion */

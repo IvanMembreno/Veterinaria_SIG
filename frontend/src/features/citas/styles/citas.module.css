@@ -1,6 +1,5 @@
 /* #region Estructura general */
 .pageWrapper {
-    margin-left: 68px;
     min-height: 100vh;
     padding: 40px max(4vw, 40px);
     font-family:
@@ -8,7 +7,7 @@
         -apple-system,
         sans-serif;
     box-sizing: border-box;
-    width: calc(100% - 68px);
+    width: 100%;
 }
 
 .loaderContainer {
@@ -16,7 +15,6 @@
     justify-content: center;
     align-items: center;
     min-height: 60vh;
-    margin-left: 68px;
     color: var(--color-primary-mid);
 }
 /* #endregion */
@@ -116,6 +114,7 @@
 
 .textCenter {
     text-align: center;
+    vertical-align: middle;
 }
 
 .tableRow {
@@ -129,6 +128,14 @@
 
 .tableRow:hover {
     background-color: var(--color-surface-alt);
+}
+
+/* Celdas de datos: mismo padding, alineación y altura mínima de fila en todas las vistas. */
+.tableRow > td {
+    padding: 14px 20px;
+    height: 66px;
+    box-sizing: border-box;
+    vertical-align: middle;
 }
 
 .petCell {
@@ -286,7 +293,11 @@
 /* #endregion */
 
 /* #region Calendario semanal */
+/* El calendario responde a su propio ancho (no al de la ventana), porque el menú lateral cambia entre 68px y 260px. */
 .calendarWrapper {
+    container-type: inline-size;
+    container-name: calendario;
+    min-width: 0;
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
@@ -296,6 +307,7 @@
 
 .calendarNav {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     gap: 16px;
@@ -341,19 +353,17 @@
     background-color: var(--color-border);
 }
 
+/* >= 1100px: 7 columnas iguales. */
 .weekGrid {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 10px;
 }
 
-@media (max-width: 1100px) {
-    .weekGrid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-}
-
 .dayColumn {
+    container-type: inline-size;
+    container-name: dia;
+    min-width: 0;
     background-color: var(--color-surface-alt);
     border-radius: 10px;
     overflow: hidden;
@@ -411,6 +421,8 @@
 }
 
 .calendarCard {
+    min-width: 0;
+    overflow: hidden;
     background-color: var(--color-surface);
     border-radius: 8px;
     padding: 8px 10px;
@@ -420,17 +432,34 @@
     box-shadow: var(--shadow-card);
 }
 
+/* Si no caben en una línea, la etiqueta de estado baja debajo de la hora. */
 .calendarCardHeader {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 6px;
+    gap: 4px 6px;
+}
+
+/* Etiqueta compacta solo dentro del calendario; la tabla conserva su badge. */
+.calendarCardHeader .statusBadge {
+    padding: 3px 8px;
+    font-size: 10px;
 }
 
 .calendarHora {
     font-size: 12px;
     font-weight: 800;
     color: var(--color-primary);
+}
+
+.calendarPet,
+.calendarVet {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .calendarPet {
@@ -444,14 +473,33 @@
     color: var(--color-text-muted);
 }
 
+.historialLinkSmall {
+    align-self: flex-start;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-primary-soft);
+    text-decoration: none;
+}
+
+.historialLinkSmall:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
 .calendarActions {
     display: flex;
+    flex-wrap: wrap;
     gap: 6px;
     margin-top: 4px;
 }
 
+/* Los botones crecen para llenar la fila pero nunca se encogen por debajo de su texto. */
+.calendarActions button {
+    flex: 1 1 auto;
+    white-space: nowrap;
+}
+
 .attendBtnSmall {
-    flex: 1;
     padding: 5px 8px;
     background-color: var(--color-primary-mid);
     color: white;
@@ -468,7 +516,6 @@
 }
 
 .cancelBtnSmall {
-    flex: 1;
     padding: 5px 8px;
     background-color: var(--color-danger-soft);
     color: var(--color-danger);
@@ -484,15 +531,94 @@
     background-color: var(--color-danger);
     color: white;
 }
+
+.editBtnSmall {
+    padding: 5px 8px;
+    background-color: var(--color-surface-alt);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 11px;
+    transition: all 0.2s ease;
+}
+
+.editBtnSmall:hover {
+    background-color: var(--color-primary-mid);
+    color: white;
+}
+
+/* Columna de día angosta: botones apilados a ancho completo. */
+@container dia (width < 170px) {
+    .calendarActions {
+        flex-direction: column;
+    }
+
+    .calendarActions button {
+        width: 100%;
+    }
+}
+
+/* 640px – 1100px: scroll horizontal solo dentro del calendario; la navegación queda fija arriba. */
+@container calendario (640px <= width < 1100px) {
+    .weekGrid {
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(170px, 1fr);
+        overflow-x: auto;
+        padding-bottom: 6px;
+    }
+}
+
+/* < 640px: días apilados en una sola columna. */
+@container calendario (width < 640px) {
+    .calendarNav {
+        gap: 8px;
+    }
+
+    .calendarRango {
+        min-width: 0;
+    }
+
+    .weekGrid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dayColumn {
+        min-height: 0;
+    }
+
+    .dayHeader {
+        flex-direction: row;
+        align-items: baseline;
+        gap: 8px;
+        padding: 8px 12px;
+    }
+
+    .dayBody {
+        padding: 6px 8px;
+    }
+
+    .dayEmpty {
+        margin: 0;
+        padding: 2px 4px;
+        text-align: left;
+    }
+}
 /* #endregion */
 
 /* #region Acciones */
 .actionsCell {
     padding: 14px 20px;
+    text-align: center;
+    vertical-align: middle;
 }
 
-.actionGroup {
+.actionsGroup {
     display: flex;
+    justify-content: center;
+    align-items: center;
     gap: 8px;
 }
 
@@ -512,6 +638,24 @@
     background-color: var(--color-primary);
 }
 
+.editBtn {
+    padding: 8px 14px;
+    background-color: var(--color-surface-alt);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.editBtn:hover {
+    background-color: var(--color-primary-mid);
+    color: white;
+}
+
 .cancelBtn {
     padding: 8px 14px;
     background-color: var(--color-danger-soft);
@@ -526,6 +670,23 @@
 
 .cancelBtn:hover {
     background-color: var(--color-danger);
+    color: white;
+}
+
+.historialBtn {
+    padding: 8px 14px;
+    background-color: var(--color-accent-soft);
+    color: var(--color-primary);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.historialBtn:hover {
+    background-color: var(--color-primary-mid);
     color: white;
 }
 
@@ -597,7 +758,38 @@
     transition: background-color 0.2s ease;
 }
 
-.submitBtn:hover {
+.submitBtn:hover:not(:disabled) {
     background-color: var(--color-primary);
+}
+
+.submitBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.errorMsg {
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.infoMsg {
+    margin: -6px 0 0;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-style: italic;
+}
+
+.warningMsg {
+    margin: -6px 0 0;
+    background-color: var(--color-warning-soft);
+    color: var(--color-warning);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
 }
 /* #endregion */

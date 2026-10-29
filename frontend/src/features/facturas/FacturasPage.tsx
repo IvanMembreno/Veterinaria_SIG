@@ -2,6 +2,7 @@ import { useFacturas } from './hooks/useFacturas';
 import { FiltrosFacturas } from './componentes/FiltrosFacturas';
 import { DetalleFactura } from './componentes/DetalleFactura';
 import { ModalPago } from './componentes/ModalPago';
+import { FacturaImprimible } from './componentes/FacturaImprimible';
 import { clienteDeFactura, type Factura } from '../../api/facturas.api';
 import { Modal } from '../../components/ui/Modal';
 import styles from './styles/facturas.module.css';
@@ -25,6 +26,9 @@ export function FacturasPage() {
         cerrarPago,
         confirmarPago,
         pagarMutation,
+        facturaAImprimir,
+        imprimir,
+        isImprimiendo,
     } = useFacturas();
 
     if (isLoading) {
@@ -107,7 +111,18 @@ export function FacturasPage() {
                                     </td>
                                     <td className={styles.actionsCell}>
                                         <div className={styles.actionsGroup}>
-                                            {f.estado === 'PENDIENTE' ? (
+                                            <button
+                                                className={styles.printBtn}
+                                                disabled={isImprimiendo}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    imprimir(f);
+                                                }}
+                                                title="Imprimir comprobante"
+                                            >
+                                                Imprimir
+                                            </button>
+                                            {f.estado === 'PENDIENTE' && (
                                                 <button
                                                     className={styles.payBtn}
                                                     onClick={(e) => {
@@ -117,14 +132,6 @@ export function FacturasPage() {
                                                 >
                                                     Marcar como pagada
                                                 </button>
-                                            ) : (
-                                                <span
-                                                    className={
-                                                        styles.emptyActions
-                                                    }
-                                                >
-                                                    -
-                                                </span>
                                             )}
                                         </div>
                                     </td>
@@ -154,6 +161,10 @@ export function FacturasPage() {
                         if (facturaSeleccionada)
                             abrirPago(facturaSeleccionada.id);
                     }}
+                    onImprimir={() => {
+                        if (facturaSeleccionada) imprimir(facturaSeleccionada);
+                    }}
+                    isImprimiendo={isImprimiendo}
                 />
             </Modal>
 
@@ -167,6 +178,10 @@ export function FacturasPage() {
                 isError={pagarMutation.isError}
                 error={pagarMutation.error}
             />
+
+            {facturaAImprimir && (
+                <FacturaImprimible factura={facturaAImprimir} />
+            )}
         </div>
     );
 }

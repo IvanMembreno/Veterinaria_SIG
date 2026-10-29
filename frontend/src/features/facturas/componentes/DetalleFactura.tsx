@@ -5,12 +5,16 @@ interface DetalleFacturaProps {
     factura?: Factura;
     isLoading: boolean;
     onPagar: () => void;
+    onImprimir: () => void;
+    isImprimiendo: boolean;
 }
 
 export function DetalleFactura({
     factura,
     isLoading,
     onPagar,
+    onImprimir,
+    isImprimiendo,
 }: DetalleFacturaProps) {
     if (isLoading || !factura) {
         return <p className={styles.detalleHint}>Cargando factura...</p>;
@@ -106,6 +110,15 @@ export function DetalleFactura({
                     </div>
                 </div>
             )}
+
+            <button
+                type="button"
+                className={styles.secondaryBtn}
+                onClick={onImprimir}
+                disabled={isImprimiendo}
+            >
+                {isImprimiendo ? 'Preparando impresión...' : 'Imprimir'}
+            </button>
 
             {factura.estado === 'PENDIENTE' && (
                 <button

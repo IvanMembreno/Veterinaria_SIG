@@ -109,6 +109,7 @@
     color: var(--color-primary-soft);
 }
 
+.filtroField input,
 .filtroField select {
     padding: 10px 12px;
     border: 2px solid var(--color-border);
@@ -121,6 +122,7 @@
     min-width: 160px;
 }
 
+.filtroField input:focus,
 .filtroField select:focus {
     border-color: var(--color-accent);
     background-color: var(--color-surface-alt);

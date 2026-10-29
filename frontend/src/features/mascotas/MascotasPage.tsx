@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { useMascotas } from './hooks/useMascotas';
+import { ESPECIE_OTRA, ESPECIES } from './especies';
 import { useAuthStore } from '../auth/useAuthStore';
 import { type Mascota } from '../../api/mascotas.api';
 import { Modal } from '../../components/ui/Modal';
+import { Autocomplete } from '../../components/ui/Autocomplete';
 import styles from './styles/mascotas.module.css';
 import basurero from '../../assets/actions/trash.svg';
 import lapiz from '../../assets/actions/pencil.svg';
@@ -22,6 +24,8 @@ export function MascotasPage() {
         editingId,
         form,
         setForm,
+        especieSeleccion,
+        elegirEspecie,
         imagen,
         setImagen,
         abrirNuevo,
@@ -138,6 +142,22 @@ export function MascotasPage() {
                                     </td>
                                     <td className={styles.actionsCell}>
                                         <div className={styles.actionsGroup}>
+                                            {puedeVerDetalle && (
+                                                <button
+                                                    className={
+                                                        styles.btnHistorial
+                                                    }
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        navigate(
+                                                            `/mascotas/${m.id}`,
+                                                        );
+                                                    }}
+                                                    title="Ver historial clínico"
+                                                >
+                                                    Historial
+                                                </button>
+                                            )}
                                             {puedeCrear && (
                                                 <button
                                                     className={styles.btnEdit}
@@ -223,19 +243,35 @@ export function MascotasPage() {
 
                     <div className={styles.formRow}>
                         <div className={styles.field}>
-                            <label htmlFor="input-especie">Especie</label>
-                            <input
-                                id="input-especie"
-                                placeholder="Ej: Canino"
-                                value={form.especie}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        especie: e.target.value,
-                                    })
-                                }
+                            <label htmlFor="select-especie">Especie</label>
+                            <select
+                                id="select-especie"
+                                value={especieSeleccion}
+                                onChange={(e) => elegirEspecie(e.target.value)}
                                 required
-                            />
+                            >
+                                <option value="">-- Especie --</option>
+                                {ESPECIES.map((especie) => (
+                                    <option key={especie} value={especie}>
+                                        {especie}
+                                    </option>
+                                ))}
+                            </select>
+                            {especieSeleccion === ESPECIE_OTRA && (
+                                <input
+                                    id="input-especie-otra"
+                                    aria-label="Especie (otra)"
+                                    placeholder="Escribe la especie"
+                                    value={form.especie}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            especie: e.target.value,
+                                        })
+                                    }
+                                    required
+                                />
+                            )}
                         </div>
                         <div className={styles.field}>
                             <label htmlFor="input-raza">Raza</label>
@@ -284,21 +320,20 @@ export function MascotasPage() {
 
                     <div className={styles.field}>
                         <label htmlFor="select-cliente">Propietario</label>
-                        <select
+                        <Autocomplete
                             id="select-cliente"
+                            placeholder="Escribe el nombre del cliente"
+                            options={(clientes ?? []).map((c) => ({
+                                value: c.id,
+                                label: c.nombre,
+                                hint: c.telefono,
+                            }))}
                             value={form.clienteId}
-                            onChange={(e) =>
-                                setForm({ ...form, clienteId: e.target.value })
+                            onChange={(clienteId) =>
+                                setForm({ ...form, clienteId })
                             }
                             required
-                        >
-                            <option value="">-- Cliente --</option>
-                            {clientes?.map((c) => (
-                                <option key={c.id} value={c.id}>
-                                    {c.nombre}
-                                </option>
-                            ))}
-                        </select>
+                        />
                     </div>
 
                     <div className={styles.field}>

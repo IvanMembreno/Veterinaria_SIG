@@ -3,6 +3,7 @@ import type {
     EstadoRecordatorio,
     RecordatoriosFiltros,
 } from '../../../api/recordatorios.api';
+import { Autocomplete } from '../../../components/ui/Autocomplete';
 import styles from '../styles/recordatorios.module.css';
 
 interface FiltrosRecordatoriosProps {
@@ -22,20 +23,19 @@ export function FiltrosRecordatorios({
         <div className={styles.filtrosBar}>
             <div className={styles.filtroField}>
                 <label htmlFor="filtro-mascota">Mascota</label>
-                <select
+                <Autocomplete
                     id="filtro-mascota"
+                    placeholder="Todas"
+                    options={(mascotas ?? []).map((m) => ({
+                        value: m.id,
+                        label: m.nombre,
+                        hint: m.cliente?.nombre,
+                    }))}
                     value={filtros.mascotaId ?? ''}
-                    onChange={(e) =>
-                        setFiltros({ ...filtros, mascotaId: e.target.value })
+                    onChange={(mascotaId) =>
+                        setFiltros({ ...filtros, mascotaId })
                     }
-                >
-                    <option value="">Todas</option>
-                    {mascotas?.map((m) => (
-                        <option key={m.id} value={m.id}>
-                            {m.nombre}
-                        </option>
-                    ))}
-                </select>
+                />
             </div>
 
             <div className={styles.filtroField}>

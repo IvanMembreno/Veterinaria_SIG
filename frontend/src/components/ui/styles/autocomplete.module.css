@@ -1,0 +1,94 @@
+/* #region Campo */
+.root {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+}
+
+/* Mismo aspecto que los inputs de los formularios; las reglas de cada página pueden ajustarlo. */
+.input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--color-border);
+    border-radius: 10px;
+    background-color: var(--color-surface);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--color-text);
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.input:focus {
+    border-color: var(--color-accent);
+    background-color: var(--color-surface-alt);
+}
+
+.input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+/* #endregion */
+
+/* #region Lista de opciones */
+/* Se monta en <body> con position: fixed para no quedar recortada por el overflow del Modal. */
+.listbox {
+    position: fixed;
+    z-index: 300;
+    margin: 0;
+    padding: 4px;
+    list-style: none;
+    overflow-y: auto;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgba(27, 67, 50, 0.18);
+    box-sizing: border-box;
+    font-family:
+        system-ui,
+        -apple-system,
+        sans-serif;
+}
+
+.option {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+.optionActive {
+    background-color: var(--color-surface-alt);
+}
+
+.optionSelected .optionLabel {
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.optionLabel {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.optionHint {
+    flex-shrink: 0;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.empty {
+    padding: 10px 12px;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--color-text-muted);
+}
+/* #endregion */

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { Cita } from '../../../api/citas.api';
 import { ESTADO_LABEL, estadoBadgeClass } from '../estado';
 import styles from '../styles/citas.module.css';
@@ -6,6 +7,7 @@ import styles from '../styles/citas.module.css';
 interface CalendarioCitasProps {
     citas: Cita[];
     puedeAtender: boolean;
+    puedeVerHistorial: boolean;
     puedeGestionar: boolean;
     onAtender: (id: string) => void;
     onEditar: (cita: Cita) => void;
@@ -34,6 +36,7 @@ function mismoDia(a: Date, b: Date): boolean {
 export function CalendarioCitas({
     citas,
     puedeAtender,
+    puedeVerHistorial,
     puedeGestionar,
     onAtender,
     onEditar,
@@ -175,6 +178,7 @@ export function CalendarioCitas({
                                                     className={
                                                         styles.calendarPet
                                                     }
+                                                    title={c.mascota?.nombre}
                                                 >
                                                     {c.mascota?.nombre ?? '-'}
                                                 </span>
@@ -182,9 +186,20 @@ export function CalendarioCitas({
                                                     className={
                                                         styles.calendarVet
                                                     }
+                                                    title={c.usuario?.nombre}
                                                 >
                                                     {c.usuario?.nombre ?? '-'}
                                                 </span>
+                                                {puedeVerHistorial && (
+                                                    <Link
+                                                        to={`/mascotas/${c.mascotaId}`}
+                                                        className={
+                                                            styles.historialLinkSmall
+                                                        }
+                                                    >
+                                                        Ver historial
+                                                    </Link>
+                                                )}
                                                 {isScheduled &&
                                                     (puedeAtender ||
                                                         puedeGestionar) && (

@@ -1,6 +1,9 @@
+import { Link } from 'react-router-dom';
 import { HORAS_LABORALES, useCitas } from './hooks/useCitas';
+import { useAuthStore } from '../auth/useAuthStore';
 import { ConsultaForm } from '../consultas/ConsultaForm';
 import { Modal } from '../../components/ui/Modal';
+import { Autocomplete } from '../../components/ui/Autocomplete';
 import { getErrorMessage } from '../../utils/getErrorMessage';
 import { FiltrosCitas } from './componentes/FiltrosCitas';
 import { CalendarioCitas } from './componentes/CalendarioCitas';
@@ -47,6 +50,12 @@ export function CitasPage() {
         vista,
         setVista,
     } = useCitas();
+
+    // El historial clínico (/mascotas/:id) solo está disponible para GERENTE y VETERINARIO.
+    const usuario = useAuthStore((s) => s.usuario);
+    const puedeVerHistorial = usuario
+        ? ['GERENTE', 'VETERINARIO'].includes(usuario.rol)
+        : false;
 
     if (isLoading) {
         return (
@@ -156,14 +165,14 @@ export function CitasPage() {
                                                 </span>
                                             </td>
                                             <td className={styles.actionsCell}>
-                                                {isScheduled ? (
+                                                {isScheduled || puedeVerHistorial ? (
                                                     <div className={styles.actionsGroup}>
 
-                                                        {puedeAtender && (<button onClick={() => setCitaParaAtender(c.id) } className={styles.attendBtn}>
+                                                        {isScheduled && puedeAtender && (<button onClick={() => setCitaParaAtender(c.id) } className={styles.attendBtn}>
                                                             Atender
                                                         </button>)}
 
-                                                        {puedeCrear && (<button
+                                                        {isScheduled && puedeCrear && (<button
                                                             onClick={() =>
                                                                 abrirEdicion(c)
                                                             }
@@ -174,7 +183,18 @@ export function CitasPage() {
                                                             Editar/Reprogramar
                                                         </button>)}
 
-                                                        {puedeCrear && (<button
+                                                        {puedeVerHistorial && (
+                                                            <Link
+                                                                to={`/mascotas/${c.mascotaId}`}
+                                                                className={
+                                                                    styles.historialBtn
+                                                                }
+                                                            >
+                                                                Ver historial
+                                                            </Link>
+                                                        )}
+
+                                                        {isScheduled && puedeCrear && (<button
                                                             onClick={() =>
                                                                 cancelarMutation.mutate(
                                                                     c.id,
@@ -218,6 +238,7 @@ export function CitasPage() {
                 <CalendarioCitas
                     citas={citas ?? []}
                     puedeAtender={puedeAtender}
+                    puedeVerHistorial={puedeVerHistorial}
                     puedeGestionar={puedeCrear}
                     onAtender={setCitaParaAtender}
                     onEditar={abrirEdicion}
@@ -234,45 +255,36 @@ export function CitasPage() {
                     <div className={styles.formRow}>
                         <div className={styles.field}>
                             <label htmlFor="select-mascota">Mascota</label>
-                            <select
+                            <Autocomplete
                                 id="select-mascota"
+                                placeholder="Escribe el nombre de la mascota"
+                                options={(mascotas ?? []).map((m) => ({
+                                    value: m.id,
+                                    label: m.nombre,
+                                    hint: m.cliente?.nombre,
+                                }))}
                                 value={form.mascotaId}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        mascotaId: e.target.value,
-                                    })
+                                onChange={(mascotaId) =>
+                                    setForm({ ...form, mascotaId })
                                 }
                                 required
-                            >
-                                <option value="">-- Mascota --</option>
-                                {mascotas?.map((m) => (
-                                    <option key={m.id} value={m.id}>
-                                        {m.nombre}
-                                    </option>
-                                ))}
-                            </select>
+                            />
                         </div>
                         <div className={styles.field}>
                             <label htmlFor="select-vet">Veterinario</label>
-                            <select
+                            <Autocomplete
                                 id="select-vet"
+                                placeholder="Escribe el nombre del veterinario"
+                                options={(veterinarios ?? []).map((v) => ({
+                                    value: v.id,
+                                    label: v.nombre,
+                                }))}
                                 value={form.usuarioId}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        usuarioId: e.target.value,
-                                    })
+                                onChange={(usuarioId) =>
+                                    setForm({ ...form, usuarioId })
                                 }
                                 required
-                            >
-                                <option value="">-- Veterinario --</option>
-                                {veterinarios?.map((v) => (
-                                    <option key={v.id} value={v.id}>
-                                        {v.nombre}
-                                    </option>
-                                ))}
-                            </select>
+                            />
                         </div>
                     </div>
 

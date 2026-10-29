@@ -1,10 +1,17 @@
+import { useNavigate } from 'react-router-dom';
 import { useMascotas } from './hooks/useMascotas';
+import { useAuthStore } from '../auth/useAuthStore';
 import { type Mascota } from '../../api/mascotas.api';
 import { Modal } from '../../components/ui/Modal';
 import styles from './styles/mascotas.module.css';
 import basurero from '../../assets/actions/trash.svg';
 
 export function MascotasPage() {
+    const navigate = useNavigate();
+    const usuario = useAuthStore((s) => s.usuario);
+    const puedeVerDetalle = usuario
+        ? ['GERENTE', 'VETERINARIO'].includes(usuario.rol)
+        : false;
     const {
         mascotas,
         clientes,
@@ -69,7 +76,20 @@ export function MascotasPage() {
                     <tbody>
                         {mascotas && mascotas.length > 0 ? (
                             mascotas.map((m: Mascota) => (
-                                <tr key={m.id} className={styles.tableRow}>
+                                <tr
+                                    key={m.id}
+                                    className={
+                                        puedeVerDetalle
+                                            ? styles.tableRow
+                                            : styles.tableRowStatic
+                                    }
+                                    onClick={
+                                        puedeVerDetalle
+                                            ? () =>
+                                                  navigate(`/mascotas/${m.id}`)
+                                            : undefined
+                                    }
+                                >
                                     <td className={styles.petCell}>
                                         {m.imagenUrl ? (
                                             <img
@@ -115,9 +135,10 @@ export function MascotasPage() {
                                     <td className={styles.actionsCell}>
                                         <button
                                             className={styles.btnDelete}
-                                            onClick={() =>
-                                                deleteMutation.mutate(m.id)
-                                            }
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                deleteMutation.mutate(m.id);
+                                            }}
                                             title="Eliminar mascota permanente"
                                         >
                                             <img

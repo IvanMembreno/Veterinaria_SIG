@@ -38,9 +38,17 @@ export class MascotasService {
         return this.prisma.consulta.findMany({
             where: { cita: { mascotaId: id } },
             include: {
-                cita: true,
+                cita: {
+                    include: {
+                        usuario: { select: { id: true, nombre: true } },
+                    },
+                },
                 insumos: { include: { insumo: true } },
-                facturas: true,
+                facturas: {
+                    include: {
+                        detalles: { include: { servicio: true, insumo: true } },
+                    },
+                },
             },
             orderBy: { cita: { fecha: 'desc' } },
         });

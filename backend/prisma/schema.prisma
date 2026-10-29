@@ -128,10 +128,11 @@ model Consulta {
 }
 
 model Servicio {
-  id     String  @id @default(uuid())
-  nombre String
-  precio Float
-  activo Boolean @default(true)
+  id       String  @id @default(uuid())
+  nombre   String
+  precio   Float
+  activo   Boolean @default(true)
+  esVacuna Boolean @default(false)
 
   detalles FacturaDetalle[]
 }

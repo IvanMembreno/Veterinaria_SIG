@@ -3,10 +3,16 @@ import { LoginPage } from '../features/auth/LoginPage';
 import { DashboardPage } from '../features/dashboard/DashboardPage';
 import { ClientesPage } from '../features/clientes/ClientesPage';
 import { MascotasPage } from '../features/mascotas/MascotasPage';
+import { MascotaDetallePage } from '../features/mascotas/MascotaDetallePage';
 import { CitasPage } from '../features/citas/CitasPage';
 import { ProtectedRoute } from './ProtectedRoute';
 import { ProtectedLayout } from '../components/layout/ProtectedLayout';
 import { InventarioPage } from '../features/inventario/InventarioPage';
+import { VentasPage } from '../features/ventas/VentasPage';
+import { UsuariosPage } from '../features/usuarios/UsuariosPage';
+import { ServiciosPage } from '../features/servicios/ServiciosPage';
+import { FacturasPage } from '../features/facturas/FacturasPage';
+import { RecordatoriosPage } from '../features/recordatorios/RecordatoriosPage';
 import { useAuthStore } from '../features/auth/useAuthStore';
 import { homeByRole } from './homeByRole';
 
@@ -37,6 +43,16 @@ export function AppRouter() {
                         </Route>
                         <Route path="/clientes" element={<ClientesPage />} />
                         <Route path="/mascotas" element={<MascotasPage />} />
+                        <Route
+                            path="/mascotas/:id"
+                            element={
+                                <ProtectedRoute
+                                    allowedRoles={['GERENTE', 'VETERINARIO']}
+                                />
+                            }
+                        >
+                            <Route index element={<MascotaDetallePage />} />
+                        </Route>
                         <Route path="/citas" element={<CitasPage />} />
                         <Route
                             path="/inventario"
@@ -47,6 +63,56 @@ export function AppRouter() {
                             }
                         >
                             <Route index element={<InventarioPage />} />
+                        </Route>
+                        <Route
+                            path="/punto-de-venta"
+                            element={
+                                <ProtectedRoute
+                                    allowedRoles={['RECEPCION', 'GERENTE']}
+                                />
+                            }
+                        >
+                            <Route index element={<VentasPage />} />
+                        </Route>
+                        <Route
+                            path="/usuarios"
+                            element={
+                                <ProtectedRoute allowedRoles={['GERENTE']} />
+                            }
+                        >
+                            <Route index element={<UsuariosPage />} />
+                        </Route>
+                        <Route
+                            path="/servicios"
+                            element={
+                                <ProtectedRoute allowedRoles={['GERENTE']} />
+                            }
+                        >
+                            <Route index element={<ServiciosPage />} />
+                        </Route>
+                        <Route
+                            path="/facturas"
+                            element={
+                                <ProtectedRoute
+                                    allowedRoles={['RECEPCION', 'GERENTE']}
+                                />
+                            }
+                        >
+                            <Route index element={<FacturasPage />} />
+                        </Route>
+                        <Route
+                            path="/recordatorios"
+                            element={
+                                <ProtectedRoute
+                                    allowedRoles={[
+                                        'GERENTE',
+                                        'VETERINARIO',
+                                        'RECEPCION',
+                                    ]}
+                                />
+                            }
+                        >
+                            <Route index element={<RecordatoriosPage />} />
                         </Route>
                     </Route>
                 </Route>

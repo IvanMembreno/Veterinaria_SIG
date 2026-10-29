@@ -39,6 +39,7 @@ export type ServicioMinAggregateOutputType = {
   nombre: string | null
   precio: number | null
   activo: boolean | null
+  esVacuna: boolean | null
 }
 
 export type ServicioMaxAggregateOutputType = {
@@ -46,6 +47,7 @@ export type ServicioMaxAggregateOutputType = {
   nombre: string | null
   precio: number | null
   activo: boolean | null
+  esVacuna: boolean | null
 }
 
 export type ServicioCountAggregateOutputType = {
@@ -53,6 +55,7 @@ export type ServicioCountAggregateOutputType = {
   nombre: number
   precio: number
   activo: number
+  esVacuna: number
   _all: number
 }
 
@@ -70,6 +73,7 @@ export type ServicioMinAggregateInputType = {
   nombre?: true
   precio?: true
   activo?: true
+  esVacuna?: true
 }
 
 export type ServicioMaxAggregateInputType = {
@@ -77,6 +81,7 @@ export type ServicioMaxAggregateInputType = {
   nombre?: true
   precio?: true
   activo?: true
+  esVacuna?: true
 }
 
 export type ServicioCountAggregateInputType = {
@@ -84,6 +89,7 @@ export type ServicioCountAggregateInputType = {
   nombre?: true
   precio?: true
   activo?: true
+  esVacuna?: true
   _all?: true
 }
 
@@ -178,6 +184,7 @@ export type ServicioGroupByOutputType = {
   nombre: string
   precio: number
   activo: boolean
+  esVacuna: boolean
   _count: ServicioCountAggregateOutputType | null
   _avg: ServicioAvgAggregateOutputType | null
   _sum: ServicioSumAggregateOutputType | null
@@ -208,6 +215,7 @@ export type ServicioWhereInput = {
   nombre?: Prisma.StringFilter<"Servicio"> | string
   precio?: Prisma.FloatFilter<"Servicio"> | number
   activo?: Prisma.BoolFilter<"Servicio"> | boolean
+  esVacuna?: Prisma.BoolFilter<"Servicio"> | boolean
   detalles?: Prisma.FacturaDetalleListRelationFilter
 }
 
@@ -216,6 +224,7 @@ export type ServicioOrderByWithRelationInput = {
   nombre?: Prisma.SortOrder
   precio?: Prisma.SortOrder
   activo?: Prisma.SortOrder
+  esVacuna?: Prisma.SortOrder
   detalles?: Prisma.FacturaDetalleOrderByRelationAggregateInput
 }
 
@@ -227,6 +236,7 @@ export type ServicioWhereUniqueInput = Prisma.AtLeast<{
   nombre?: Prisma.StringFilter<"Servicio"> | string
   precio?: Prisma.FloatFilter<"Servicio"> | number
   activo?: Prisma.BoolFilter<"Servicio"> | boolean
+  esVacuna?: Prisma.BoolFilter<"Servicio"> | boolean
   detalles?: Prisma.FacturaDetalleListRelationFilter
 }, "id">
 
@@ -235,6 +245,7 @@ export type ServicioOrderByWithAggregationInput = {
   nombre?: Prisma.SortOrder
   precio?: Prisma.SortOrder
   activo?: Prisma.SortOrder
+  esVacuna?: Prisma.SortOrder
   _count?: Prisma.ServicioCountOrderByAggregateInput
   _avg?: Prisma.ServicioAvgOrderByAggregateInput
   _max?: Prisma.ServicioMaxOrderByAggregateInput
@@ -250,6 +261,7 @@ export type ServicioScalarWhereWithAggregatesInput = {
   nombre?: Prisma.StringWithAggregatesFilter<"Servicio"> | string
   precio?: Prisma.FloatWithAggregatesFilter<"Servicio"> | number
   activo?: Prisma.BoolWithAggregatesFilter<"Servicio"> | boolean
+  esVacuna?: Prisma.BoolWithAggregatesFilter<"Servicio"> | boolean
 }
 
 export type ServicioCreateInput = {
@@ -257,6 +269,7 @@ export type ServicioCreateInput = {
   nombre: string
   precio: number
   activo?: boolean
+  esVacuna?: boolean
   detalles?: Prisma.FacturaDetalleCreateNestedManyWithoutServicioInput
 }
 
@@ -265,6 +278,7 @@ export type ServicioUncheckedCreateInput = {
   nombre: string
   precio: number
   activo?: boolean
+  esVacuna?: boolean
   detalles?: Prisma.FacturaDetalleUncheckedCreateNestedManyWithoutServicioInput
 }
 
@@ -273,6 +287,7 @@ export type ServicioUpdateInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   precio?: Prisma.FloatFieldUpdateOperationsInput | number
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  esVacuna?: Prisma.BoolFieldUpdateOperationsInput | boolean
   detalles?: Prisma.FacturaDetalleUpdateManyWithoutServicioNestedInput
 }
 
@@ -281,6 +296,7 @@ export type ServicioUncheckedUpdateInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   precio?: Prisma.FloatFieldUpdateOperationsInput | number
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  esVacuna?: Prisma.BoolFieldUpdateOperationsInput | boolean
   detalles?: Prisma.FacturaDetalleUncheckedUpdateManyWithoutServicioNestedInput
 }
 
@@ -289,6 +305,7 @@ export type ServicioCreateManyInput = {
   nombre: string
   precio: number
   activo?: boolean
+  esVacuna?: boolean
 }
 
 export type ServicioUpdateManyMutationInput = {
@@ -296,6 +313,7 @@ export type ServicioUpdateManyMutationInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   precio?: Prisma.FloatFieldUpdateOperationsInput | number
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  esVacuna?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ServicioUncheckedUpdateManyInput = {
@@ -303,6 +321,7 @@ export type ServicioUncheckedUpdateManyInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   precio?: Prisma.FloatFieldUpdateOperationsInput | number
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  esVacuna?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ServicioCountOrderByAggregateInput = {
@@ -310,6 +329,7 @@ export type ServicioCountOrderByAggregateInput = {
   nombre?: Prisma.SortOrder
   precio?: Prisma.SortOrder
   activo?: Prisma.SortOrder
+  esVacuna?: Prisma.SortOrder
 }
 
 export type ServicioAvgOrderByAggregateInput = {
@@ -321,6 +341,7 @@ export type ServicioMaxOrderByAggregateInput = {
   nombre?: Prisma.SortOrder
   precio?: Prisma.SortOrder
   activo?: Prisma.SortOrder
+  esVacuna?: Prisma.SortOrder
 }
 
 export type ServicioMinOrderByAggregateInput = {
@@ -328,6 +349,7 @@ export type ServicioMinOrderByAggregateInput = {
   nombre?: Prisma.SortOrder
   precio?: Prisma.SortOrder
   activo?: Prisma.SortOrder
+  esVacuna?: Prisma.SortOrder
 }
 
 export type ServicioSumOrderByAggregateInput = {
@@ -368,6 +390,7 @@ export type ServicioCreateWithoutDetallesInput = {
   nombre: string
   precio: number
   activo?: boolean
+  esVacuna?: boolean
 }
 
 export type ServicioUncheckedCreateWithoutDetallesInput = {
@@ -375,6 +398,7 @@ export type ServicioUncheckedCreateWithoutDetallesInput = {
   nombre: string
   precio: number
   activo?: boolean
+  esVacuna?: boolean
 }
 
 export type ServicioCreateOrConnectWithoutDetallesInput = {
@@ -398,6 +422,7 @@ export type ServicioUpdateWithoutDetallesInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   precio?: Prisma.FloatFieldUpdateOperationsInput | number
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  esVacuna?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ServicioUncheckedUpdateWithoutDetallesInput = {
@@ -405,6 +430,7 @@ export type ServicioUncheckedUpdateWithoutDetallesInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   precio?: Prisma.FloatFieldUpdateOperationsInput | number
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  esVacuna?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -443,6 +469,7 @@ export type ServicioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   nombre?: boolean
   precio?: boolean
   activo?: boolean
+  esVacuna?: boolean
   detalles?: boolean | Prisma.Servicio$detallesArgs<ExtArgs>
   _count?: boolean | Prisma.ServicioCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["servicio"]>
@@ -452,6 +479,7 @@ export type ServicioSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   nombre?: boolean
   precio?: boolean
   activo?: boolean
+  esVacuna?: boolean
 }, ExtArgs["result"]["servicio"]>
 
 export type ServicioSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -459,6 +487,7 @@ export type ServicioSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   nombre?: boolean
   precio?: boolean
   activo?: boolean
+  esVacuna?: boolean
 }, ExtArgs["result"]["servicio"]>
 
 export type ServicioSelectScalar = {
@@ -466,9 +495,10 @@ export type ServicioSelectScalar = {
   nombre?: boolean
   precio?: boolean
   activo?: boolean
+  esVacuna?: boolean
 }
 
-export type ServicioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "precio" | "activo", ExtArgs["result"]["servicio"]>
+export type ServicioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "precio" | "activo" | "esVacuna", ExtArgs["result"]["servicio"]>
 export type ServicioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   detalles?: boolean | Prisma.Servicio$detallesArgs<ExtArgs>
   _count?: boolean | Prisma.ServicioCountOutputTypeDefaultArgs<ExtArgs>
@@ -486,6 +516,7 @@ export type $ServicioPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     nombre: string
     precio: number
     activo: boolean
+    esVacuna: boolean
   }, ExtArgs["result"]["servicio"]>
   composites: {}
 }
@@ -914,6 +945,7 @@ export interface ServicioFieldRefs {
   readonly nombre: Prisma.FieldRef<"Servicio", 'String'>
   readonly precio: Prisma.FieldRef<"Servicio", 'Float'>
   readonly activo: Prisma.FieldRef<"Servicio", 'Boolean'>
+  readonly esVacuna: Prisma.FieldRef<"Servicio", 'Boolean'>
 }
     
 

@@ -6,6 +6,8 @@ import {
 import { PrismaService } from '../../config/prisma.service.js';
 import { CreateConsultaDto } from './dto/create-consulta.dto.js';
 
+const DIAS_REFUERZO_VACUNA = 21;
+
 @Injectable()
 export class ConsultasService {
     constructor(private readonly prisma: PrismaService) {}
@@ -19,6 +21,10 @@ export class ConsultasService {
         if (cita.consulta)
             throw new BadRequestException(
                 'Esta cita ya tiene una consulta registrada',
+            );
+        if (cita.estado === 'CANCELADA' || cita.estado === 'NO_ASISTIO')
+            throw new BadRequestException(
+                'No se puede atender una cita cancelada o no asistida',
             );
 
         return this.prisma.$transaction(async (tx) => {
@@ -76,6 +82,7 @@ export class ConsultasService {
                 cantidad: number;
                 precio: number;
             }[] = [];
+            const serviciosVacuna: { nombre: string }[] = [];
 
             for (const item of dto.servicios) {
                 const servicio = await tx.servicio.findUnique({
@@ -92,6 +99,9 @@ export class ConsultasService {
                     cantidad,
                     precio: servicio.precio,
                 });
+                if (servicio.esVacuna) {
+                    serviciosVacuna.push({ nombre: servicio.nombre });
+                }
             }
 
             const factura = await tx.factura.create({
@@ -107,6 +117,25 @@ export class ConsultasService {
                 where: { id: dto.citaId },
                 data: { estado: 'ATENDIDA' },
             });
+
+            if (serviciosVacuna.length > 0) {
+                const fechaProgramada = new Date(cita.fecha);
+                fechaProgramada.setDate(
+                    fechaProgramada.getDate() + DIAS_REFUERZO_VACUNA,
+                );
+
+                for (const servicioVacuna of serviciosVacuna) {
+                    await tx.recordatorio.create({
+                        data: {
+                            mascotaId: cita.mascotaId,
+                            tipo: 'VACUNA',
+                            fechaProgramada,
+                            estado: 'PENDIENTE',
+                            nota: `Refuerzo de la vacuna "${servicioVacuna.nombre}" aplicada el ${cita.fecha.toLocaleDateString('es')}.`,
+                        },
+                    });
+                }
+            }
 
             return { consulta, factura };
         });

@@ -21,4 +21,8 @@ export class CreateServicioDto {
     @IsBoolean()
     @IsOptional()
     activo?: boolean;
+
+    @IsBoolean()
+    @IsOptional()
+    esVacuna?: boolean;
 }

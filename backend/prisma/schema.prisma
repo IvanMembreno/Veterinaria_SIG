@@ -145,6 +145,7 @@ model Inventario {
   stock       Int       @default(0)
   stockMinimo Int       @default(5)
   precioUnit  Float
+  imagenUrl   String?
   createdAt   DateTime  @default(now())
 
   consultaUso ConsultaInsumo[]

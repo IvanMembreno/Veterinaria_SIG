@@ -8,11 +8,12 @@ import { RegistrarEntradaDto } from './dto/registrar-entrada.dto.js';
 export class InventarioService {
     constructor(private readonly prisma: PrismaService) {}
 
-    create(dto: CreateInsumoDto) {
+    create(dto: CreateInsumoDto, imagenUrl?: string) {
         return this.prisma.inventario.create({
             data: {
                 ...dto,
                 fechaVenc: dto.fechaVenc ? new Date(dto.fechaVenc) : undefined,
+                imagenUrl,
             },
         });
     }
@@ -29,7 +30,7 @@ export class InventarioService {
         return insumo;
     }
 
-    async update(id: string, dto: UpdateInsumoDto) {
+    async update(id: string, dto: UpdateInsumoDto, imagenUrl?: string) {
         await this.findOne(id);
         return this.prisma.inventario.update({
             where: { id },
@@ -38,6 +39,7 @@ export class InventarioService {
                 ...(dto.fechaVenc !== undefined && {
                     fechaVenc: dto.fechaVenc ? new Date(dto.fechaVenc) : null,
                 }),
+                ...(imagenUrl && { imagenUrl }),
             },
         });
     }

@@ -1,3 +1,4 @@
+import { useEffect, useMemo } from 'react';
 import { useInventario } from './hooks/useInventario';
 import { type Insumo } from '../../api/inventario.api';
 import { Modal } from '../../components/ui/Modal';
@@ -43,12 +44,25 @@ export function InventarioPage() {
         setForm,
         entradas,
         setEntradas,
+        imagen,
+        setImagen,
         entradaMutation,
         handleSubmit,
         isSaving,
         isError,
         error,
     } = useInventario();
+
+    const previewUrl = useMemo(
+        () => (imagen ? URL.createObjectURL(imagen) : null),
+        [imagen],
+    );
+    useEffect(
+        () => () => {
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+        },
+        [previewUrl],
+    );
 
     if (isLoading) {
         return (
@@ -59,6 +73,11 @@ export function InventarioPage() {
     }
 
     const bajoMinimo = insumos?.filter((i) => i.stock <= i.stockMinimo) ?? [];
+    // Al editar sin elegir archivo nuevo se muestra la foto que ya tiene el insumo.
+    const imagenMostrada =
+        previewUrl ??
+        insumos?.find((i) => i.id === editingId)?.imagenUrl ??
+        null;
 
     return (
         <div className={styles.pageWrapper}>
@@ -122,7 +141,30 @@ export function InventarioPage() {
                                 return (
                                     <tr key={i.id} className={styles.tableRow}>
                                         <td className={styles.nameCell}>
-                                            {i.nombre}
+                                            <div
+                                                className={styles.cellContent}
+                                            >
+                                                {i.imagenUrl ? (
+                                                    <img
+                                                        src={i.imagenUrl}
+                                                        alt=""
+                                                        className={
+                                                            styles.insumoPhoto
+                                                        }
+                                                    />
+                                                ) : (
+                                                    <div
+                                                        className={
+                                                            styles.avatar
+                                                        }
+                                                    >
+                                                        {i.nombre
+                                                            .charAt(0)
+                                                            .toUpperCase()}
+                                                    </div>
+                                                )}
+                                                <span>{i.nombre}</span>
+                                            </div>
                                         </td>
                                         <td className={styles.loteCell}>
                                             {i.lote ?? (
@@ -350,6 +392,39 @@ export function InventarioPage() {
                                 })
                             }
                             required
+                        />
+                    </div>
+
+                    <div className={styles.field}>
+                        <label
+                            htmlFor="input-imagen"
+                            className={styles.fileLabel}
+                        >
+                            {imagenMostrada ? (
+                                <img
+                                    src={imagenMostrada}
+                                    alt="Vista previa"
+                                    className={styles.imagePreview}
+                                />
+                            ) : (
+                                <span className={styles.fileIconPlaceholder}>
+                                    📷
+                                </span>
+                            )}
+                            {imagen
+                                ? imagen.name
+                                : imagenMostrada
+                                  ? 'Cambiar foto (opcional)'
+                                  : 'Subir foto (opcional)'}
+                        </label>
+                        <input
+                            id="input-imagen"
+                            type="file"
+                            accept="image/*"
+                            className={styles.fileInput}
+                            onChange={(e) =>
+                                setImagen(e.target.files?.[0] ?? null)
+                            }
                         />
                     </div>
 

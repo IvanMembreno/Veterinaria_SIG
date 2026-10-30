@@ -8,24 +8,25 @@ export interface Insumo {
     stock: number;
     stockMinimo: number;
     precioUnit: number;
+    imagenUrl?: string | null;
 }
 
 export const getInventario = () =>
     api.get<Insumo[]>('/inventario').then((r) => r.data);
 
-export const createInsumo = (data: Omit<Insumo, 'id'>) =>
-    api.post('/inventario', data).then((r) => r.data);
+export const createInsumo = (formData: FormData) =>
+    api
+        .post('/inventario', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        .then((r) => r.data);
 
-export interface UpdateInsumoPayload {
-    nombre?: string;
-    lote?: string | null;
-    fechaVenc?: string | null;
-    stockMinimo?: number;
-    precioUnit?: number;
-}
-
-export const updateInsumo = (id: string, data: UpdateInsumoPayload) =>
-    api.patch<Insumo>(`/inventario/${id}`, data).then((r) => r.data);
+export const updateInsumo = (id: string, formData: FormData) =>
+    api
+        .patch<Insumo>(`/inventario/${id}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        .then((r) => r.data);
 
 export const registrarEntrada = (id: string, cantidad: number, nota?: string) =>
     api

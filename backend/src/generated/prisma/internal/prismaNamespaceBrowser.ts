@@ -168,6 +168,7 @@ export const InventarioScalarFieldEnum = {
   stock: 'stock',
   stockMinimo: 'stockMinimo',
   precioUnit: 'precioUnit',
+  imagenUrl: 'imagenUrl',
   createdAt: 'createdAt'
 } as const
 

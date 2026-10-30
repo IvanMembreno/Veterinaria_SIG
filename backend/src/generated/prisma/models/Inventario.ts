@@ -46,6 +46,7 @@ export type InventarioMinAggregateOutputType = {
   stock: number | null
   stockMinimo: number | null
   precioUnit: number | null
+  imagenUrl: string | null
   createdAt: Date | null
 }
 
@@ -57,6 +58,7 @@ export type InventarioMaxAggregateOutputType = {
   stock: number | null
   stockMinimo: number | null
   precioUnit: number | null
+  imagenUrl: string | null
   createdAt: Date | null
 }
 
@@ -68,6 +70,7 @@ export type InventarioCountAggregateOutputType = {
   stock: number
   stockMinimo: number
   precioUnit: number
+  imagenUrl: number
   createdAt: number
   _all: number
 }
@@ -93,6 +96,7 @@ export type InventarioMinAggregateInputType = {
   stock?: true
   stockMinimo?: true
   precioUnit?: true
+  imagenUrl?: true
   createdAt?: true
 }
 
@@ -104,6 +108,7 @@ export type InventarioMaxAggregateInputType = {
   stock?: true
   stockMinimo?: true
   precioUnit?: true
+  imagenUrl?: true
   createdAt?: true
 }
 
@@ -115,6 +120,7 @@ export type InventarioCountAggregateInputType = {
   stock?: true
   stockMinimo?: true
   precioUnit?: true
+  imagenUrl?: true
   createdAt?: true
   _all?: true
 }
@@ -213,6 +219,7 @@ export type InventarioGroupByOutputType = {
   stock: number
   stockMinimo: number
   precioUnit: number
+  imagenUrl: string | null
   createdAt: Date
   _count: InventarioCountAggregateOutputType | null
   _avg: InventarioAvgAggregateOutputType | null
@@ -247,6 +254,7 @@ export type InventarioWhereInput = {
   stock?: Prisma.IntFilter<"Inventario"> | number
   stockMinimo?: Prisma.IntFilter<"Inventario"> | number
   precioUnit?: Prisma.FloatFilter<"Inventario"> | number
+  imagenUrl?: Prisma.StringNullableFilter<"Inventario"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Inventario"> | Date | string
   consultaUso?: Prisma.ConsultaInsumoListRelationFilter
   movimientos?: Prisma.MovimientoInventarioListRelationFilter
@@ -261,6 +269,7 @@ export type InventarioOrderByWithRelationInput = {
   stock?: Prisma.SortOrder
   stockMinimo?: Prisma.SortOrder
   precioUnit?: Prisma.SortOrder
+  imagenUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   consultaUso?: Prisma.ConsultaInsumoOrderByRelationAggregateInput
   movimientos?: Prisma.MovimientoInventarioOrderByRelationAggregateInput
@@ -278,6 +287,7 @@ export type InventarioWhereUniqueInput = Prisma.AtLeast<{
   stock?: Prisma.IntFilter<"Inventario"> | number
   stockMinimo?: Prisma.IntFilter<"Inventario"> | number
   precioUnit?: Prisma.FloatFilter<"Inventario"> | number
+  imagenUrl?: Prisma.StringNullableFilter<"Inventario"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Inventario"> | Date | string
   consultaUso?: Prisma.ConsultaInsumoListRelationFilter
   movimientos?: Prisma.MovimientoInventarioListRelationFilter
@@ -292,6 +302,7 @@ export type InventarioOrderByWithAggregationInput = {
   stock?: Prisma.SortOrder
   stockMinimo?: Prisma.SortOrder
   precioUnit?: Prisma.SortOrder
+  imagenUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.InventarioCountOrderByAggregateInput
   _avg?: Prisma.InventarioAvgOrderByAggregateInput
@@ -311,6 +322,7 @@ export type InventarioScalarWhereWithAggregatesInput = {
   stock?: Prisma.IntWithAggregatesFilter<"Inventario"> | number
   stockMinimo?: Prisma.IntWithAggregatesFilter<"Inventario"> | number
   precioUnit?: Prisma.FloatWithAggregatesFilter<"Inventario"> | number
+  imagenUrl?: Prisma.StringNullableWithAggregatesFilter<"Inventario"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Inventario"> | Date | string
 }
 
@@ -322,6 +334,7 @@ export type InventarioCreateInput = {
   stock?: number
   stockMinimo?: number
   precioUnit: number
+  imagenUrl?: string | null
   createdAt?: Date | string
   consultaUso?: Prisma.ConsultaInsumoCreateNestedManyWithoutInsumoInput
   movimientos?: Prisma.MovimientoInventarioCreateNestedManyWithoutInsumoInput
@@ -336,6 +349,7 @@ export type InventarioUncheckedCreateInput = {
   stock?: number
   stockMinimo?: number
   precioUnit: number
+  imagenUrl?: string | null
   createdAt?: Date | string
   consultaUso?: Prisma.ConsultaInsumoUncheckedCreateNestedManyWithoutInsumoInput
   movimientos?: Prisma.MovimientoInventarioUncheckedCreateNestedManyWithoutInsumoInput
@@ -350,6 +364,7 @@ export type InventarioUpdateInput = {
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   stockMinimo?: Prisma.IntFieldUpdateOperationsInput | number
   precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
+  imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consultaUso?: Prisma.ConsultaInsumoUpdateManyWithoutInsumoNestedInput
   movimientos?: Prisma.MovimientoInventarioUpdateManyWithoutInsumoNestedInput
@@ -364,6 +379,7 @@ export type InventarioUncheckedUpdateInput = {
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   stockMinimo?: Prisma.IntFieldUpdateOperationsInput | number
   precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
+  imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consultaUso?: Prisma.ConsultaInsumoUncheckedUpdateManyWithoutInsumoNestedInput
   movimientos?: Prisma.MovimientoInventarioUncheckedUpdateManyWithoutInsumoNestedInput
@@ -378,6 +394,7 @@ export type InventarioCreateManyInput = {
   stock?: number
   stockMinimo?: number
   precioUnit: number
+  imagenUrl?: string | null
   createdAt?: Date | string
 }
 
@@ -389,6 +406,7 @@ export type InventarioUpdateManyMutationInput = {
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   stockMinimo?: Prisma.IntFieldUpdateOperationsInput | number
   precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
+  imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -400,6 +418,7 @@ export type InventarioUncheckedUpdateManyInput = {
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   stockMinimo?: Prisma.IntFieldUpdateOperationsInput | number
   precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
+  imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -411,6 +430,7 @@ export type InventarioCountOrderByAggregateInput = {
   stock?: Prisma.SortOrder
   stockMinimo?: Prisma.SortOrder
   precioUnit?: Prisma.SortOrder
+  imagenUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -428,6 +448,7 @@ export type InventarioMaxOrderByAggregateInput = {
   stock?: Prisma.SortOrder
   stockMinimo?: Prisma.SortOrder
   precioUnit?: Prisma.SortOrder
+  imagenUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -439,6 +460,7 @@ export type InventarioMinOrderByAggregateInput = {
   stock?: Prisma.SortOrder
   stockMinimo?: Prisma.SortOrder
   precioUnit?: Prisma.SortOrder
+  imagenUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -518,6 +540,7 @@ export type InventarioCreateWithoutConsultaUsoInput = {
   stock?: number
   stockMinimo?: number
   precioUnit: number
+  imagenUrl?: string | null
   createdAt?: Date | string
   movimientos?: Prisma.MovimientoInventarioCreateNestedManyWithoutInsumoInput
   detalles?: Prisma.FacturaDetalleCreateNestedManyWithoutInsumoInput
@@ -531,6 +554,7 @@ export type InventarioUncheckedCreateWithoutConsultaUsoInput = {
   stock?: number
   stockMinimo?: number
   precioUnit: number
+  imagenUrl?: string | null
   createdAt?: Date | string
   movimientos?: Prisma.MovimientoInventarioUncheckedCreateNestedManyWithoutInsumoInput
   detalles?: Prisma.FacturaDetalleUncheckedCreateNestedManyWithoutInsumoInput
@@ -560,6 +584,7 @@ export type InventarioUpdateWithoutConsultaUsoInput = {
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   stockMinimo?: Prisma.IntFieldUpdateOperationsInput | number
   precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
+  imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   movimientos?: Prisma.MovimientoInventarioUpdateManyWithoutInsumoNestedInput
   detalles?: Prisma.FacturaDetalleUpdateManyWithoutInsumoNestedInput
@@ -573,6 +598,7 @@ export type InventarioUncheckedUpdateWithoutConsultaUsoInput = {
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   stockMinimo?: Prisma.IntFieldUpdateOperationsInput | number
   precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
+  imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   movimientos?: Prisma.MovimientoInventarioUncheckedUpdateManyWithoutInsumoNestedInput
   detalles?: Prisma.FacturaDetalleUncheckedUpdateManyWithoutInsumoNestedInput
@@ -586,6 +612,7 @@ export type InventarioCreateWithoutMovimientosInput = {
   stock?: number
   stockMinimo?: number
   precioUnit: number
+  imagenUrl?: string | null
   createdAt?: Date | string
   consultaUso?: Prisma.ConsultaInsumoCreateNestedManyWithoutInsumoInput
   detalles?: Prisma.FacturaDetalleCreateNestedManyWithoutInsumoInput
@@ -599,6 +626,7 @@ export type InventarioUncheckedCreateWithoutMovimientosInput = {
   stock?: number
   stockMinimo?: number
   precioUnit: number
+  imagenUrl?: string | null
   createdAt?: Date | string
   consultaUso?: Prisma.ConsultaInsumoUncheckedCreateNestedManyWithoutInsumoInput
   detalles?: Prisma.FacturaDetalleUncheckedCreateNestedManyWithoutInsumoInput
@@ -628,6 +656,7 @@ export type InventarioUpdateWithoutMovimientosInput = {
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   stockMinimo?: Prisma.IntFieldUpdateOperationsInput | number
   precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
+  imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consultaUso?: Prisma.ConsultaInsumoUpdateManyWithoutInsumoNestedInput
   detalles?: Prisma.FacturaDetalleUpdateManyWithoutInsumoNestedInput
@@ -641,6 +670,7 @@ export type InventarioUncheckedUpdateWithoutMovimientosInput = {
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   stockMinimo?: Prisma.IntFieldUpdateOperationsInput | number
   precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
+  imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consultaUso?: Prisma.ConsultaInsumoUncheckedUpdateManyWithoutInsumoNestedInput
   detalles?: Prisma.FacturaDetalleUncheckedUpdateManyWithoutInsumoNestedInput
@@ -654,6 +684,7 @@ export type InventarioCreateWithoutDetallesInput = {
   stock?: number
   stockMinimo?: number
   precioUnit: number
+  imagenUrl?: string | null
   createdAt?: Date | string
   consultaUso?: Prisma.ConsultaInsumoCreateNestedManyWithoutInsumoInput
   movimientos?: Prisma.MovimientoInventarioCreateNestedManyWithoutInsumoInput
@@ -667,6 +698,7 @@ export type InventarioUncheckedCreateWithoutDetallesInput = {
   stock?: number
   stockMinimo?: number
   precioUnit: number
+  imagenUrl?: string | null
   createdAt?: Date | string
   consultaUso?: Prisma.ConsultaInsumoUncheckedCreateNestedManyWithoutInsumoInput
   movimientos?: Prisma.MovimientoInventarioUncheckedCreateNestedManyWithoutInsumoInput
@@ -696,6 +728,7 @@ export type InventarioUpdateWithoutDetallesInput = {
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   stockMinimo?: Prisma.IntFieldUpdateOperationsInput | number
   precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
+  imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consultaUso?: Prisma.ConsultaInsumoUpdateManyWithoutInsumoNestedInput
   movimientos?: Prisma.MovimientoInventarioUpdateManyWithoutInsumoNestedInput
@@ -709,6 +742,7 @@ export type InventarioUncheckedUpdateWithoutDetallesInput = {
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   stockMinimo?: Prisma.IntFieldUpdateOperationsInput | number
   precioUnit?: Prisma.FloatFieldUpdateOperationsInput | number
+  imagenUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consultaUso?: Prisma.ConsultaInsumoUncheckedUpdateManyWithoutInsumoNestedInput
   movimientos?: Prisma.MovimientoInventarioUncheckedUpdateManyWithoutInsumoNestedInput
@@ -771,6 +805,7 @@ export type InventarioSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   stock?: boolean
   stockMinimo?: boolean
   precioUnit?: boolean
+  imagenUrl?: boolean
   createdAt?: boolean
   consultaUso?: boolean | Prisma.Inventario$consultaUsoArgs<ExtArgs>
   movimientos?: boolean | Prisma.Inventario$movimientosArgs<ExtArgs>
@@ -786,6 +821,7 @@ export type InventarioSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   stock?: boolean
   stockMinimo?: boolean
   precioUnit?: boolean
+  imagenUrl?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["inventario"]>
 
@@ -797,6 +833,7 @@ export type InventarioSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   stock?: boolean
   stockMinimo?: boolean
   precioUnit?: boolean
+  imagenUrl?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["inventario"]>
 
@@ -808,10 +845,11 @@ export type InventarioSelectScalar = {
   stock?: boolean
   stockMinimo?: boolean
   precioUnit?: boolean
+  imagenUrl?: boolean
   createdAt?: boolean
 }
 
-export type InventarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "lote" | "fechaVenc" | "stock" | "stockMinimo" | "precioUnit" | "createdAt", ExtArgs["result"]["inventario"]>
+export type InventarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "lote" | "fechaVenc" | "stock" | "stockMinimo" | "precioUnit" | "imagenUrl" | "createdAt", ExtArgs["result"]["inventario"]>
 export type InventarioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   consultaUso?: boolean | Prisma.Inventario$consultaUsoArgs<ExtArgs>
   movimientos?: boolean | Prisma.Inventario$movimientosArgs<ExtArgs>
@@ -836,6 +874,7 @@ export type $InventarioPayload<ExtArgs extends runtime.Types.Extensions.Internal
     stock: number
     stockMinimo: number
     precioUnit: number
+    imagenUrl: string | null
     createdAt: Date
   }, ExtArgs["result"]["inventario"]>
   composites: {}
@@ -1270,6 +1309,7 @@ export interface InventarioFieldRefs {
   readonly stock: Prisma.FieldRef<"Inventario", 'Int'>
   readonly stockMinimo: Prisma.FieldRef<"Inventario", 'Int'>
   readonly precioUnit: Prisma.FieldRef<"Inventario", 'Float'>
+  readonly imagenUrl: Prisma.FieldRef<"Inventario", 'String'>
   readonly createdAt: Prisma.FieldRef<"Inventario", 'DateTime'>
 }
     

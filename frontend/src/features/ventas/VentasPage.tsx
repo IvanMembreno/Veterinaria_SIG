@@ -12,6 +12,7 @@ export function VentasPage() {
         productosFiltrados,
         serviciosFiltrados,
         carrito,
+        cantidadEnCarrito,
         agregarProducto,
         agregarServicio,
         actualizarCantidad,
@@ -56,6 +57,7 @@ export function VentasPage() {
                     setBusqueda={setBusqueda}
                     productosFiltrados={productosFiltrados}
                     serviciosFiltrados={serviciosFiltrados}
+                    cantidadEnCarrito={cantidadEnCarrito}
                     onAgregarProducto={agregarProducto}
                     onAgregarServicio={agregarServicio}
                 />

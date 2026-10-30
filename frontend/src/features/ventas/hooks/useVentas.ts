@@ -19,6 +19,14 @@ export interface CartItem {
     stockDisponible?: number;
 }
 
+// Minúsculas y sin acentos para comparar ("Desparasitación" coincide con "desparasitacion").
+const normalizar = (texto: string) =>
+    texto
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim();
+
 export function useVentas() {
     const queryClient = useQueryClient();
 
@@ -39,20 +47,25 @@ export function useVentas() {
         null,
     );
 
-    const termino = busqueda.trim().toLowerCase();
+    const termino = normalizar(busqueda);
 
+    // Sin término se devuelve el catálogo completo; el componente decide cuántos mostrar.
     const productosFiltrados = useMemo(() => {
-        if (!termino) return [];
-        return (insumos ?? []).filter((i) =>
-            i.nombre.toLowerCase().includes(termino),
+        const ordenados = [...(insumos ?? [])].sort(
+            (a, b) =>
+                Number(a.stock <= 0) - Number(b.stock <= 0) ||
+                a.nombre.localeCompare(b.nombre, 'es'),
         );
+        if (!termino) return ordenados;
+        return ordenados.filter((i) => normalizar(i.nombre).includes(termino));
     }, [insumos, termino]);
 
     const serviciosFiltrados = useMemo(() => {
-        if (!termino) return [];
-        return (servicios ?? []).filter((s) =>
-            s.nombre.toLowerCase().includes(termino),
+        const ordenados = [...(servicios ?? [])].sort((a, b) =>
+            a.nombre.localeCompare(b.nombre, 'es'),
         );
+        if (!termino) return ordenados;
+        return ordenados.filter((s) => normalizar(s.nombre).includes(termino));
     }, [servicios, termino]);
 
     const agregarProducto = (insumo: Insumo) => {
@@ -123,6 +136,14 @@ export function useVentas() {
         setCarrito((prev) => prev.filter((i) => i.key !== key));
     };
 
+    const cantidadEnCarrito = useMemo(
+        () =>
+            Object.fromEntries(
+                carrito.map((i) => [i.key, i.cantidad]),
+            ) as Record<string, number>,
+        [carrito],
+    );
+
     const total = useMemo(
         () => carrito.reduce((acc, i) => acc + i.precio * i.cantidad, 0),
         [carrito],
@@ -164,6 +185,7 @@ export function useVentas() {
         productosFiltrados,
         serviciosFiltrados,
         carrito,
+        cantidadEnCarrito,
         agregarProducto,
         agregarServicio,
         actualizarCantidad,

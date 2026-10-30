@@ -6,7 +6,6 @@ import {
     updateInsumo,
     registrarEntrada,
     type Insumo,
-    type UpdateInsumoPayload,
 } from '../../../api/inventario.api';
 import { useAuthStore } from '../../auth/useAuthStore';
 
@@ -39,11 +38,13 @@ export function useInventario() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [form, setForm] = useState(initialForm);
     const [entradas, setEntradas] = useState<Record<string, string>>({});
+    const [imagen, setImagen] = useState<File | null>(null);
 
     const cerrarModal = () => {
         setIsModalOpen(false);
         setEditingId(null);
         setForm(initialForm);
+        setImagen(null);
     };
 
     const createMutation = useMutation({
@@ -55,7 +56,7 @@ export function useInventario() {
     });
 
     const updateMutation = useMutation({
-        mutationFn: ({ id, data }: { id: string; data: UpdateInsumoPayload }) =>
+        mutationFn: ({ id, data }: { id: string; data: FormData }) =>
             updateInsumo(id, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['inventario'] });
@@ -73,6 +74,7 @@ export function useInventario() {
     const abrirNuevo = () => {
         setEditingId(null);
         setForm(initialForm);
+        setImagen(null);
         setIsModalOpen(true);
     };
 
@@ -86,33 +88,28 @@ export function useInventario() {
             stockMinimo: String(insumo.stockMinimo),
             precioUnit: String(insumo.precioUnit),
         });
+        setImagen(null);
         setIsModalOpen(true);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const data = new FormData();
+        data.append('nombre', form.nombre);
+        // Lote y vencimiento se envían aunque estén vacíos para poder limpiarlos al editar.
+        data.append('lote', form.lote);
+        data.append('fechaVenc', form.fechaVenc);
+        // El stock solo se envía al crear: luego cambia por entradas, consultas o ventas.
+        if (!editingId) data.append('stock', form.stock);
+        if (form.stockMinimo) data.append('stockMinimo', form.stockMinimo);
+        data.append('precioUnit', form.precioUnit);
+        if (imagen) data.append('imagen', imagen);
+
         if (editingId) {
-            // El stock no se envía: solo cambia por entradas, consultas o ventas.
-            updateMutation.mutate({
-                id: editingId,
-                data: {
-                    nombre: form.nombre,
-                    lote: form.lote || null,
-                    fechaVenc: form.fechaVenc || null,
-                    stockMinimo: Number(form.stockMinimo),
-                    precioUnit: Number(form.precioUnit),
-                },
-            });
-            return;
+            updateMutation.mutate({ id: editingId, data });
+        } else {
+            createMutation.mutate(data);
         }
-        createMutation.mutate({
-            nombre: form.nombre,
-            lote: form.lote || undefined,
-            fechaVenc: form.fechaVenc || undefined,
-            stock: Number(form.stock),
-            stockMinimo: Number(form.stockMinimo),
-            precioUnit: Number(form.precioUnit),
-        });
     };
 
     return {
@@ -129,6 +126,8 @@ export function useInventario() {
         setForm,
         entradas,
         setEntradas,
+        imagen,
+        setImagen,
         entradaMutation,
         handleSubmit,
         isSaving: createMutation.isPending || updateMutation.isPending,

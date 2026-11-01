@@ -8,6 +8,7 @@ export interface RecordatorioCliente {
     nombre: string;
     telefono: string;
     email?: string | null;
+    aceptaRecordatorios?: boolean;
 }
 
 export interface RecordatorioMascota {

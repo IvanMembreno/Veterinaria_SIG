@@ -109,5 +109,7 @@ export function useConsultaForm(citaId: string, onClose: () => void) {
         actualizarInsumoLinea,
         quitarInsumoLinea,
         handleSubmit,
+        isError: mutation.isError,
+        error: mutation.error,
     };
 }

@@ -2,6 +2,7 @@ import { useRecordatorios } from './hooks/useRecordatorios';
 import { FiltrosRecordatorios } from './componentes/FiltrosRecordatorios';
 import { ModalNuevoRecordatorio } from './componentes/ModalNuevoRecordatorio';
 import { type Recordatorio } from '../../api/recordatorios.api';
+import { formatearTelefono } from '../../utils/telefono';
 import styles from './styles/recordatorios.module.css';
 
 const TIPO_LABEL: Record<Recordatorio['tipo'], string> = {
@@ -96,7 +97,36 @@ export function RecordatoriosPage() {
                                         {r.mascota?.nombre ?? '-'}
                                     </td>
                                     <td className={styles.clientCell}>
-                                        {r.mascota?.cliente?.nombre ?? (
+                                        {r.mascota?.cliente ? (
+                                            <>
+                                                {r.mascota.cliente.nombre}
+                                                {r.mascota.cliente.telefono && (
+                                                    <small
+                                                        className={
+                                                            styles.clientPhone
+                                                        }
+                                                    >
+                                                        {formatearTelefono(
+                                                            r.mascota.cliente
+                                                                .telefono,
+                                                        )}
+                                                    </small>
+                                                )}
+                                                {!r.mascota.cliente
+                                                    .aceptaRecordatorios && (
+                                                    <small
+                                                        className={
+                                                            styles.avisoConsentimiento
+                                                        }
+                                                        title="El envío manual sigue disponible; confirma con el cliente antes de escribirle."
+                                                    >
+                                                        ⚠ El cliente no autoriza
+                                                        recordatorios por
+                                                        WhatsApp
+                                                    </small>
+                                                )}
+                                            </>
+                                        ) : (
                                             <span className={styles.noData}>
                                                 Sin asignar
                                             </span>

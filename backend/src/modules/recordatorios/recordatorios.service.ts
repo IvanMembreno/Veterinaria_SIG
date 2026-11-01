@@ -14,6 +14,7 @@ const MASCOTA_CONTACTO_SELECT = {
             nombre: true,
             telefono: true,
             email: true,
+            aceptaRecordatorios: true,
         },
     },
 } as const;

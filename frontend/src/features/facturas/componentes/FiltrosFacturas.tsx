@@ -1,6 +1,7 @@
 import type { Cliente } from '../../../api/clientes.api';
 import type { EstadoFactura, FacturasFiltros } from '../../../api/facturas.api';
 import { Autocomplete } from '../../../components/ui/Autocomplete';
+import { formatearTelefono } from '../../../utils/telefono';
 import styles from '../styles/facturas.module.css';
 
 interface FiltrosFacturasProps {
@@ -50,7 +51,7 @@ export function FiltrosFacturas({
                     options={(clientes ?? []).map((c) => ({
                         value: c.id,
                         label: c.nombre,
-                        hint: c.telefono,
+                        hint: formatearTelefono(c.telefono),
                     }))}
                     value={filtros.clienteId ?? ''}
                     onChange={(clienteId) =>

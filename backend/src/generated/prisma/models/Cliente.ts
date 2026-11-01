@@ -31,6 +31,8 @@ export type ClienteMinAggregateOutputType = {
   email: string | null
   direccion: string | null
   createdAt: Date | null
+  aceptaRecordatorios: boolean | null
+  consentimientoFecha: Date | null
 }
 
 export type ClienteMaxAggregateOutputType = {
@@ -40,6 +42,8 @@ export type ClienteMaxAggregateOutputType = {
   email: string | null
   direccion: string | null
   createdAt: Date | null
+  aceptaRecordatorios: boolean | null
+  consentimientoFecha: Date | null
 }
 
 export type ClienteCountAggregateOutputType = {
@@ -49,6 +53,8 @@ export type ClienteCountAggregateOutputType = {
   email: number
   direccion: number
   createdAt: number
+  aceptaRecordatorios: number
+  consentimientoFecha: number
   _all: number
 }
 
@@ -60,6 +66,8 @@ export type ClienteMinAggregateInputType = {
   email?: true
   direccion?: true
   createdAt?: true
+  aceptaRecordatorios?: true
+  consentimientoFecha?: true
 }
 
 export type ClienteMaxAggregateInputType = {
@@ -69,6 +77,8 @@ export type ClienteMaxAggregateInputType = {
   email?: true
   direccion?: true
   createdAt?: true
+  aceptaRecordatorios?: true
+  consentimientoFecha?: true
 }
 
 export type ClienteCountAggregateInputType = {
@@ -78,6 +88,8 @@ export type ClienteCountAggregateInputType = {
   email?: true
   direccion?: true
   createdAt?: true
+  aceptaRecordatorios?: true
+  consentimientoFecha?: true
   _all?: true
 }
 
@@ -160,6 +172,8 @@ export type ClienteGroupByOutputType = {
   email: string | null
   direccion: string | null
   createdAt: Date
+  aceptaRecordatorios: boolean
+  consentimientoFecha: Date | null
   _count: ClienteCountAggregateOutputType | null
   _min: ClienteMinAggregateOutputType | null
   _max: ClienteMaxAggregateOutputType | null
@@ -190,6 +204,8 @@ export type ClienteWhereInput = {
   email?: Prisma.StringNullableFilter<"Cliente"> | string | null
   direccion?: Prisma.StringNullableFilter<"Cliente"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Cliente"> | Date | string
+  aceptaRecordatorios?: Prisma.BoolFilter<"Cliente"> | boolean
+  consentimientoFecha?: Prisma.DateTimeNullableFilter<"Cliente"> | Date | string | null
   mascotas?: Prisma.MascotaListRelationFilter
 }
 
@@ -200,6 +216,8 @@ export type ClienteOrderByWithRelationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   direccion?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  aceptaRecordatorios?: Prisma.SortOrder
+  consentimientoFecha?: Prisma.SortOrderInput | Prisma.SortOrder
   mascotas?: Prisma.MascotaOrderByRelationAggregateInput
 }
 
@@ -213,6 +231,8 @@ export type ClienteWhereUniqueInput = Prisma.AtLeast<{
   email?: Prisma.StringNullableFilter<"Cliente"> | string | null
   direccion?: Prisma.StringNullableFilter<"Cliente"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Cliente"> | Date | string
+  aceptaRecordatorios?: Prisma.BoolFilter<"Cliente"> | boolean
+  consentimientoFecha?: Prisma.DateTimeNullableFilter<"Cliente"> | Date | string | null
   mascotas?: Prisma.MascotaListRelationFilter
 }, "id">
 
@@ -223,6 +243,8 @@ export type ClienteOrderByWithAggregationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   direccion?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  aceptaRecordatorios?: Prisma.SortOrder
+  consentimientoFecha?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ClienteCountOrderByAggregateInput
   _max?: Prisma.ClienteMaxOrderByAggregateInput
   _min?: Prisma.ClienteMinOrderByAggregateInput
@@ -238,6 +260,8 @@ export type ClienteScalarWhereWithAggregatesInput = {
   email?: Prisma.StringNullableWithAggregatesFilter<"Cliente"> | string | null
   direccion?: Prisma.StringNullableWithAggregatesFilter<"Cliente"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Cliente"> | Date | string
+  aceptaRecordatorios?: Prisma.BoolWithAggregatesFilter<"Cliente"> | boolean
+  consentimientoFecha?: Prisma.DateTimeNullableWithAggregatesFilter<"Cliente"> | Date | string | null
 }
 
 export type ClienteCreateInput = {
@@ -247,6 +271,8 @@ export type ClienteCreateInput = {
   email?: string | null
   direccion?: string | null
   createdAt?: Date | string
+  aceptaRecordatorios?: boolean
+  consentimientoFecha?: Date | string | null
   mascotas?: Prisma.MascotaCreateNestedManyWithoutClienteInput
 }
 
@@ -257,6 +283,8 @@ export type ClienteUncheckedCreateInput = {
   email?: string | null
   direccion?: string | null
   createdAt?: Date | string
+  aceptaRecordatorios?: boolean
+  consentimientoFecha?: Date | string | null
   mascotas?: Prisma.MascotaUncheckedCreateNestedManyWithoutClienteInput
 }
 
@@ -267,6 +295,8 @@ export type ClienteUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aceptaRecordatorios?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  consentimientoFecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   mascotas?: Prisma.MascotaUpdateManyWithoutClienteNestedInput
 }
 
@@ -277,6 +307,8 @@ export type ClienteUncheckedUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aceptaRecordatorios?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  consentimientoFecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   mascotas?: Prisma.MascotaUncheckedUpdateManyWithoutClienteNestedInput
 }
 
@@ -287,6 +319,8 @@ export type ClienteCreateManyInput = {
   email?: string | null
   direccion?: string | null
   createdAt?: Date | string
+  aceptaRecordatorios?: boolean
+  consentimientoFecha?: Date | string | null
 }
 
 export type ClienteUpdateManyMutationInput = {
@@ -296,6 +330,8 @@ export type ClienteUpdateManyMutationInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aceptaRecordatorios?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  consentimientoFecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ClienteUncheckedUpdateManyInput = {
@@ -305,6 +341,8 @@ export type ClienteUncheckedUpdateManyInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aceptaRecordatorios?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  consentimientoFecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ClienteCountOrderByAggregateInput = {
@@ -314,6 +352,8 @@ export type ClienteCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   direccion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  aceptaRecordatorios?: Prisma.SortOrder
+  consentimientoFecha?: Prisma.SortOrder
 }
 
 export type ClienteMaxOrderByAggregateInput = {
@@ -323,6 +363,8 @@ export type ClienteMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   direccion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  aceptaRecordatorios?: Prisma.SortOrder
+  consentimientoFecha?: Prisma.SortOrder
 }
 
 export type ClienteMinOrderByAggregateInput = {
@@ -332,6 +374,8 @@ export type ClienteMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   direccion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  aceptaRecordatorios?: Prisma.SortOrder
+  consentimientoFecha?: Prisma.SortOrder
 }
 
 export type ClienteScalarRelationFilter = {
@@ -341,6 +385,10 @@ export type ClienteScalarRelationFilter = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type ClienteCreateNestedOneWithoutMascotasInput = {
@@ -364,6 +412,8 @@ export type ClienteCreateWithoutMascotasInput = {
   email?: string | null
   direccion?: string | null
   createdAt?: Date | string
+  aceptaRecordatorios?: boolean
+  consentimientoFecha?: Date | string | null
 }
 
 export type ClienteUncheckedCreateWithoutMascotasInput = {
@@ -373,6 +423,8 @@ export type ClienteUncheckedCreateWithoutMascotasInput = {
   email?: string | null
   direccion?: string | null
   createdAt?: Date | string
+  aceptaRecordatorios?: boolean
+  consentimientoFecha?: Date | string | null
 }
 
 export type ClienteCreateOrConnectWithoutMascotasInput = {
@@ -398,6 +450,8 @@ export type ClienteUpdateWithoutMascotasInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aceptaRecordatorios?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  consentimientoFecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ClienteUncheckedUpdateWithoutMascotasInput = {
@@ -407,6 +461,8 @@ export type ClienteUncheckedUpdateWithoutMascotasInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aceptaRecordatorios?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  consentimientoFecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -447,6 +503,8 @@ export type ClienteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   email?: boolean
   direccion?: boolean
   createdAt?: boolean
+  aceptaRecordatorios?: boolean
+  consentimientoFecha?: boolean
   mascotas?: boolean | Prisma.Cliente$mascotasArgs<ExtArgs>
   _count?: boolean | Prisma.ClienteCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cliente"]>
@@ -458,6 +516,8 @@ export type ClienteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   email?: boolean
   direccion?: boolean
   createdAt?: boolean
+  aceptaRecordatorios?: boolean
+  consentimientoFecha?: boolean
 }, ExtArgs["result"]["cliente"]>
 
 export type ClienteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -467,6 +527,8 @@ export type ClienteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   email?: boolean
   direccion?: boolean
   createdAt?: boolean
+  aceptaRecordatorios?: boolean
+  consentimientoFecha?: boolean
 }, ExtArgs["result"]["cliente"]>
 
 export type ClienteSelectScalar = {
@@ -476,9 +538,11 @@ export type ClienteSelectScalar = {
   email?: boolean
   direccion?: boolean
   createdAt?: boolean
+  aceptaRecordatorios?: boolean
+  consentimientoFecha?: boolean
 }
 
-export type ClienteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "telefono" | "email" | "direccion" | "createdAt", ExtArgs["result"]["cliente"]>
+export type ClienteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "telefono" | "email" | "direccion" | "createdAt" | "aceptaRecordatorios" | "consentimientoFecha", ExtArgs["result"]["cliente"]>
 export type ClienteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mascotas?: boolean | Prisma.Cliente$mascotasArgs<ExtArgs>
   _count?: boolean | Prisma.ClienteCountOutputTypeDefaultArgs<ExtArgs>
@@ -498,6 +562,8 @@ export type $ClientePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     email: string | null
     direccion: string | null
     createdAt: Date
+    aceptaRecordatorios: boolean
+    consentimientoFecha: Date | null
   }, ExtArgs["result"]["cliente"]>
   composites: {}
 }
@@ -928,6 +994,8 @@ export interface ClienteFieldRefs {
   readonly email: Prisma.FieldRef<"Cliente", 'String'>
   readonly direccion: Prisma.FieldRef<"Cliente", 'String'>
   readonly createdAt: Prisma.FieldRef<"Cliente", 'DateTime'>
+  readonly aceptaRecordatorios: Prisma.FieldRef<"Cliente", 'Boolean'>
+  readonly consentimientoFecha: Prisma.FieldRef<"Cliente", 'DateTime'>
 }
     
 

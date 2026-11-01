@@ -1,5 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../features/auth/useAuthStore';
+import { useNotificacionesQuery } from '../../features/notificaciones/hooks/useNotificaciones';
 import styles from './styles/sidebar.module.css';
 
 import hamburguesa from '../../assets/actions/burger.svg';
@@ -83,6 +84,11 @@ const links = [
     },
 ];
 
+interface Pendientes {
+    total: number;
+    hayUrgentes: boolean;
+}
+
 interface SidebarProps {
     isOpen: boolean;
     onToggle: () => void;
@@ -92,6 +98,21 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
     const { usuario, logout } = useAuthStore();
     const navigate = useNavigate();
     const location = useLocation();
+    const { data: notificaciones, isError } = useNotificacionesQuery(
+        usuario?.id,
+    );
+
+    // Suma de pendientes por ruta del menú; sin datos (cargando o con error) no hay insignias.
+    const pendientesPorRuta = new Map<string, Pendientes>();
+    for (const n of isError ? [] : (notificaciones ?? [])) {
+        const actual = pendientesPorRuta.get(n.ruta) ?? {
+            total: 0,
+            hayUrgentes: false,
+        };
+        actual.total += n.cantidad ?? 1;
+        actual.hayUrgentes ||= n.severidad === 'alta';
+        pendientesPorRuta.set(n.ruta, actual);
+    }
 
     const handleLogout = () => {
         logout();
@@ -127,11 +148,27 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                     .filter((l) => usuario && l.roles.includes(usuario.rol))
                     .map((l) => {
                         const isActive = location.pathname === l.to;
+                        const pendientes = pendientesPorRuta.get(l.to);
+                        const insignia = pendientes && (
+                            <span
+                                className={`${styles.navBadge} ${pendientes.hayUrgentes ? styles.navBadgeUrgente : ''}`}
+                                aria-hidden="true"
+                            >
+                                {pendientes.total > 99
+                                    ? '99+'
+                                    : pendientes.total}
+                            </span>
+                        );
                         return (
                             <li key={l.to} className={styles.linkItem}>
                                 <Link
                                     to={l.to}
                                     className={`${styles.navLink} ${isActive ? styles.activeLink : ''}`}
+                                    aria-label={
+                                        pendientes
+                                            ? `${l.label}, ${pendientes.total} pendientes`
+                                            : l.label
+                                    }
                                 >
                                     {!isOpen && (
                                         <span
@@ -142,6 +179,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                                                 alt=""
                                                 className={styles.navIconImg}
                                             />
+                                            {insignia}
                                         </span>
                                     )}
                                     {isOpen && (
@@ -149,6 +187,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                                             {l.label}
                                         </span>
                                     )}
+                                    {isOpen && insignia}
                                 </Link>
                             </li>
                         );

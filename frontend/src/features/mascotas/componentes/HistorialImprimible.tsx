@@ -4,6 +4,7 @@ import type {
     MascotaDetalle,
 } from '../../../api/mascotas.api';
 import { DATOS_CLINICA } from '../../../utils/datosClinica';
+import { formatearTelefono } from '../../../utils/telefono';
 import { fechaDeConsulta, type RangoFechas } from '../hooks/useMascotaDetalle';
 // Mismos estilos de impresión que la factura (contenedor, encabezado, datos y pie).
 import printStyles from '../../facturas/styles/facturas.module.css';
@@ -120,7 +121,10 @@ export function HistorialImprimible({
                     </div>
                     <div className={printStyles.printDato}>
                         <span>Teléfono</span>
-                        <span>{mascota.cliente?.telefono ?? '-'}</span>
+                        <span>
+                            {formatearTelefono(mascota.cliente?.telefono) ||
+                                '-'}
+                        </span>
                     </div>
                 </div>
             </section>

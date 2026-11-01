@@ -8,6 +8,7 @@ import {
     type TipoItemVenta,
     type VentaItem,
 } from '../../../api/ventas.api';
+import { estaVencido } from '../../../utils/vencimiento';
 
 export interface CartItem {
     key: string;
@@ -50,10 +51,13 @@ export function useVentas() {
     const termino = normalizar(busqueda);
 
     // Sin término se devuelve el catálogo completo; el componente decide cuántos mostrar.
+    // Los productos agotados o vencidos quedan al final.
     const productosFiltrados = useMemo(() => {
+        const noDisponible = (i: Insumo) =>
+            Number(i.stock <= 0 || estaVencido(i.fechaVenc));
         const ordenados = [...(insumos ?? [])].sort(
             (a, b) =>
-                Number(a.stock <= 0) - Number(b.stock <= 0) ||
+                noDisponible(a) - noDisponible(b) ||
                 a.nombre.localeCompare(b.nombre, 'es'),
         );
         if (!termino) return ordenados;
@@ -69,7 +73,7 @@ export function useVentas() {
     }, [servicios, termino]);
 
     const agregarProducto = (insumo: Insumo) => {
-        if (insumo.stock <= 0) return;
+        if (insumo.stock <= 0 || estaVencido(insumo.fechaVenc)) return;
         setCarrito((prev) => {
             const key = `insumo-${insumo.id}`;
             const existente = prev.find((i) => i.key === key);

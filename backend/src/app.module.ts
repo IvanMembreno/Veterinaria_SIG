@@ -14,6 +14,7 @@ import { InventarioModule } from './modules/inventario/inventario.module.js';
 import { VentasModule } from './modules/ventas/ventas.module.js';
 import { FacturasModule } from './modules/facturas/facturas.module.js';
 import { RecordatoriosModule } from './modules/recordatorios/recordatorios.module.js';
+import { NotificacionesModule } from './modules/notificaciones/notificaciones.module.js';
 
 @Module({
     imports: [
@@ -34,6 +35,7 @@ import { RecordatoriosModule } from './modules/recordatorios/recordatorios.modul
         VentasModule,
         FacturasModule,
         RecordatoriosModule,
+        NotificacionesModule,
     ],
     controllers: [],
     providers: [],

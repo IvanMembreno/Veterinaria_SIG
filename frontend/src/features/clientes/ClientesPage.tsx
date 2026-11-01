@@ -4,6 +4,7 @@ import { Modal } from '../../components/ui/Modal';
 import styles from './styles/clientes.module.css';
 import basurero from '../../assets/actions/trash.svg';
 import lapiz from '../../assets/actions/pencil.svg';
+import { formatearTelefono } from '../../utils/telefono';
 
 export function ClientesPage() {
     const {
@@ -14,6 +15,10 @@ export function ClientesPage() {
         editingId,
         form,
         setForm,
+        telefonoError,
+        telefonoRef,
+        handleTelefonoChange,
+        handleTelefonoKeyDown,
         abrirNuevo,
         abrirEdicion,
         cerrarModal,
@@ -97,7 +102,18 @@ export function ClientesPage() {
                                         </div>
                                     </td>
                                     <td className={styles.phoneCell}>
-                                        {c.telefono}
+                                        {formatearTelefono(c.telefono)}
+                                        <span
+                                            className={
+                                                c.aceptaRecordatorios
+                                                    ? styles.tagAutoriza
+                                                    : styles.tagSinAutorizacion
+                                            }
+                                        >
+                                            {c.aceptaRecordatorios
+                                                ? 'Autoriza WhatsApp'
+                                                : 'Sin autorización'}
+                                        </span>
                                     </td>
                                     <td className={styles.emailCell}>
                                         {c.email ?? (
@@ -178,13 +194,35 @@ export function ClientesPage() {
                         <label htmlFor="input-telefono">Teléfono</label>
                         <input
                             id="input-telefono"
-                            placeholder="Ej: 555-0199"
+                            ref={telefonoRef}
+                            type="tel"
+                            inputMode="tel"
+                            autoComplete="tel"
+                            // Holgado para pegar números con espacios o paréntesis.
+                            maxLength={24}
+                            placeholder="Ej: 7001-0001"
                             value={form.telefono}
-                            onChange={(e) =>
-                                setForm({ ...form, telefono: e.target.value })
-                            }
+                            onChange={handleTelefonoChange}
+                            onKeyDown={handleTelefonoKeyDown}
+                            aria-describedby="ayuda-telefono"
+                            aria-invalid={telefonoError ? true : undefined}
                             required
                         />
+                        {telefonoError ? (
+                            <small
+                                id="ayuda-telefono"
+                                className={styles.fieldError}
+                            >
+                                {telefonoError}
+                            </small>
+                        ) : (
+                            <small
+                                id="ayuda-telefono"
+                                className={styles.fieldHint}
+                            >
+                                8 dígitos, ej. 7001-0001
+                            </small>
+                        )}
                     </div>
 
                     <div className={styles.field}>
@@ -216,6 +254,20 @@ export function ClientesPage() {
                             }
                         />
                     </div>
+
+                    <label className={styles.checkboxField}>
+                        <input
+                            type="checkbox"
+                            checked={form.aceptaRecordatorios}
+                            onChange={(e) =>
+                                setForm({
+                                    ...form,
+                                    aceptaRecordatorios: e.target.checked,
+                                })
+                            }
+                        />
+                        El cliente autoriza recibir recordatorios por WhatsApp
+                    </label>
 
                     <button
                         type="submit"

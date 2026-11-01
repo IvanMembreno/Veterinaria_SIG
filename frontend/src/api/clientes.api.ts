@@ -6,6 +6,8 @@ export interface Cliente {
     telefono: string;
     email?: string;
     direccion?: string;
+    aceptaRecordatorios?: boolean;
+    consentimientoFecha?: string | null;
 }
 
 export const getClientes = () =>

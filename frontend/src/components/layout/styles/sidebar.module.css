@@ -169,6 +169,7 @@
 }
 
 .navIconContainer {
+    position: relative;
     width: 20px;
     height: 20px;
     display: flex;
@@ -206,6 +207,46 @@
 .linkLabel {
     line-height: 1;
     white-space: nowrap;
+}
+/* #endregion */
+
+/* #region Insignias de pendientes */
+.navBadge {
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    margin-left: auto;
+    border-radius: 999px;
+    background-color: #a97a2f;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 20px;
+    text-align: center;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.navBadgeUrgente {
+    background-color: #b3433c;
+}
+
+/* Con el menú colapsado la insignia se monta, pequeña, sobre la esquina del ícono. */
+.navIconContainer .navBadge {
+    position: absolute;
+    top: -9px;
+    right: -11px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    margin-left: 0;
+    font-size: 9px;
+    line-height: 16px;
+    box-shadow: 0 0 0 2px #1b4332;
+}
+
+.activeLink .navIconContainer .navBadge {
+    box-shadow: 0 0 0 2px #d8f3dc;
 }
 /* #endregion */
 

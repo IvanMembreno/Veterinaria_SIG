@@ -1,4 +1,5 @@
 import type { Recordatorio } from '../../api/recordatorios.api';
+import { leerTelefonoGuardado } from '../../utils/telefono';
 
 const TIPO_MOTIVO: Record<Recordatorio['tipo'], string> = {
     VACUNA: 'una vacunación',
@@ -23,12 +24,11 @@ export function construirMensajeWhatsapp(recordatorio: Recordatorio): string {
 export function construirLinkWhatsapp(
     recordatorio: Recordatorio,
 ): string | null {
-    const telefono = recordatorio.mascota?.cliente?.telefono;
+    const telefono = leerTelefonoGuardado(
+        recordatorio.mascota?.cliente?.telefono,
+    );
     if (!telefono) return null;
 
-    const telefonoLimpio = telefono.replace(/\D/g, '');
-    if (!telefonoLimpio) return null;
-
     const mensaje = construirMensajeWhatsapp(recordatorio);
-    return `https://wa.me/${telefonoLimpio}?text=${encodeURIComponent(mensaje)}`;
+    return `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
 }

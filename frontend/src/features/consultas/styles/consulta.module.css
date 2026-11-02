@@ -137,6 +137,16 @@
 /* #endregion */
 
 /* #region Acciones */
+.errorMsg {
+    margin: 0;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+    font-size: 13px;
+    font-weight: 600;
+}
+
 .actionsContainer {
     display: flex;
     justify-content: flex-end;

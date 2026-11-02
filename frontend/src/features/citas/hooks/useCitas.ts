@@ -1,16 +1,21 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
     getCitas,
     createCita,
     updateCita,
     updateCitaEstado,
+    avisarCitaWhatsapp,
     type Cita,
+    type TipoAvisoCita,
     type UpdateCitaPayload,
 } from '../../../api/citas.api';
 import { getMascotas } from '../../../api/mascotas.api';
-import { getUsuarios } from '../../../api/usuarios.api';
+import { getVeterinarios } from '../../../api/usuarios.api';
+import { getEstadoWhatsapp } from '../../../api/recordatorios.api';
 import { useAuthStore } from '../../auth/useAuthStore';
+import { getErrorMessage } from '../../../utils/getErrorMessage';
+import { construirLinkCita } from '../whatsapp';
 
 const initialForm = { mascotaId: '', usuarioId: '', fecha: '', motivo: '' };
 
@@ -90,6 +95,18 @@ const filtrosIniciales: CitasFiltros = { estado: '', desde: '', hasta: '' };
 
 export type VistaCitas = 'lista' | 'calendario';
 
+// Abre wa.me en otra pestaña; devuelve false si no hay teléfono o el navegador la bloqueó.
+function abrirWhatsappCita(cita: Cita, tipo: TipoAvisoCita) {
+    const link = construirLinkCita(cita, tipo);
+    if (!link) return false;
+    const ventana = window.open(link, '_blank');
+    if (ventana) ventana.opener = null;
+    return ventana !== null;
+}
+
+const VENTANA_BLOQUEADA =
+    'El navegador bloqueó la ventana de WhatsApp; permite las ventanas emergentes de este sitio e intenta de nuevo.';
+
 export function useCitas() {
     const queryClient = useQueryClient();
     const { data: citas, isLoading } = useQuery({
@@ -100,15 +117,23 @@ export function useCitas() {
         queryKey: ['mascotas'],
         queryFn: getMascotas,
     });
-    const { data: usuarios } = useQuery({
-        queryKey: ['usuarios'],
-        queryFn: getUsuarios,
+    const { data: estadoWhatsapp } = useQuery({
+        queryKey: ['whatsapp-estado'],
+        queryFn: getEstadoWhatsapp,
+        staleTime: 5 * 60 * 1000,
     });
 
     const usuario = useAuthStore((s) => s.usuario);
     const puedeCrear = usuario
         ? ['GERENTE', 'RECEPCION'].includes(usuario.rol)
         : false;
+
+    // Solo quien agenda necesita el selector (GET /usuarios/veterinarios: GERENTE y RECEPCION).
+    const { data: veterinarios } = useQuery({
+        queryKey: ['veterinarios'],
+        queryFn: getVeterinarios,
+        enabled: puedeCrear,
+    });
 
     const puedeAtender = usuario
         ? ['GERENTE', 'VETERINARIO'].includes(usuario.rol)
@@ -122,6 +147,21 @@ export function useCitas() {
     const [fechaOriginal, setFechaOriginal] = useState<string | null>(null);
     const [errorHorario, setErrorHorario] = useState<string | null>(null);
     const [citaParaAtender, setCitaParaAtender] = useState<string | null>(null);
+    // Cita recién agendada, reprogramada o cancelada cuyo aviso se ofrece al cliente.
+    const [avisoCita, setAvisoCita] = useState<{
+        cita: Cita;
+        tipo: TipoAvisoCita;
+    } | null>(null);
+    const [aviso, setAviso] = useState<{
+        tipo: 'exito' | 'error';
+        texto: string;
+    } | null>(null);
+
+    useEffect(() => {
+        if (!aviso) return;
+        const timer = setTimeout(() => setAviso(null), 6000);
+        return () => clearTimeout(timer);
+    }, [aviso]);
 
     const [filtros, setFiltros] = useState<CitasFiltros>(filtrosIniciales);
     const [vista, setVista] = useState<VistaCitas>('lista');
@@ -146,8 +186,6 @@ export function useCitas() {
         });
     }, [citas, filtros]);
 
-    const veterinarios = usuarios?.filter((u) => u.rol === 'VETERINARIO');
-
     const limpiarErrores = () => {
         setErrorHorario(null);
         createMutation.reset();
@@ -164,25 +202,76 @@ export function useCitas() {
 
     const createMutation = useMutation({
         mutationFn: createCita,
-        onSuccess: () => {
+        onSuccess: (cita) => {
             queryClient.invalidateQueries({ queryKey: ['citas'] });
             cerrarModal();
+            setAvisoCita({ cita, tipo: 'AGENDADA' });
         },
     });
 
     const updateMutation = useMutation({
-        mutationFn: ({ id, data }: { id: string; data: UpdateCitaPayload }) =>
-            updateCita(id, data),
-        onSuccess: () => {
+        mutationFn: ({
+            id,
+            data,
+        }: {
+            id: string;
+            data: UpdateCitaPayload;
+            reprograma: boolean;
+        }) => updateCita(id, data),
+        onSuccess: (cita, { reprograma }) => {
             queryClient.invalidateQueries({ queryKey: ['citas'] });
             cerrarModal();
+            if (reprograma) setAvisoCita({ cita, tipo: 'REPROGRAMADA' });
         },
     });
 
     const cancelarMutation = useMutation({
         mutationFn: (id: string) => updateCitaEstado(id, 'CANCELADA'),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['citas'] }),
+        onSuccess: (cita) => {
+            queryClient.invalidateQueries({ queryKey: ['citas'] });
+            setAvisoCita({ cita, tipo: 'CANCELADA' });
+        },
     });
+
+    const avisarApiMutation = useMutation({
+        mutationFn: ({ cita, tipo }: { cita: Cita; tipo: TipoAvisoCita }) =>
+            avisarCitaWhatsapp(cita.id, tipo),
+        onSuccess: () => {
+            setAvisoCita(null);
+            setAviso({ tipo: 'exito', texto: 'Aviso enviado por WhatsApp.' });
+        },
+        // Si la API falla, se abre wa.me como respaldo.
+        onError: (error, { cita, tipo }) => {
+            const abierto = abrirWhatsappCita(cita, tipo);
+            if (abierto) setAvisoCita(null);
+            setAviso({
+                tipo: 'error',
+                texto: `${getErrorMessage(error, 'No se pudo enviar el aviso por WhatsApp.')} ${abierto ? 'Se abrió WhatsApp con el mensaje listo como respaldo.' : VENTANA_BLOQUEADA}`,
+            });
+        },
+    });
+
+    // Usa la API si está habilitada (la cancelación requiere su propia plantilla); si no, wa.me.
+    const avisarWhatsapp = (cita: Cita, tipo: TipoAvisoCita) => {
+        const usarApi =
+            !!estadoWhatsapp?.apiHabilitada &&
+            (tipo !== 'CANCELADA' || !!estadoWhatsapp.plantillaCancelacion);
+        if (usarApi) {
+            avisarApiMutation.mutate({ cita, tipo });
+            return;
+        }
+        if (abrirWhatsappCita(cita, tipo)) {
+            setAvisoCita(null);
+            setAviso({
+                tipo: 'exito',
+                texto: 'Se abrió WhatsApp con el mensaje listo para enviar.',
+            });
+        } else {
+            setAviso({ tipo: 'error', texto: VENTANA_BLOQUEADA });
+        }
+    };
+
+    const cerrarAvisoCita = () => setAvisoCita(null);
 
     const abrirNuevo = () => {
         setEditingId(null);
@@ -299,7 +388,11 @@ export function useCitas() {
         setErrorHorario(null);
         const data = { ...form, fecha: new Date(form.fecha).toISOString() };
         if (editingId) {
-            updateMutation.mutate({ id: editingId, data });
+            updateMutation.mutate({
+                id: editingId,
+                data,
+                reprograma: form.fecha !== fechaOriginal,
+            });
         } else {
             createMutation.mutate(data);
         }
@@ -333,6 +426,11 @@ export function useCitas() {
         citaParaAtender,
         setCitaParaAtender,
         cancelarMutation,
+        avisoCita,
+        cerrarAvisoCita,
+        avisarWhatsapp,
+        avisandoWhatsapp: avisarApiMutation.isPending,
+        aviso,
         handleSubmit,
         isSaving: createMutation.isPending || updateMutation.isPending,
         isError: createMutation.isError || updateMutation.isError,

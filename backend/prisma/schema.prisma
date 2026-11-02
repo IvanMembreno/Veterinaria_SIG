@@ -76,6 +76,9 @@ model Cliente {
   direccion String?
   createdAt DateTime @default(now())
 
+  aceptaRecordatorios Boolean   @default(false)
+  consentimientoFecha DateTime?
+
   mascotas Mascota[]
 }
 

@@ -7,6 +7,7 @@ import { PrismaService } from '../../config/prisma.service.js';
 import { CreateUsuarioDto } from './dto/create-usuario.dto.js';
 import * as bcrypt from 'bcrypt';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto.js';
+import { Role } from '../../generated/prisma/enums.js';
 
 @Injectable()
 export class UsuariosService {
@@ -41,6 +42,15 @@ export class UsuariosService {
                 rol: true,
                 activo: true,
             },
+        });
+    }
+
+    // Lista mínima para agendar citas: solo id y nombre, nunca email ni password.
+    findVeterinarios() {
+        return this.prisma.usuario.findMany({
+            where: { rol: Role.VETERINARIO, activo: true },
+            select: { id: true, nombre: true },
+            orderBy: { nombre: 'asc' },
         });
     }
 

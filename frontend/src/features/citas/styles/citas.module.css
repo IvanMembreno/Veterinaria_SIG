@@ -673,6 +673,29 @@
     color: white;
 }
 
+.whatsappBtn {
+    padding: 8px 14px;
+    background-color: var(--color-accent-soft);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.whatsappBtn:hover:not(:disabled) {
+    background-color: var(--color-primary-mid);
+    color: white;
+}
+
+.whatsappBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .historialBtn {
     padding: 8px 14px;
     background-color: var(--color-accent-soft);
@@ -791,5 +814,84 @@
     border-radius: 10px;
     font-size: 13px;
     font-weight: 600;
+}
+/* #endregion */
+
+/* #region Aviso por WhatsApp */
+.avisoTexto {
+    margin: 0;
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+.resumenCita {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 16px;
+    margin: 0;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background-color: var(--color-surface-alt);
+    font-size: 14px;
+}
+
+.resumenCita dt {
+    font-weight: 600;
+    color: var(--color-primary-soft);
+}
+
+.resumenCita dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.modalActions .submitBtn {
+    margin-top: 0;
+}
+
+.secondaryBtn {
+    padding: 12px 20px;
+    background-color: var(--color-surface-alt);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.secondaryBtn:hover {
+    background-color: var(--color-primary-mid);
+    color: white;
+}
+
+.toastError,
+.toastExito {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: var(--shadow-card);
+    max-width: min(420px, calc(100vw - 48px));
+    /* Por encima del modal (z-index 200). */
+    z-index: 210;
+}
+
+.toastExito {
+    background-color: var(--color-accent-soft);
+    color: var(--color-primary);
 }
 /* #endregion */

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { Insumo } from '../../../api/inventario.api';
 import type { Servicio } from '../../../api/servicios.api';
+import { estaVencido } from '../../../utils/vencimiento';
 import styles from '../styles/ventas.module.css';
 
 const TAMANO_PAGINA = 12;
@@ -20,8 +21,15 @@ type ItemCatalogo =
 const nombreDe = (item: ItemCatalogo) =>
     item.tipo === 'producto' ? item.insumo.nombre : item.servicio.nombre;
 
-const estaAgotado = (item: ItemCatalogo) =>
-    item.tipo === 'producto' && item.insumo.stock <= 0;
+// Motivo por el que un producto no se puede agregar al carrito, o null si está disponible.
+const motivoNoDisponible = (item: ItemCatalogo) => {
+    if (item.tipo !== 'producto') return null;
+    if (estaVencido(item.insumo.fechaVenc)) return 'Vencido';
+    if (item.insumo.stock <= 0) return 'Sin stock';
+    return null;
+};
+
+const noDisponible = (item: ItemCatalogo) => motivoNoDisponible(item) !== null;
 
 interface BuscadorProductosProps {
     busqueda: string;
@@ -62,10 +70,10 @@ export function BuscadorProductos({
         );
         if (pestana === 'productos') return productos;
         if (pestana === 'servicios') return servicios;
-        // En "Todos" se mezclan por nombre y los agotados quedan al final.
+        // En "Todos" se mezclan por nombre y los agotados o vencidos quedan al final.
         return [...productos, ...servicios].sort(
             (a, b) =>
-                Number(estaAgotado(a)) - Number(estaAgotado(b)) ||
+                Number(noDisponible(a)) - Number(noDisponible(b)) ||
                 nombreDe(a).localeCompare(nombreDe(b), 'es'),
         );
     }, [productosFiltrados, serviciosFiltrados, pestana]);
@@ -90,7 +98,7 @@ export function BuscadorProductos({
     const agregarPrimeraCoincidencia = (e: React.KeyboardEvent) => {
         if (e.key !== 'Enter' || !hayBusqueda) return;
         e.preventDefault();
-        const primera = items.find((item) => !estaAgotado(item));
+        const primera = items.find((item) => !noDisponible(item));
         if (primera) agregar(primera);
     };
 
@@ -137,11 +145,11 @@ export function BuscadorProductos({
                 >
                     {visibles.map((item) => {
                         const nombre = nombreDe(item);
-                        const agotado = estaAgotado(item);
+                        const motivo = motivoNoDisponible(item);
                         const enCarrito = cantidadEnCarrito[item.key];
                         const stockBajo =
                             item.tipo === 'producto' &&
-                            !agotado &&
+                            !motivo &&
                             item.insumo.stock <= item.insumo.stockMinimo;
                         const precio =
                             item.tipo === 'producto'
@@ -156,8 +164,8 @@ export function BuscadorProductos({
                             <button
                                 key={item.key}
                                 type="button"
-                                className={`${styles.catalogoCard} ${agotado ? styles.catalogoCardAgotada : ''}`}
-                                disabled={agotado}
+                                className={`${styles.catalogoCard} ${motivo ? styles.catalogoCardAgotada : ''}`}
+                                disabled={motivo !== null}
                                 onClick={() => agregar(item)}
                                 title={nombre}
                             >
@@ -194,16 +202,15 @@ export function BuscadorProductos({
                                 {item.tipo === 'producto' ? (
                                     <span
                                         className={
-                                            agotado
+                                            motivo
                                                 ? styles.catalogoStockAgotado
                                                 : stockBajo
                                                   ? styles.catalogoStockBajo
                                                   : styles.catalogoStock
                                         }
                                     >
-                                        {agotado
-                                            ? 'Sin stock'
-                                            : `Stock: ${item.insumo.stock}`}
+                                        {motivo ??
+                                            `Stock: ${item.insumo.stock}`}
                                     </span>
                                 ) : (
                                     <span className={styles.catalogoStock}>

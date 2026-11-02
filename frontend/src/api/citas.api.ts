@@ -1,4 +1,8 @@
 import { api } from './axios';
+import type {
+    EnvioWhatsappRespuesta,
+    RecordatorioCliente,
+} from './recordatorios.api';
 
 export interface Cita {
     id: string;
@@ -12,13 +16,17 @@ export interface Cita {
         | 'CANCELADA'
         | 'NO_ASISTIO';
     motivo: string;
-    mascota?: { id: string; nombre: string };
+    mascota?: {
+        id: string;
+        nombre: string;
+        cliente?: Omit<RecordatorioCliente, 'email'> | null;
+    };
     usuario?: { id: string; nombre: string };
 }
 
 export const getCitas = () => api.get<Cita[]>('/citas').then((r) => r.data);
 export const createCita = (data: Omit<Cita, 'id' | 'estado'>) =>
-    api.post('/citas', data).then((r) => r.data);
+    api.post<Cita>('/citas', data).then((r) => r.data);
 export type UpdateCitaPayload = Partial<
     Pick<Cita, 'mascotaId' | 'usuarioId' | 'fecha' | 'motivo'>
 >;
@@ -26,4 +34,11 @@ export type UpdateCitaPayload = Partial<
 export const updateCita = (id: string, data: UpdateCitaPayload) =>
     api.patch<Cita>(`/citas/${id}`, data).then((r) => r.data);
 export const updateCitaEstado = (id: string, estado: string) =>
-    api.patch(`/citas/${id}`, { estado }).then((r) => r.data);
+    api.patch<Cita>(`/citas/${id}`, { estado }).then((r) => r.data);
+
+export type TipoAvisoCita = 'AGENDADA' | 'REPROGRAMADA' | 'CANCELADA';
+
+export const avisarCitaWhatsapp = (id: string, tipo: TipoAvisoCita) =>
+    api
+        .post<EnvioWhatsappRespuesta>(`/citas/${id}/avisar-whatsapp`, { tipo })
+        .then((r) => r.data);

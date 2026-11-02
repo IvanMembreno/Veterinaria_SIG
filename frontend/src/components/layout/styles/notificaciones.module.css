@@ -1,0 +1,251 @@
+/* #region Barra superior */
+/* Vive dentro de <main>: los márgenes negativos anulan su padding, así que siempre
+   ocupa el ancho del contenido y sigue al menú lateral al abrirse o cerrarse. */
+.topBar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 52px;
+    margin: -24px -24px 0;
+    padding: 0 24px;
+    background-color: rgba(238, 242, 238, 0.85);
+    backdrop-filter: blur(6px);
+}
+
+@media print {
+    .topBar {
+        display: none;
+    }
+}
+/* #endregion */
+
+/* #region Campana */
+.contenedor {
+    position: relative;
+}
+
+.campanaBtn {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 10px;
+    background: none;
+    color: var(--color-primary-mid);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.campanaBtn:hover,
+.campanaBtn[aria-expanded='true'] {
+    background-color: var(--color-accent-soft);
+    color: var(--color-primary);
+}
+
+.campanaBtn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.insignia {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background-color: var(--color-primary-mid);
+    color: white;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 18px;
+    text-align: center;
+    box-shadow: 0 0 0 2px var(--color-canvas);
+}
+
+.insigniaUrgente {
+    background-color: var(--color-danger);
+}
+/* #endregion */
+
+/* #region Panel desplegable */
+.panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: min(380px, calc(100vw - 32px));
+    max-height: min(520px, 75vh);
+    overflow-y: auto;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 32px rgba(27, 67, 50, 0.16);
+    outline: none;
+}
+
+.panelHeader {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.panelTitulo {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--color-primary);
+}
+
+.marcarTodasBtn {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 6px;
+    background: none;
+    color: var(--color-primary-soft);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.marcarTodasBtn:hover:not(:disabled) {
+    background-color: var(--color-surface-alt);
+}
+
+.marcarTodasBtn:disabled {
+    color: var(--color-text-muted);
+    opacity: 0.6;
+    cursor: default;
+}
+
+.estado {
+    margin: 0;
+    padding: 28px 16px;
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+.seccion {
+    padding: 8px 0;
+}
+
+.seccion + .seccion {
+    border-top: 1px solid var(--color-surface-alt);
+}
+
+.seccionTitulo {
+    margin: 0;
+    padding: 4px 16px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--color-text-muted);
+}
+
+.lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 16px;
+    border: none;
+    background: none;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.item:hover,
+.item:focus-visible {
+    background-color: var(--color-surface-alt);
+    outline: none;
+}
+
+.punto {
+    width: 8px;
+    height: 8px;
+    margin-top: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.punto-alta {
+    background-color: var(--color-danger);
+}
+
+.punto-media {
+    background-color: var(--color-warning);
+}
+
+.punto-info {
+    background-color: var(--color-accent);
+}
+
+.itemTexto {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.itemTitulo {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.itemDetalle {
+    font-size: 13px;
+    color: var(--color-text);
+    overflow-wrap: anywhere;
+}
+
+.itemFecha {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.itemLeido .itemTitulo {
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.itemLeido .itemDetalle {
+    color: var(--color-text-muted);
+}
+
+.itemLeido .punto {
+    opacity: 0.35;
+}
+
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+/* #endregion */

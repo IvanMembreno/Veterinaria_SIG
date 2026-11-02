@@ -8,8 +8,22 @@ import { getErrorMessage } from '../../utils/getErrorMessage';
 import { FiltrosCitas } from './componentes/FiltrosCitas';
 import { CalendarioCitas } from './componentes/CalendarioCitas';
 import { ESTADO_LABEL, estadoBadgeClass } from './estado';
-import { type Cita } from '../../api/citas.api';
+import { bloqueoWhatsappCita } from './whatsapp';
+import { formatearFechaWhatsapp } from '../recordatorios/whatsapp';
+import { type Cita, type TipoAvisoCita } from '../../api/citas.api';
 import styles from './styles/citas.module.css';
+
+const AVISO_TITULO: Record<TipoAvisoCita, string> = {
+    AGENDADA: 'Cita agendada',
+    REPROGRAMADA: 'Cita reprogramada',
+    CANCELADA: 'Cita cancelada',
+};
+
+const AVISO_TEXTO: Record<TipoAvisoCita, string> = {
+    AGENDADA: 'La cita se registró correctamente.',
+    REPROGRAMADA: 'La cita se reprogramó correctamente.',
+    CANCELADA: 'La cita se canceló correctamente.',
+};
 
 export function CitasPage() {
     const {
@@ -40,6 +54,11 @@ export function CitasPage() {
         citaParaAtender,
         setCitaParaAtender,
         cancelarMutation,
+        avisoCita,
+        cerrarAvisoCita,
+        avisarWhatsapp,
+        avisandoWhatsapp,
+        aviso,
         handleSubmit,
         isSaving,
         isError,
@@ -181,6 +200,32 @@ export function CitasPage() {
                                                             }
                                                         >
                                                             Editar/Reprogramar
+                                                        </button>)}
+
+                                                        {isScheduled && puedeCrear && (<button
+                                                            onClick={() =>
+                                                                avisarWhatsapp(
+                                                                    c,
+                                                                    'AGENDADA',
+                                                                )
+                                                            }
+                                                            disabled={
+                                                                avisandoWhatsapp ||
+                                                                bloqueoWhatsappCita(
+                                                                    c,
+                                                                ) !== null
+                                                            }
+                                                            title={
+                                                                bloqueoWhatsappCita(
+                                                                    c,
+                                                                ) ??
+                                                                'Reenviar el aviso de la cita al cliente por WhatsApp'
+                                                            }
+                                                            className={
+                                                                styles.whatsappBtn
+                                                            }
+                                                        >
+                                                            WhatsApp
                                                         </button>)}
 
                                                         {puedeVerHistorial && (
@@ -374,11 +419,89 @@ export function CitasPage() {
                 </form>
             </Modal>
 
+            <Modal
+                isOpen={avisoCita !== null}
+                onClose={cerrarAvisoCita}
+                title={avisoCita ? AVISO_TITULO[avisoCita.tipo] : ''}
+            >
+                {avisoCita && (
+                    <div className={styles.formGrid}>
+                        <p className={styles.avisoTexto}>
+                            {AVISO_TEXTO[avisoCita.tipo]} ¿Desea avisar al
+                            cliente por WhatsApp?
+                        </p>
+                        <dl className={styles.resumenCita}>
+                            <dt>Cliente</dt>
+                            <dd>
+                                {avisoCita.cita.mascota?.cliente?.nombre ?? '-'}
+                            </dd>
+                            <dt>Mascota</dt>
+                            <dd>{avisoCita.cita.mascota?.nombre ?? '-'}</dd>
+                            <dt>Motivo</dt>
+                            <dd>{avisoCita.cita.motivo}</dd>
+                            <dt>Fecha y hora</dt>
+                            <dd>
+                                {formatearFechaWhatsapp(avisoCita.cita.fecha)}
+                            </dd>
+                        </dl>
+                        {bloqueoWhatsappCita(avisoCita.cita) && (
+                            <p className={styles.warningMsg}>
+                                {bloqueoWhatsappCita(avisoCita.cita)}.
+                            </p>
+                        )}
+                        <div className={styles.modalActions}>
+                            <button
+                                type="button"
+                                className={styles.submitBtn}
+                                disabled={
+                                    avisandoWhatsapp ||
+                                    bloqueoWhatsappCita(avisoCita.cita) !== null
+                                }
+                                title={
+                                    bloqueoWhatsappCita(avisoCita.cita) ??
+                                    'Enviar el aviso al cliente por WhatsApp'
+                                }
+                                onClick={() =>
+                                    avisarWhatsapp(
+                                        avisoCita.cita,
+                                        avisoCita.tipo,
+                                    )
+                                }
+                            >
+                                {avisandoWhatsapp
+                                    ? 'Enviando...'
+                                    : 'Avisar por WhatsApp'}
+                            </button>
+                            <button
+                                type="button"
+                                className={styles.secondaryBtn}
+                                onClick={cerrarAvisoCita}
+                            >
+                                Cerrar
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </Modal>
+
             {citaParaAtender && (
                 <ConsultaForm
                     citaId={citaParaAtender}
                     onClose={() => setCitaParaAtender(null)}
                 />
+            )}
+
+            {aviso && (
+                <p
+                    role="status"
+                    className={
+                        aviso.tipo === 'exito'
+                            ? styles.toastExito
+                            : styles.toastError
+                    }
+                >
+                    {aviso.texto}
+                </p>
             )}
         </div>
     );

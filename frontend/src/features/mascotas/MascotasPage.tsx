@@ -5,6 +5,7 @@ import { useAuthStore } from '../auth/useAuthStore';
 import { type Mascota } from '../../api/mascotas.api';
 import { Modal } from '../../components/ui/Modal';
 import { Autocomplete } from '../../components/ui/Autocomplete';
+import { formatearTelefono } from '../../utils/telefono';
 import styles from './styles/mascotas.module.css';
 import basurero from '../../assets/actions/trash.svg';
 import lapiz from '../../assets/actions/pencil.svg';
@@ -326,7 +327,7 @@ export function MascotasPage() {
                             options={(clientes ?? []).map((c) => ({
                                 value: c.id,
                                 label: c.nombre,
-                                hint: c.telefono,
+                                hint: formatearTelefono(c.telefono),
                             }))}
                             value={form.clienteId}
                             onChange={(clienteId) =>

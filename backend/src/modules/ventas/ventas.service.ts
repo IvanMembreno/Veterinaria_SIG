@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../config/prisma.service.js';
 import { CreateVentaDto } from './dto/create-venta.dto.js';
+import { validarInsumoNoVencido } from '../inventario/vencimiento.js';
 
 @Injectable()
 export class VentasService {
@@ -39,6 +40,7 @@ export class VentasService {
                         throw new BadRequestException(
                             `Insumo ${item.id} no existe`,
                         );
+                    validarInsumoNoVencido(insumo);
 
                     const resultado = await tx.inventario.updateMany({
                         where: { id: item.id, stock: { gte: item.cantidad } },

@@ -1,6 +1,8 @@
 import { useConsultaForm } from './hooks/useConsulta';
 import { Modal } from '../../components/ui/Modal';
 import { Autocomplete } from '../../components/ui/Autocomplete';
+import { getErrorMessage } from '../../utils/getErrorMessage';
+import { estaVencido } from '../../utils/vencimiento';
 import styles from './styles/consulta.module.css';
 
 interface Props {
@@ -29,6 +31,8 @@ export function ConsultaForm({ citaId, onClose }: Props) {
         actualizarInsumoLinea,
         quitarInsumoLinea,
         handleSubmit,
+        isError,
+        error,
     } = useConsultaForm(citaId, onClose);
 
     return (
@@ -134,11 +138,20 @@ export function ConsultaForm({ citaId, onClose }: Props) {
                                 className={styles.lineaCampo}
                                 ariaLabel={`Insumo ${index + 1}`}
                                 placeholder="Busca un insumo"
-                                options={(inventario ?? []).map((i) => ({
-                                    value: i.id,
-                                    label: i.nombre,
-                                    hint: `Stock: ${i.stock}`,
-                                }))}
+                                // Los vencidos no se ofrecen; si ya estaba elegido se mantiene marcado.
+                                options={(inventario ?? [])
+                                    .filter(
+                                        (i) =>
+                                            !estaVencido(i.fechaVenc) ||
+                                            i.id === linea.insumoId,
+                                    )
+                                    .map((i) => ({
+                                        value: i.id,
+                                        label: i.nombre,
+                                        hint: estaVencido(i.fechaVenc)
+                                            ? 'Vencido'
+                                            : `Stock: ${i.stock}`,
+                                    }))}
                                 value={linea.insumoId}
                                 onChange={(insumoId) =>
                                     actualizarInsumoLinea(index, { insumoId })
@@ -173,6 +186,15 @@ export function ConsultaForm({ citaId, onClose }: Props) {
                         + Agregar insumo
                     </button>
                 </div>
+
+                {isError && (
+                    <p className={`${styles.fullWidth} ${styles.errorMsg}`}>
+                        {getErrorMessage(
+                            error,
+                            'No se pudo guardar la consulta.',
+                        )}
+                    </p>
+                )}
 
                 <div
                     className={`${styles.fullWidth} ${styles.actionsContainer}`}

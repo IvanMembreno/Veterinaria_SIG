@@ -1,26 +1,45 @@
 import { useEffect, useMemo } from 'react';
 import { useInventario } from './hooks/useInventario';
-import { type Insumo } from '../../api/inventario.api';
+import { type Insumo, type TipoMovimiento } from '../../api/inventario.api';
 import { Modal } from '../../components/ui/Modal';
 import { getErrorMessage } from '../../utils/getErrorMessage';
+import {
+    diaDeManana,
+    estaVencido,
+    formatearDiaVencimiento,
+} from '../../utils/vencimiento';
 import styles from './styles/inventario.module.css';
+
+const MOTIVO_ENTRADA_BLOQUEADA =
+    'Producto vencido: dé de baja o actualice el lote';
+
+const TIPO_MOVIMIENTO: Record<TipoMovimiento, string> = {
+    ENTRADA: 'Entrada',
+    SALIDA_CONSULTA: 'Salida por consulta',
+    AJUSTE: 'Ajuste',
+    VENTA: 'Venta',
+};
 
 function estadoVencimiento(fechaVenc?: string) {
     if (!fechaVenc) return null;
+
+    if (estaVencido(fechaVenc)) {
+        return { label: 'Vencido', className: styles.vencVencido };
+    }
 
     const hoy = new Date();
     const vence = new Date(fechaVenc);
     const dias = Math.ceil(
         (vence.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24),
     );
-
-    if (dias < 0) {
-        return { label: 'Vencido', className: styles.vencVencido };
-    }
     if (dias <= 30) {
         return { label: `Vence en ${dias}d`, className: styles.vencProximo };
     }
-    return { label: vence.toLocaleDateString(), className: styles.vencLejano };
+    // toLocaleDateString mostraría el día anterior: medianoche UTC es la tarde previa en El Salvador.
+    return {
+        label: formatearDiaVencimiento(fechaVenc),
+        className: styles.vencLejano,
+    };
 }
 
 function nivelStock(stock: number, stockMinimo: number) {
@@ -47,6 +66,22 @@ export function InventarioPage() {
         imagen,
         setImagen,
         entradaMutation,
+        aviso,
+        insumoBaja,
+        abrirBaja,
+        cerrarBaja,
+        bajaMutation,
+        insumoHistorial,
+        abrirHistorial,
+        cerrarHistorial,
+        historialQuery,
+        insumoReabastecer,
+        formReabastecer,
+        setFormReabastecer,
+        abrirReabastecer,
+        cerrarReabastecer,
+        handleReabastecer,
+        reabastecerMutation,
         handleSubmit,
         isSaving,
         isError,
@@ -129,6 +164,7 @@ export function InventarioPage() {
                         {insumos && insumos.length > 0 ? (
                             insumos.map((i: Insumo) => {
                                 const venc = estadoVencimiento(i.fechaVenc);
+                                const vencido = estaVencido(i.fechaVenc);
                                 const nivel = nivelStock(
                                     i.stock,
                                     i.stockMinimo,
@@ -218,42 +254,85 @@ export function InventarioPage() {
                                             ${i.precioUnit}
                                         </td>
                                         <td className={styles.entradaCell}>
-                                            <div
-                                                className={styles.entradaGroup}
-                                            >
-                                                <input
-                                                    type="number"
-                                                    min="1"
-                                                    placeholder="Cant."
+                                            {vencido &&
+                                            i.stock === 0 &&
+                                            puedeEditar ? (
+                                                <div
                                                     className={
-                                                        styles.entradaInput
-                                                    }
-                                                    value={entradas[i.id] ?? ''}
-                                                    onChange={(e) =>
-                                                        setEntradas({
-                                                            ...entradas,
-                                                            [i.id]: e.target
-                                                                .value,
-                                                        })
-                                                    }
-                                                />
-                                                <button
-                                                    className={
-                                                        styles.entradaBtn
-                                                    }
-                                                    disabled={!entradas[i.id]}
-                                                    onClick={() =>
-                                                        entradaMutation.mutate({
-                                                            id: i.id,
-                                                            cantidad: Number(
-                                                                entradas[i.id],
-                                                            ),
-                                                        })
+                                                        styles.entradaGroup
                                                     }
                                                 >
-                                                    + Agregar
-                                                </button>
-                                            </div>
+                                                    <button
+                                                        className={
+                                                            styles.entradaBtn
+                                                        }
+                                                        title="Registrar existencias con un lote y vencimiento nuevos"
+                                                        onClick={() =>
+                                                            abrirReabastecer(i)
+                                                        }
+                                                    >
+                                                        Reabastecer
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div
+                                                    className={
+                                                        styles.entradaGroup
+                                                    }
+                                                    title={
+                                                        vencido
+                                                            ? MOTIVO_ENTRADA_BLOQUEADA
+                                                            : undefined
+                                                    }
+                                                >
+                                                    <input
+                                                        type="number"
+                                                        min="1"
+                                                        placeholder="Cant."
+                                                        className={
+                                                            styles.entradaInput
+                                                        }
+                                                        disabled={vencido}
+                                                        aria-label={`Cantidad a ingresar de ${i.nombre}`}
+                                                        value={
+                                                            entradas[i.id] ?? ''
+                                                        }
+                                                        onChange={(e) =>
+                                                            setEntradas({
+                                                                ...entradas,
+                                                                [i.id]:
+                                                                    e.target
+                                                                        .value,
+                                                            })
+                                                        }
+                                                    />
+                                                    <button
+                                                        className={
+                                                            styles.entradaBtn
+                                                        }
+                                                        disabled={
+                                                            vencido ||
+                                                            !entradas[i.id]
+                                                        }
+                                                        onClick={() =>
+                                                            entradaMutation.mutate(
+                                                                {
+                                                                    id: i.id,
+                                                                    cantidad:
+                                                                        Number(
+                                                                            entradas[
+                                                                                i
+                                                                                    .id
+                                                                            ],
+                                                                        ),
+                                                                },
+                                                            )
+                                                        }
+                                                    >
+                                                        + Agregar
+                                                    </button>
+                                                </div>
+                                            )}
                                         </td>
                                         {puedeEditar && (
                                             <td className={styles.entradaCell}>
@@ -271,6 +350,28 @@ export function InventarioPage() {
                                                         }
                                                     >
                                                         Editar
+                                                    </button>
+                                                    {vencido && i.stock > 0 && (
+                                                        <button
+                                                            className={
+                                                                styles.bajaBtn
+                                                            }
+                                                            onClick={() =>
+                                                                abrirBaja(i)
+                                                            }
+                                                        >
+                                                            Dar de baja
+                                                        </button>
+                                                    )}
+                                                    <button
+                                                        className={
+                                                            styles.editBtn
+                                                        }
+                                                        onClick={() =>
+                                                            abrirHistorial(i)
+                                                        }
+                                                    >
+                                                        Historial
                                                     </button>
                                                 </div>
                                             </td>
@@ -450,6 +551,198 @@ export function InventarioPage() {
                     </button>
                 </form>
             </Modal>
+
+            <Modal
+                isOpen={insumoBaja !== null}
+                onClose={cerrarBaja}
+                title="Dar de baja por vencimiento"
+            >
+                {insumoBaja && (
+                    <div className={styles.formGrid}>
+                        <p className={styles.confirmText}>
+                            Se descartarán <b>{insumoBaja.stock}</b> unidades de{' '}
+                            <b>{insumoBaja.nombre}</b>
+                            {insumoBaja.lote && ` (lote ${insumoBaja.lote})`},
+                            vencido el{' '}
+                            {formatearDiaVencimiento(insumoBaja.fechaVenc)}. Las
+                            existencias quedarán en 0 y la baja se registrará en
+                            el historial.
+                        </p>
+                        {bajaMutation.isError && (
+                            <p className={styles.errorMsg}>
+                                {getErrorMessage(
+                                    bajaMutation.error,
+                                    'No se pudo dar de baja el producto.',
+                                )}
+                            </p>
+                        )}
+                        <div className={styles.confirmActions}>
+                            <button
+                                className={styles.editBtn}
+                                onClick={cerrarBaja}
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                className={styles.bajaBtn}
+                                disabled={bajaMutation.isPending}
+                                onClick={() =>
+                                    bajaMutation.mutate(insumoBaja.id)
+                                }
+                            >
+                                {bajaMutation.isPending
+                                    ? 'Dando de baja...'
+                                    : 'Dar de baja'}
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </Modal>
+
+            <Modal
+                isOpen={insumoReabastecer !== null}
+                onClose={cerrarReabastecer}
+                title={`Reabastecer: ${insumoReabastecer?.nombre ?? ''}`}
+            >
+                <form onSubmit={handleReabastecer} className={styles.formGrid}>
+                    <p className={styles.confirmText}>
+                        El lote anterior venció el{' '}
+                        {formatearDiaVencimiento(insumoReabastecer?.fechaVenc)}.
+                        Registra el lote nuevo y su fecha de vencimiento.
+                    </p>
+                    <div className={styles.field}>
+                        <label htmlFor="reab-cantidad">Cantidad</label>
+                        <input
+                            id="reab-cantidad"
+                            type="number"
+                            min="1"
+                            step="1"
+                            placeholder="0"
+                            value={formReabastecer.cantidad}
+                            onChange={(e) =>
+                                setFormReabastecer({
+                                    ...formReabastecer,
+                                    cantidad: e.target.value,
+                                })
+                            }
+                            required
+                        />
+                    </div>
+                    <div className={styles.formRow}>
+                        <div className={styles.field}>
+                            <label htmlFor="reab-lote">Lote nuevo</label>
+                            <input
+                                id="reab-lote"
+                                placeholder="Ej: L-2027-01"
+                                value={formReabastecer.lote}
+                                onChange={(e) =>
+                                    setFormReabastecer({
+                                        ...formReabastecer,
+                                        lote: e.target.value,
+                                    })
+                                }
+                                required
+                            />
+                        </div>
+                        <div className={styles.field}>
+                            <label htmlFor="reab-vence">Vence</label>
+                            <input
+                                id="reab-vence"
+                                type="date"
+                                min={diaDeManana()}
+                                value={formReabastecer.fechaVenc}
+                                onChange={(e) =>
+                                    setFormReabastecer({
+                                        ...formReabastecer,
+                                        fechaVenc: e.target.value,
+                                    })
+                                }
+                                required
+                            />
+                        </div>
+                    </div>
+                    {reabastecerMutation.isError && (
+                        <p className={styles.errorMsg}>
+                            {getErrorMessage(
+                                reabastecerMutation.error,
+                                'No se pudo reabastecer el producto.',
+                            )}
+                        </p>
+                    )}
+                    <button
+                        type="submit"
+                        className={styles.submitBtn}
+                        disabled={reabastecerMutation.isPending}
+                    >
+                        {reabastecerMutation.isPending
+                            ? 'Guardando...'
+                            : 'Reabastecer'}
+                    </button>
+                </form>
+            </Modal>
+
+            <Modal
+                isOpen={insumoHistorial !== null}
+                onClose={cerrarHistorial}
+                title={`Historial: ${insumoHistorial?.nombre ?? ''}`}
+            >
+                {historialQuery.isLoading ? (
+                    <p className={styles.noData}>Cargando movimientos...</p>
+                ) : historialQuery.isError ? (
+                    <p className={styles.errorMsg}>
+                        {getErrorMessage(
+                            historialQuery.error,
+                            'No se pudo cargar el historial.',
+                        )}
+                    </p>
+                ) : historialQuery.data && historialQuery.data.length > 0 ? (
+                    <table className={styles.historialTable}>
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Cantidad</th>
+                                <th>Fecha</th>
+                                <th>Nota</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {historialQuery.data.map((m) => (
+                                <tr key={m.id}>
+                                    <td>{TIPO_MOVIMIENTO[m.tipo]}</td>
+                                    <td>{m.cantidad}</td>
+                                    <td>
+                                        {new Date(m.fecha).toLocaleString()}
+                                    </td>
+                                    <td>
+                                        {m.nota ?? (
+                                            <span className={styles.noData}>
+                                                -
+                                            </span>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                ) : (
+                    <p className={styles.noData}>
+                        Este insumo aún no tiene movimientos registrados.
+                    </p>
+                )}
+            </Modal>
+
+            {aviso && (
+                <p
+                    role="status"
+                    className={
+                        aviso.tipo === 'exito'
+                            ? styles.toastExito
+                            : styles.toastError
+                    }
+                >
+                    {aviso.texto}
+                </p>
+            )}
         </div>
     );
 }

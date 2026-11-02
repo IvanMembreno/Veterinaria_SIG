@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../config/prisma.service.js';
 import { CreateConsultaDto } from './dto/create-consulta.dto.js';
+import { validarInsumoNoVencido } from '../inventario/vencimiento.js';
 
 const DIAS_REFUERZO_VACUNA = 21;
 
@@ -40,20 +41,21 @@ export class ConsultasService {
             });
 
             for (const item of dto.insumos ?? []) {
+                const insumo = await tx.inventario.findUnique({
+                    where: { id: item.insumoId },
+                });
+                if (!insumo) {
+                    throw new BadRequestException(
+                        `Insumo ${item.insumoId} no existe`,
+                    );
+                }
+                validarInsumoNoVencido(insumo);
+
                 const resultado = await tx.inventario.updateMany({
                     where: { id: item.insumoId, stock: { gte: item.cantidad } },
                     data: { stock: { decrement: item.cantidad } },
                 });
-
                 if (resultado.count === 0) {
-                    const insumo = await tx.inventario.findUnique({
-                        where: { id: item.insumoId },
-                    });
-                    if (!insumo) {
-                        throw new BadRequestException(
-                            `Insumo ${item.insumoId} no existe`,
-                        );
-                    }
                     throw new BadRequestException(
                         `Stock insuficiente de ${insumo.nombre}`,
                     );

@@ -7,8 +7,30 @@ import { UpdateClienteDto } from './dto/update-cliente.dto.js';
 export class ClientesService {
     constructor(private readonly prisma: PrismaService) {}
 
+    // La fecha de consentimiento se registra al pasar a true y se limpia al pasar a false.
+    private resolverConsentimiento<T extends UpdateClienteDto>(
+        dto: T,
+        actual?: { aceptaRecordatorios: boolean },
+    ) {
+        const { consentimientoFecha, ...resto } = dto;
+        const acepta =
+            dto.aceptaRecordatorios ?? actual?.aceptaRecordatorios ?? false;
+
+        if (!acepta) return { ...resto, consentimientoFecha: null };
+        if (consentimientoFecha) {
+            return {
+                ...resto,
+                consentimientoFecha: new Date(consentimientoFecha),
+            };
+        }
+        if (actual?.aceptaRecordatorios) return resto;
+        return { ...resto, consentimientoFecha: new Date() };
+    }
+
     create(dto: CreateClienteDto) {
-        return this.prisma.cliente.create({ data: dto });
+        return this.prisma.cliente.create({
+            data: this.resolverConsentimiento(dto),
+        });
     }
 
     findAll() {
@@ -28,8 +50,11 @@ export class ClientesService {
     }
 
     async update(id: string, dto: UpdateClienteDto) {
-        await this.findOne(id);
-        return this.prisma.cliente.update({ where: { id }, data: dto });
+        const actual = await this.findOne(id);
+        return this.prisma.cliente.update({
+            where: { id },
+            data: this.resolverConsentimiento(dto, actual),
+        });
     }
 
     async remove(id: string) {

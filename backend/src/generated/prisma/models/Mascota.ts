@@ -536,10 +536,6 @@ export type EnumSexoFieldUpdateOperationsInput = {
   set?: $Enums.Sexo
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type NullableFloatFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number

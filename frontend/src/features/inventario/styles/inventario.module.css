@@ -337,6 +337,95 @@
     background-color: var(--color-primary-mid);
     color: white;
 }
+
+.entradaInput:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Baja por vencimiento: mismo botón que Editar, en tono de peligro. */
+.bajaBtn {
+    padding: 10px 14px;
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.bajaBtn:hover:not(:disabled) {
+    background-color: var(--color-danger);
+    color: white;
+}
+
+.bajaBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+/* #endregion */
+
+/* #region Modales de baja e historial */
+.confirmText {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-text);
+}
+
+.confirmActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.historialTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.historialTable th {
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    background-color: var(--color-surface-alt);
+}
+
+.historialTable td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--color-surface-alt);
+    color: var(--color-text);
+}
+/* #endregion */
+
+/* #region Aviso flotante */
+.toastError,
+.toastExito {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    max-width: min(420px, calc(100vw - 48px));
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: var(--shadow-card);
+}
+
+.toastError {
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+}
+
+.toastExito {
+    background-color: var(--color-accent-soft);
+    color: var(--color-primary);
+}
 /* #endregion */
 
 /* #region Formulario del modal */

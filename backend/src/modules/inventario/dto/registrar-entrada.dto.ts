@@ -1,4 +1,11 @@
-import { IsInt, IsOptional, IsString, Min } from 'class-validator';
+import {
+    IsDateString,
+    IsInt,
+    IsNotEmpty,
+    IsOptional,
+    IsString,
+    Min,
+} from 'class-validator';
 
 export class RegistrarEntradaDto {
     @IsInt()
@@ -8,4 +15,17 @@ export class RegistrarEntradaDto {
     @IsString()
     @IsOptional()
     nota?: string;
+
+    // Lote y vencimiento nuevos: obligatorios al reabastecer un producto vencido.
+    @IsString({ message: 'El lote debe ser texto.' })
+    @IsNotEmpty({ message: 'El lote no puede estar vacío.' })
+    @IsOptional()
+    lote?: string;
+
+    @IsDateString(
+        {},
+        { message: 'La fecha de vencimiento no es una fecha válida.' },
+    )
+    @IsOptional()
+    fechaVenc?: string;
 }

@@ -28,7 +28,31 @@ export const updateInsumo = (id: string, formData: FormData) =>
         })
         .then((r) => r.data);
 
-export const registrarEntrada = (id: string, cantidad: number, nota?: string) =>
+export type TipoMovimiento = 'ENTRADA' | 'SALIDA_CONSULTA' | 'AJUSTE' | 'VENTA';
+
+export interface MovimientoInventario {
+    id: string;
+    tipo: TipoMovimiento;
+    cantidad: number;
+    fecha: string;
+    nota?: string | null;
+}
+
+export const darDeBajaInsumo = (id: string) =>
+    api.patch<Insumo>(`/inventario/${id}/baja`).then((r) => r.data);
+
+export const getMovimientos = (id: string) =>
     api
-        .post(`/inventario/${id}/entrada`, { cantidad, nota })
+        .get<MovimientoInventario[]>(`/inventario/${id}/movimientos`)
         .then((r) => r.data);
+
+export interface EntradaPayload {
+    cantidad: number;
+    nota?: string;
+    // Obligatorios al reabastecer un producto vencido (lote y vencimiento nuevos).
+    lote?: string;
+    fechaVenc?: string;
+}
+
+export const registrarEntrada = (id: string, datos: EntradaPayload) =>
+    api.post<Insumo>(`/inventario/${id}/entrada`, datos).then((r) => r.data);

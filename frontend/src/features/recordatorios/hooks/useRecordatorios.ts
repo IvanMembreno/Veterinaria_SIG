@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
     createRecordatorio,
+    enviarRecordatorioWhatsapp,
+    getEstadoWhatsapp,
     getRecordatorios,
     updateRecordatorio,
     type CreateRecordatorioPayload,
@@ -12,6 +14,10 @@ import {
 } from '../../../api/recordatorios.api';
 import { getMascotas } from '../../../api/mascotas.api';
 import { construirLinkWhatsapp } from '../whatsapp';
+import { getErrorMessage } from '../../../utils/getErrorMessage';
+
+const SUGERENCIA_RESPALDO =
+    'Puedes usar el botón "Abrir WhatsApp" como respaldo.';
 
 const filtrosIniciales: RecordatoriosFiltros = {
     mascotaId: '',
@@ -51,8 +57,25 @@ export function useRecordatorios() {
         queryFn: getMascotas,
     });
 
+    const { data: estadoWhatsapp } = useQuery({
+        queryKey: ['whatsapp-estado'],
+        queryFn: getEstadoWhatsapp,
+        staleTime: 5 * 60 * 1000,
+    });
+
     const invalidar = () =>
         queryClient.invalidateQueries({ queryKey: ['recordatorios'] });
+
+    const [aviso, setAviso] = useState<{
+        tipo: 'exito' | 'error';
+        texto: string;
+    } | null>(null);
+
+    useEffect(() => {
+        if (!aviso) return;
+        const timer = setTimeout(() => setAviso(null), 6000);
+        return () => clearTimeout(timer);
+    }, [aviso]);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
@@ -93,6 +116,27 @@ export function useRecordatorios() {
                 contactoEnviado: new Date().toISOString(),
             }),
         onSuccess: invalidar,
+        onError: () =>
+            setAviso({
+                tipo: 'error',
+                texto: 'No se pudo actualizar el estado del recordatorio tras abrir WhatsApp. Intenta de nuevo.',
+            }),
+    });
+
+    const enviarApiMutation = useMutation({
+        mutationFn: enviarRecordatorioWhatsapp,
+        onSuccess: () => {
+            invalidar();
+            setAviso({
+                tipo: 'exito',
+                texto: 'Recordatorio enviado por WhatsApp.',
+            });
+        },
+        onError: (error) =>
+            setAviso({
+                tipo: 'error',
+                texto: `${getErrorMessage(error, 'No se pudo enviar el recordatorio por WhatsApp.')} ${SUGERENCIA_RESPALDO}`,
+            }),
     });
 
     const limpiarFiltros = () => setFiltros(filtrosIniciales);
@@ -161,6 +205,8 @@ export function useRecordatorios() {
         isError: createMutation.isError || updateMutation.isError,
         error: createMutation.error ?? updateMutation.error,
         enviarRecordatorio,
-        enviarMutation,
+        apiWhatsappHabilitada: estadoWhatsapp?.apiHabilitada ?? false,
+        enviarApiMutation,
+        aviso,
     };
 }

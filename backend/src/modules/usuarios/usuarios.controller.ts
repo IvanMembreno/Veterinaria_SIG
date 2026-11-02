@@ -33,6 +33,13 @@ export class UsuariosController {
         return this.usuariosService.findAll();
     }
 
+    // Debe ir antes de GET :id para que el parámetro no capture "veterinarios".
+    @Roles(Role.GERENTE, Role.RECEPCION)
+    @Get('veterinarios')
+    findVeterinarios() {
+        return this.usuariosService.findVeterinarios();
+    }
+
     @Roles(Role.GERENTE)
     @Get(':id')
     findOne(@Param('id') id: string) {

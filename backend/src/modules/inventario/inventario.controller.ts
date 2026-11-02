@@ -70,6 +70,13 @@ export class InventarioController {
         return this.inventarioService.update(id, dto, imagenUrl);
     }
 
+    @Roles(Role.GERENTE, Role.INVENTARIO)
+    @Patch(':id/baja')
+    darDeBaja(@Param('id') id: string) {
+        return this.inventarioService.darDeBaja(id);
+    }
+
+    @Roles(Role.GERENTE, Role.INVENTARIO)
     @Get(':id/movimientos')
     historial(@Param('id') id: string) {
         return this.inventarioService.historialMovimientos(id);

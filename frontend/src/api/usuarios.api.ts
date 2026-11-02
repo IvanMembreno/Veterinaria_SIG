@@ -26,6 +26,11 @@ export interface UpdateUsuarioPayload {
 export const getUsuarios = () =>
     api.get<Usuario[]>('/usuarios').then((r) => r.data);
 
+export type Veterinario = Pick<Usuario, 'id' | 'nombre'>;
+
+export const getVeterinarios = () =>
+    api.get<Veterinario[]>('/usuarios/veterinarios').then((r) => r.data);
+
 export const createUsuario = (data: CreateUsuarioPayload) =>
     api.post<Usuario>('/usuarios', data).then((r) => r.data);
 

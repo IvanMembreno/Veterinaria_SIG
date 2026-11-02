@@ -43,11 +43,14 @@ export class MascotasController {
         return this.mascotasService.create(dto, imagenUrl);
     }
 
+    // INVENTARIO no usa datos de clientes, mascotas ni citas.
+    @Roles(Role.GERENTE, Role.RECEPCION, Role.VETERINARIO)
     @Get()
     findAll() {
         return this.mascotasService.findAll();
     }
 
+    @Roles(Role.GERENTE, Role.RECEPCION, Role.VETERINARIO)
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.mascotasService.findOne(id);

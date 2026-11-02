@@ -3,6 +3,7 @@ import { FiltrosRecordatorios } from './componentes/FiltrosRecordatorios';
 import { ModalNuevoRecordatorio } from './componentes/ModalNuevoRecordatorio';
 import { type Recordatorio } from '../../api/recordatorios.api';
 import { formatearTelefono } from '../../utils/telefono';
+import { telefonoWhatsapp } from './whatsapp';
 import styles from './styles/recordatorios.module.css';
 
 const TIPO_LABEL: Record<Recordatorio['tipo'], string> = {
@@ -14,6 +15,17 @@ function estadoClase(estado: Recordatorio['estado']) {
     if (estado === 'PENDIENTE') return 'estadoPendiente';
     if (estado === 'ENVIADO') return 'estadoEnviado';
     return 'estadoCompletado';
+}
+
+// Motivo por el que el backend rechazaría el envío por API, o null si se puede enviar.
+function bloqueoApi(recordatorio: Recordatorio) {
+    if (!telefonoWhatsapp(recordatorio)) {
+        return 'El cliente no tiene un teléfono válido';
+    }
+    if (!recordatorio.mascota?.cliente?.aceptaRecordatorios) {
+        return 'El cliente no autoriza recordatorios por WhatsApp';
+    }
+    return null;
 }
 
 export function RecordatoriosPage() {
@@ -36,7 +48,9 @@ export function RecordatoriosPage() {
         isError,
         error,
         enviarRecordatorio,
-        enviarMutation,
+        apiWhatsappHabilitada,
+        enviarApiMutation,
+        aviso,
     } = useRecordatorios();
 
     if (isLoading) {
@@ -164,23 +178,48 @@ export function RecordatoriosPage() {
                                                 >
                                                     Editar
                                                 </button>
+                                                {apiWhatsappHabilitada && (
+                                                    <button
+                                                        className={
+                                                            styles.sendBtn
+                                                        }
+                                                        disabled={
+                                                            enviarApiMutation.isPending ||
+                                                            bloqueoApi(r) !==
+                                                                null
+                                                        }
+                                                        title={
+                                                            bloqueoApi(r) ??
+                                                            'Enviar la plantilla por la API de WhatsApp'
+                                                        }
+                                                        onClick={() =>
+                                                            enviarApiMutation.mutate(
+                                                                r.id,
+                                                            )
+                                                        }
+                                                    >
+                                                        {enviarApiMutation.isPending &&
+                                                        enviarApiMutation.variables ===
+                                                            r.id
+                                                            ? 'Enviando...'
+                                                            : 'Enviar por WhatsApp'}
+                                                    </button>
+                                                )}
                                                 <button
-                                                    className={styles.sendBtn}
+                                                    className={styles.manualBtn}
                                                     disabled={
-                                                        !r.mascota?.cliente
-                                                            ?.telefono
+                                                        !telefonoWhatsapp(r)
                                                     }
                                                     title={
-                                                        r.mascota?.cliente
-                                                            ?.telefono
-                                                            ? 'Enviar recordatorio por WhatsApp'
-                                                            : 'El cliente no tiene teléfono registrado'
+                                                        telefonoWhatsapp(r)
+                                                            ? 'Abrir el chat en WhatsApp con el mensaje listo'
+                                                            : 'El cliente no tiene un teléfono válido'
                                                     }
                                                     onClick={() =>
                                                         enviarRecordatorio(r)
                                                     }
                                                 >
-                                                    Enviar recordatorio
+                                                    Abrir WhatsApp
                                                 </button>
                                             </div>
                                         ) : (
@@ -218,10 +257,16 @@ export function RecordatoriosPage() {
                 error={error}
             />
 
-            {enviarMutation.isError && (
-                <p className={styles.toastError}>
-                    No se pudo actualizar el estado del recordatorio tras abrir
-                    WhatsApp. Intenta de nuevo.
+            {aviso && (
+                <p
+                    role="status"
+                    className={
+                        aviso.tipo === 'exito'
+                            ? styles.toastExito
+                            : styles.toastError
+                    }
+                >
+                    {aviso.texto}
                 </p>
             )}
         </div>

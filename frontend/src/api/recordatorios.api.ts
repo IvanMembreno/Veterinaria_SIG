@@ -64,5 +64,25 @@ export const updateRecordatorio = (
     data: UpdateRecordatorioPayload,
 ) => api.patch<Recordatorio>(`/recordatorios/${id}`, data).then((r) => r.data);
 
+export interface EstadoWhatsapp {
+    apiHabilitada: boolean;
+    plantillaCancelacion?: boolean;
+}
+
+export interface EnvioWhatsappRespuesta {
+    ok: boolean;
+    messageId: string;
+}
+
+export const getEstadoWhatsapp = () =>
+    api
+        .get<EstadoWhatsapp>('/recordatorios/whatsapp/estado')
+        .then((r) => r.data);
+
+export const enviarRecordatorioWhatsapp = (id: string) =>
+    api
+        .post<EnvioWhatsappRespuesta>(`/recordatorios/${id}/enviar-whatsapp`)
+        .then((r) => r.data);
+
 export const deleteRecordatorio = (id: string) =>
     api.delete(`/recordatorios/${id}`);

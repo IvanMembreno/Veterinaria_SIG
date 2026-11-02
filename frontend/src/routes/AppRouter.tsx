@@ -41,8 +41,30 @@ export function AppRouter() {
                         >
                             <Route index element={<DashboardPage />} />
                         </Route>
-                        <Route path="/clientes" element={<ClientesPage />} />
-                        <Route path="/mascotas" element={<MascotasPage />} />
+                        <Route
+                            path="/clientes"
+                            element={
+                                <ProtectedRoute
+                                    allowedRoles={['GERENTE', 'RECEPCION']}
+                                />
+                            }
+                        >
+                            <Route index element={<ClientesPage />} />
+                        </Route>
+                        <Route
+                            path="/mascotas"
+                            element={
+                                <ProtectedRoute
+                                    allowedRoles={[
+                                        'GERENTE',
+                                        'RECEPCION',
+                                        'VETERINARIO',
+                                    ]}
+                                />
+                            }
+                        >
+                            <Route index element={<MascotasPage />} />
+                        </Route>
                         <Route
                             path="/mascotas/:id"
                             element={
@@ -53,7 +75,20 @@ export function AppRouter() {
                         >
                             <Route index element={<MascotaDetallePage />} />
                         </Route>
-                        <Route path="/citas" element={<CitasPage />} />
+                        <Route
+                            path="/citas"
+                            element={
+                                <ProtectedRoute
+                                    allowedRoles={[
+                                        'GERENTE',
+                                        'RECEPCION',
+                                        'VETERINARIO',
+                                    ]}
+                                />
+                            }
+                        >
+                            <Route index element={<CitasPage />} />
+                        </Route>
                         <Route
                             path="/inventario"
                             element={

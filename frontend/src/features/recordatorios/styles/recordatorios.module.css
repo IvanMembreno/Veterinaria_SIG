@@ -306,7 +306,8 @@
 /* #endregion */
 
 /* #region Acciones de fila */
-.sendBtn {
+.sendBtn,
+.manualBtn {
     padding: 8px 14px;
     background-color: var(--color-accent-soft);
     color: var(--color-primary);
@@ -319,14 +320,21 @@
     transition: all 0.2s ease;
 }
 
-.sendBtn:hover:not(:disabled) {
+.sendBtn:hover:not(:disabled),
+.manualBtn:hover:not(:disabled) {
     background-color: var(--color-primary-mid);
     color: white;
 }
 
-.sendBtn:disabled {
+.sendBtn:disabled,
+.manualBtn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+/* Respaldo manual (wa.me): mismo botón con fondo neutro. */
+.manualBtn {
+    background-color: var(--color-surface-alt);
 }
 
 .actionsGroup {
@@ -431,7 +439,8 @@
 /* #endregion */
 
 /* #region Aviso flotante */
-.toastError {
+.toastError,
+.toastExito {
     position: fixed;
     bottom: 24px;
     right: 24px;
@@ -442,5 +451,11 @@
     font-size: 13px;
     font-weight: 600;
     box-shadow: var(--shadow-card);
+    max-width: min(420px, calc(100vw - 48px));
+}
+
+.toastExito {
+    background-color: var(--color-accent-soft);
+    color: var(--color-primary);
 }
 /* #endregion */

@@ -29,9 +29,19 @@ export class RecordatoriosController {
         return this.recordatoriosService.findAll(query);
     }
 
+    @Get('whatsapp/estado')
+    estadoWhatsapp() {
+        return this.recordatoriosService.estadoWhatsapp();
+    }
+
     @Post()
     create(@Body() dto: CreateRecordatorioDto) {
         return this.recordatoriosService.create(dto);
+    }
+
+    @Post(':id/enviar-whatsapp')
+    enviarWhatsapp(@Param('id') id: string) {
+        return this.recordatoriosService.enviarWhatsapp(id);
     }
 
     @Patch(':id')
@@ -39,6 +49,8 @@ export class RecordatoriosController {
         return this.recordatoriosService.update(id, dto);
     }
 
+    // Borrar es irreversible; ninguna pantalla lo usa y queda solo para GERENTE.
+    @Roles(Role.GERENTE)
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.recordatoriosService.remove(id);

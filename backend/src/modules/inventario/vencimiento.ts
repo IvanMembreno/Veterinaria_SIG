@@ -22,13 +22,20 @@ const diaDeHoy = (ahora: Date) => {
 export const estaVencido = (fechaVenc: Date | null, ahora = new Date()) =>
     fechaVenc !== null && diaDeVencimiento(fechaVenc) < diaDeHoy(ahora);
 
+// true si la fecha cae en un día posterior a hoy (El Salvador).
+export const esPosteriorAHoy = (fecha: Date, ahora = new Date()) =>
+    diaDeVencimiento(fecha) > diaDeHoy(ahora);
+
+// "dd/MM/yyyy" del día de calendario de una fecha guardada sin hora.
+export const formatearDia = (fecha: Date) =>
+    diaDeVencimiento(fecha).split('-').reverse().join('/');
+
 export function validarInsumoNoVencido(insumo: {
     nombre: string;
     fechaVenc: Date | null;
 }) {
     if (!insumo.fechaVenc || !estaVencido(insumo.fechaVenc)) return;
-    const [anio, mes, dia] = diaDeVencimiento(insumo.fechaVenc).split('-');
     throw new BadRequestException(
-        `El insumo ${insumo.nombre} está vencido (venció el ${dia}/${mes}/${anio})`,
+        `El insumo ${insumo.nombre} está vencido (venció el ${formatearDia(insumo.fechaVenc)})`,
     );
 }

@@ -3,17 +3,44 @@ import {
     ConflictException,
     Injectable,
     NotFoundException,
+    ServiceUnavailableException,
 } from '@nestjs/common';
 import { PrismaService } from '../../config/prisma.service.js';
 import { CreateCitaDto } from './dto/create-cita.dto.js';
 import { UpdateCitaDto } from './dto/update-cita.dto.js';
+import { type TipoAvisoCita } from './dto/avisar-whatsapp-cita.dto.js';
+import {
+    formatearFechaWhatsapp,
+    WhatsappService,
+} from '../recordatorios/whatsapp.service.js';
+import { leerTelefonoGuardado } from '../common/utils/telefono.js';
 
 // Cada cita ocupa un bloque de 30 min.
 const DURACION_CITA_MS = 30 * 60 * 1000;
 
+// Incluye los datos de contacto del dueño para poder avisarle por WhatsApp.
+const CITA_INCLUDE = {
+    mascota: {
+        include: {
+            cliente: {
+                select: {
+                    id: true,
+                    nombre: true,
+                    telefono: true,
+                    aceptaRecordatorios: true,
+                },
+            },
+        },
+    },
+    usuario: { select: { id: true, nombre: true } },
+} as const;
+
 @Injectable()
 export class CitasService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly whatsapp: WhatsappService,
+    ) {}
 
     // Compara instantes para no depender de la zona horaria.
     private validarFechaFutura(fecha: Date) {
@@ -72,19 +99,13 @@ export class CitasService {
         });
         return this.prisma.cita.create({
             data: { ...dto, fecha: new Date(dto.fecha) },
-            include: {
-                mascota: true,
-                usuario: { select: { id: true, nombre: true } },
-            },
+            include: CITA_INCLUDE,
         });
     }
 
     findAll() {
         return this.prisma.cita.findMany({
-            include: {
-                mascota: true,
-                usuario: { select: { id: true, nombre: true } },
-            },
+            include: CITA_INCLUDE,
             orderBy: { fecha: 'asc' },
         });
     }
@@ -123,7 +144,67 @@ export class CitasService {
         return this.prisma.cita.update({
             where: { id },
             data: { ...dto, ...(dto.fecha && { fecha: new Date(dto.fecha) }) },
+            include: CITA_INCLUDE,
         });
+    }
+
+    async avisarWhatsapp(id: string, tipo: TipoAvisoCita = 'AGENDADA') {
+        const cita = await this.prisma.cita.findUnique({
+            where: { id },
+            include: CITA_INCLUDE,
+        });
+        if (!cita) throw new NotFoundException('Cita no encontrada');
+
+        // La cancelación usa su propia plantilla (WHATSAPP_TEMPLATE_CANCELACION).
+        let plantilla: string | undefined;
+        if (tipo === 'CANCELADA') {
+            if (cita.estado !== 'CANCELADA') {
+                throw new ConflictException(
+                    'Solo se puede avisar la cancelación de citas canceladas.',
+                );
+            }
+            plantilla = this.whatsapp.plantillaCancelacion ?? undefined;
+            if (this.whatsapp.habilitado && !plantilla) {
+                throw new ServiceUnavailableException(
+                    'No hay una plantilla de WhatsApp configurada para avisar cancelaciones.',
+                );
+            }
+        } else if (
+            cita.estado !== 'PROGRAMADA' &&
+            cita.estado !== 'CONFIRMADA'
+        ) {
+            throw new ConflictException(
+                'Solo se puede avisar de citas programadas o confirmadas.',
+            );
+        }
+
+        const { mascota } = cita;
+        const cliente = mascota.cliente;
+        const telefono = leerTelefonoGuardado(cliente.telefono);
+        if (!telefono) {
+            throw new BadRequestException(
+                'El teléfono del cliente no es válido. Corrígelo en el directorio de clientes (8 dígitos, por ejemplo 7001-0001).',
+            );
+        }
+        if (!cliente.aceptaRecordatorios) {
+            throw new ConflictException(
+                'El cliente no ha autorizado recibir recordatorios por WhatsApp.',
+            );
+        }
+
+        const messageId = await this.whatsapp.enviarPlantilla(
+            telefono,
+            [
+                cliente.nombre,
+                this.whatsapp.clinicName,
+                mascota.nombre,
+                cita.motivo,
+                formatearFechaWhatsapp(cita.fecha),
+            ],
+            plantilla,
+        );
+
+        return { ok: true, messageId };
     }
 
     async remove(id: string) {
